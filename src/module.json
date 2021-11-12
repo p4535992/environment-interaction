@@ -6,17 +6,7 @@
   "author": "enso#0361, p4535992",
   "type": "module",
   "socket": true,
-  "includes": [
-    "./assets/**",
-    "./lang/**",
-    "./scripts/**",
-    "./styles/**",
-    "./templates/**",
-    "./module.json",
-    "./README.md",
-    "./icons/**",
-    "./packs/**"
-  ],
+  "includes": ["./assets/**", "./lang/**", "./scripts/**", "./styles/**", "./templates/**", "./module.json", "./README.md", "./icons/**", "./packs/**"],
   "media": [
     {
       "type": "icon",

@@ -141,7 +141,8 @@ export class EnvironmentInteraction {
       case ACTION_TYPE.SAVE: {
         //const save = environmentItem.data.data.save.ability;
         //interactor.rollAbilitySave(save);
-        getMonkTokenBarAPI().requestContestedRoll([interactorTokenID]);
+        getMonkTokenBarAPI().requestRoll([interactorTokenID]);
+        // getMonkTokenBarAPI().requestContestedRoll([interactorTokenID]);
         break;
       }
     }
