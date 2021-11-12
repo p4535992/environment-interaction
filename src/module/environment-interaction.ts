@@ -1,4 +1,4 @@
-import { ACTION_TYPE, ITEM_TYPE, useData } from './environment-interaction-models';
+import { ACTION_TYPE, ENVIROMENT_TYPE, ITEM_TYPE, useData } from './environment-interaction-models';
 import { i18n } from '../environment-interaction-main.js';
 // import { libWrapper } from '../lib/shim.js';
 import { getCanvas, getGame, getMonkTokenBarAPI, moduleName } from './settings.js';
@@ -14,7 +14,7 @@ export class EnvironmentInteraction {
         const actionType = <string>item.data.data.actionType;
         const typeDict = {
           weapon: i18n('DND5E.ItemTypeWeapon'),
-          consumable: actionType === ACTION_TYPE.ABILITY ? i18n('DND5E.ActionAbil') : actionType === ACTION_TYPE.SAVE ? i18n('DND5E.ActionSave') : i18n(`${moduleName}.ActionSkill`),
+          consumable: actionType === ACTION_TYPE.abil ? i18n('DND5E.ActionAbil') : actionType === ACTION_TYPE.save ? i18n('DND5E.ActionSave') : i18n(`${moduleName}.ActionSkill`),
           loot: i18n(`${moduleName}.handlebarsHelper.Macro`),
         };
 
@@ -27,7 +27,7 @@ export class EnvironmentInteraction {
         const actionType = <string>item.data.data.actionType;
         const typeDict = {
           weapon: i18n(`${moduleName}.ItemTypeWeapon`),
-          consumable: actionType === ACTION_TYPE.ABILITY ? i18n(`${moduleName}.ActionAbil`) : actionType === ACTION_TYPE.SAVE ? i18n(`${moduleName}.ActionSave`) : i18n(`${moduleName}.ActionSkill`),
+          consumable: actionType === ACTION_TYPE.abil ? i18n(`${moduleName}.ActionAbil`) : actionType === ACTION_TYPE.save ? i18n(`${moduleName}.ActionSave`) : i18n(`${moduleName}.ActionSkill`),
           loot: i18n(`${moduleName}.handlebarsHelper.Macro`),
         };
 
@@ -40,16 +40,16 @@ export class EnvironmentInteraction {
   static registerWrappers() {
     // Alter mouse interaction for tokens flagged as environment
     //@ts-ignore
-    libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._canView', window.EnvironmentInteraction._canView, 'MIXED');
+    libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._canView', getGame().EnvironmentInteraction._canView, 'MIXED');
     //@ts-ignore
-    libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft', window.EnvironmentInteraction._onClickLeft, 'MIXED');
+    libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft', getGame().EnvironmentInteraction._onClickLeft, 'MIXED');
     //@ts-ignore
-    libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft2', window.EnvironmentInteraction._onClickLeft2, 'MIXED');
+    libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft2', getGame().EnvironmentInteraction._onClickLeft2, 'MIXED');
 
     // dnd5e handling of chat message buttons
     if (getGame().system.id === 'dnd5e') {
       //@ts-ignore
-      libWrapper.register(moduleName, 'CONFIG.Item.documentClass._onChatCardAction', window.EnvironmentInteraction._onChatCardAction, 'MIXED');
+      libWrapper.register(moduleName, 'CONFIG.Item.documentClass._onChatCardAction', getGame().EnvironmentInteraction._onChatCardAction, 'MIXED');
     }
   }
 
@@ -97,10 +97,10 @@ export class EnvironmentInteraction {
     const action = $(button).data('action');
     let interactorItem;
 
-    if ([ACTION_TYPE.ATTACK, ACTION_TYPE.DAMAGE].includes(action)) {
+    if ([ENVIROMENT_TYPE.ATTACK, ENVIROMENT_TYPE.DAMAGE].includes(action)) {
       [interactorItem] = <Item[]>await interactor.createEmbeddedDocuments('Item', [environmentItem.toObject()]);
     }
-    if ([ACTION_TYPE.ABILITY, ACTION_TYPE.SAVE].includes(action)) {
+    if ([ENVIROMENT_TYPE.ABILITY, ENVIROMENT_TYPE.SAVE].includes(action)) {
       Hooks.once('renderDialog', (dialog, html, dialogData) => {
         dialog.setPosition({ top: event.clientY - 50 ?? null, left: window.innerWidth - 710 });
       });
@@ -108,13 +108,13 @@ export class EnvironmentInteraction {
 
     switch (action) {
       // may need to update certain item properties like proficiency/equipped
-      case ACTION_TYPE.ATTACK: {
+      case ENVIROMENT_TYPE.ATTACK: {
         let prof: any = null;
         if (getGame().settings.get(moduleName, 'autoProficiency')) {
           prof = true;
         } else {
           prof = <boolean>await Dialog.confirm({
-            title: i18n('DND5E.Proficiency'),
+            title: i18n(`${moduleName}.Proficiency`),
             content: i18n(`${moduleName}.autoProficiency.content`),
             options: { top: event.clientY ?? null, left: window.innerWidth - 560, width: 250 },
           });
@@ -128,17 +128,17 @@ export class EnvironmentInteraction {
         await interactorItem.rollAttack({ event });
         break;
       }
-      case ACTION_TYPE.DAMAGE: {
+      case ENVIROMENT_TYPE.DAMAGE: {
         await interactorItem.rollDamage({ critical: event.altKey, event });
         break;
       }
-      case ACTION_TYPE.ABILITY: {
+      case ENVIROMENT_TYPE.ABILITY: {
         //const ability = environmentItem.data.data.ability;
         //interactor.rollAbilityTest(ability);
         getMonkTokenBarAPI().requestRoll([interactorTokenID]);
         break;
       }
-      case ACTION_TYPE.SAVE: {
+      case ENVIROMENT_TYPE.SAVE: {
         //const save = environmentItem.data.data.save.ability;
         //interactor.rollAbilitySave(save);
         getMonkTokenBarAPI().requestRoll([interactorTokenID]);
@@ -155,7 +155,7 @@ export class EnvironmentInteraction {
     // TODO: dnd5e specific; create a helper function to handle different systems
     // Sort to mimic order of items on character sheet
     const items: Item[] = [];
-    for (const type of [ITEM_TYPE.WEAPON, ACTION_TYPE.ABILITY, ACTION_TYPE.SAVE, ITEM_TYPE.LOOT]) {
+    for (const type of [ITEM_TYPE.WEAPON, ACTION_TYPE.abil, ACTION_TYPE.save, ITEM_TYPE.LOOT]) {
       environmentToken.actor.items
         .filter((i) => {
           if (i.type === ITEM_TYPE.CONSUMABLE) {
@@ -200,7 +200,7 @@ export class EnvironmentInteraction {
             if (item.type === ITEM_TYPE.LOOT) content.find(`div.card-buttons`).remove();
           }
 
-          if (item.data.data.actionType === ACTION_TYPE.ABILITY) {
+          if (item.data.data.actionType === ACTION_TYPE.abil) {
             if (getGame().system.id == 'dnd5e') {
               //@ts-ignore
               content.find(`div.card-buttons`).append(`<button data-action="ability">${CONFIG.DND5E.abilities[item.data.data.ability]} ${i18n(`${moduleName}.interactWithEnvironment.Check`)}</button>`);
@@ -212,7 +212,7 @@ export class EnvironmentInteraction {
 
         //@ts-ignore
         const chatCard = await interactorToken.actor?.items?.get(<string>ownedItem.id)?.roll();
-        chatCard.setFlag(moduleName, 'useData', {
+        chatCard?.setFlag(moduleName, 'useData', {
           itemID,
           environmentTokenID: environmentToken.id,
           interactorTokenID: interactorToken.id,

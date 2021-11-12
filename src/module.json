@@ -44,6 +44,9 @@
   "dependencies": [
     {
       "name": "lib-wrapper"
+    },
+    {
+      "name":"monks-tokenbar"
     }
   ]
 }

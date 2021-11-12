@@ -27,6 +27,7 @@ If you want to support more modules of this kind, I invite you to go and support
 - Integration with a automatic rolls
 - Make a PR to the official master project [Environment Interaction](https://github.com/jessev14/environment-interaction)
 - Some friend request
+
 ## Usage
 
 <img src="./img/environment-interaction-demo.gif" height="450"/>
@@ -46,6 +47,7 @@ To move an environment token, first select it by drag-selection.
 Interactions are automatically generated from the items on the environment token's actor sheet.
 
 ### Interaction Types
+
 The type of interaction an item has depends on its item type:
 * Weapon: Function as if the character had the item on its own actor sheet.
 * Consumable:
@@ -53,15 +55,18 @@ The type of interaction an item has depends on its item type:
   - If the item action type is set to "Saving Throw," the chat card will allow the character to perform the corresponding saving throw, based on the saving throw select drop-down.
 * Loot: Loot-type items allow the character to execute a macro. To set the macro to be executed, enter the macro's name (exactly) into the "source" input of the item.
 
-See [these images](https://github.com/jessev14/environment-interaction/tree/main/img/example-interactions) for example items.
+See [these images](./img/example-interactions) for example items.
 
 ### Item Macro
+
 If an item on an environment token has a set Item Macro, after rolling the item to chat, the Item Macro will be executed.
 
 ## System
+
 Environment Interaction currently only supports dnd5e, but please reach out if you'd like to help me support your system!
 
 ## Compatibility
+
 Environment Interactions *should* be compatible with custom rollers (e.g. Midi-QOL, Better Rolls for 5e, MRE), but please submit an issue if anything seems to not work correctly.
 
 ## Technical Notes

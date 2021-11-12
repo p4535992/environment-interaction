@@ -31,6 +31,7 @@
     "ItemTypeWeapon": "Type of Weapon",
     "ActionAbil": "Ability",
     "ActionSave": "Saving Throw",
-    "ActionSkill": "Skill Check"
+    "ActionSkill": "Skill Check",
+    "Proficiency": "Proficiency"
   }
 }
