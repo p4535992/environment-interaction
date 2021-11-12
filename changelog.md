@@ -5,7 +5,7 @@
 - Add prettier (always best practices)
 - Add github action for build release
 - Add gulpfile files for building
-- Start integration mutlisystem ????
+- Start integration mutlisystem using the api on the Tokenbar module
 
 ### Update 1.0.1
 

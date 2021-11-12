@@ -1,7 +1,7 @@
 import { ACTION_TYPE, ITEM_TYPE, useData } from './environment-interaction-models';
 import { i18n } from '../environment-interaction-main.js';
 // import { libWrapper } from '../lib/shim.js';
-import { getCanvas, getGame, moduleName } from './settings.js';
+import { getCanvas, getGame, getMonkTokenBarAPI, moduleName } from './settings.js';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 
 export class EnvironmentInteraction {
@@ -82,14 +82,14 @@ export class EnvironmentInteraction {
 
   static async _onChatCardAction(wrapped, event) {
     const button = event.currentTarget;
-    const chatMessageID = $(button).closest(`li.chat-message`).data('message-id');
+    const chatMessageID = <string>$(button).closest(`li.chat-message`).data('message-id');
     const chatMessage = <ChatMessage>getGame().messages?.get(chatMessageID);
-    const useData = chatMessage.getFlag(moduleName, 'useData');
+    const useData = <useData>chatMessage.getFlag(moduleName, 'useData');
 
     if (!useData) {
       return wrapped(event);
     }
-    const { itemID, environmentTokenID, interactorTokenID } = <useData>useData;
+    const { itemID, environmentTokenID, interactorTokenID } = useData;
     const environment = <Actor>getCanvas().tokens?.get(environmentTokenID)?.actor;
     const interactor = <Actor>getCanvas().tokens?.get(interactorTokenID)?.actor;
     const environmentItem = <Item>environment.items.get(itemID);
@@ -98,7 +98,7 @@ export class EnvironmentInteraction {
     let interactorItem;
 
     if ([ACTION_TYPE.ATTACK, ACTION_TYPE.DAMAGE].includes(action)) {
-      [interactorItem] = await interactor.createEmbeddedDocuments('Item', [environmentItem.toObject()]);
+      [interactorItem] = <Item[]>await interactor.createEmbeddedDocuments('Item', [environmentItem.toObject()]);
     }
     if ([ACTION_TYPE.ABILITY, ACTION_TYPE.SAVE].includes(action)) {
       Hooks.once('renderDialog', (dialog, html, dialogData) => {
@@ -133,13 +133,15 @@ export class EnvironmentInteraction {
         break;
       }
       case ACTION_TYPE.ABILITY: {
-        const ability = environmentItem.data.data.ability;
-        interactor.rollAbilityTest(ability);
+        //const ability = environmentItem.data.data.ability;
+        //interactor.rollAbilityTest(ability);
+        getMonkTokenBarAPI().requestRoll([interactorTokenID]);
         break;
       }
       case ACTION_TYPE.SAVE: {
-        const save = environmentItem.data.data.save.ability;
-        interactor.rollAbilitySave(save);
+        //const save = environmentItem.data.data.save.ability;
+        //interactor.rollAbilitySave(save);
+        getMonkTokenBarAPI().requestContestedRoll([interactorTokenID]);
         break;
       }
     }
