@@ -28,7 +28,7 @@ Hooks.once("ready", () => {
 
 class EnvironmentInteraction {
     // Settings
-    static registerSettings() {
+    registerSettings() {
         // Automatically close interaction selection dialog
         game.settings.register(moduleName, "closeDialog", {
             name: game.i18n.localize(`${moduleName}.settings.closeDialog.name`),

@@ -22,7 +22,12 @@
         },
         "tokenConfig": {
             "label": "Environment Token"
-        }
-        
+        },
+        "RollMode": "Roll Mode",
+        "PublicRoll": "Public Roll",
+        "PrivateGMRoll": "Private GM Roll",
+        "BlindGMRoll": "Blind GM Roll",
+        "SelfRoll": "Self Roll"
+
     }
 }
