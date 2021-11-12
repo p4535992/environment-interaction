@@ -27,7 +27,10 @@
         "PublicRoll": "Public Roll",
         "PrivateGMRoll": "Private GM Roll",
         "BlindGMRoll": "Blind GM Roll",
-        "SelfRoll": "Self Roll"
-
+        "SelfRoll": "Self Roll",
+        "ItemTypeWeapon": "Type of Weapon",
+        "ActionAbil": "Ability",
+        "ActionSave": "Saving Throw",
+        "ActionSkill": "Skill Check"
     }
 }
