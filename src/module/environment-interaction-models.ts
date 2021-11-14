@@ -1,8 +1,9 @@
 export const ENVIROMENT_TYPE = {
   SAVE: 'save',
-  ABILITY: 'ability', // for dnd5e is 'abil' ???
+  ABILITY: 'ability',
   DAMAGE: 'damage',
   ATTACK: 'attack',
+  OTHER: 'other',
 };
 
 export const ACTION_TYPE = {
@@ -21,7 +22,7 @@ export const ITEM_TYPE = {
   LOOT: 'loot',
   WEAPON: 'weapon',
   CONSUMABLE: 'consumable',
-  TOOL: 'tool'
+  TOOL: 'tool',
 };
 
 export class useData {

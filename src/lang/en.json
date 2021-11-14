@@ -2,10 +2,16 @@
   "environment-interaction": {
     "settings": {
       "closeDialog": {
-        "name": "Automatically Close Interaction Selection Dialog"
+        "name": "Automatically Close Interaction Selection Dialog",
+        "hint": " "
       },
       "autoProficiency": {
-        "name": "Automatically Add Proficiency Bonus to Attack Rolls"
+        "name": "Automatically Add Proficiency Bonus to Attack Rolls",
+        "hint": " "
+      },
+      "integrationWithPolyglot": {
+        "name": "Integration with Polyglot",
+        "hint": "Set up different rolltable one for each language and change the audio file with customized one for that language"
       }
     },
     "handlebarsHelper": {
@@ -17,6 +23,7 @@
     "interactWithEnvironment": {
       "openCharacterSheet": "[GM] Open Character Sheet",
       "selectTokenWarn": "Select a token to interact with environment.",
+      "noValidRequestWarn": "The string request for tokenbar module is not a valid one",
       "Check": "Check",
       "title": "Select Action"
     },

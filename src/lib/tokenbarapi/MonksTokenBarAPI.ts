@@ -10,7 +10,7 @@ export interface MonksTokenBarAPI {
 
   requestRoll(tokens: Token[], options?: MonkTokenBarRollOptions): Promise<void>;
 
-  requestContestedRoll(request0, request1, options?: MonkTokenBarRollOptions): Promise<void>;
+  requestContestedRoll(request0: MonkTokenBarContestedRollRequest, request1: MonkTokenBarContestedRollRequest, options?: MonkTokenBarRollOptions): Promise<void>;
 
   /*
    * Used to open a dialog to assign xp to tokens
@@ -29,10 +29,10 @@ export interface MonksTokenBarAPI {
 
 export class MonkTokenBarRollOptions {
   rollmode = 'roll';
-  silent = true;
+  silent = false;
   fastForward = false;
   dc = NaN;
-  request:string;
+  request: string;
 }
 
 // export class MonkTokenBarRequest{
@@ -44,3 +44,7 @@ export class MonkTokenBarRollOptions {
 //   request:string;
 // }
 
+export class MonkTokenBarContestedRollRequest {
+  token: Token;
+  request: string;
+}

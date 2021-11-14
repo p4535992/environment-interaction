@@ -1,3 +1,4 @@
+import { i18n } from '../environment-interaction-main';
 import { MonksTokenBarAPI } from './../lib/tokenbarapi/MonksTokenBarAPI';
 
 export const moduleName = 'environment-interaction';
@@ -57,5 +58,14 @@ export const registerSettings = function () {
     config: true,
     type: Boolean,
     default: true,
+  });
+
+  getGame().settings.register(moduleName, 'integrationWithPolyglot', {
+    name: i18n(`${moduleName}.settings.integrationWithPolyglot.name`),
+    hint: i18n(`${moduleName}.settings.integrationWithPolyglot.hint`),
+    scope: 'world',
+    config: true,
+    default: false,
+    type: Boolean,
   });
 };

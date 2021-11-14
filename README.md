@@ -94,7 +94,9 @@ Full options example for MonTokenBar :
 {rollmode : 'roll', silent : true, fastForward: true, dc: 13, request: misc:init}
 ```
 
-Full example for Item Macro module :
+### Full example for Item Macro module :
+
+#### Request Roll (Initiave, Death Save, Saving Throw ecc.)
 
 ``` 
 const options = {rollmode : 'roll', silent : true, fastForward: true, dc: 13, request: 'misc:init'};
@@ -107,6 +109,14 @@ other example but when you want the rol on the current token
 ``` 
 const options = {rollmode : 'roll', silent : true, fastForward: true, dc: 13, request: 'misc:init'};
 const interactorToken = args[0];
+game.MonksTokenBar.requestRoll([interactorToken],options);
+```
+
+#### Contested Request Roll (Initiave, Death Save, Saving Throw ecc.)
+
+``` 
+const options = {rollmode : 'roll', silent : true, fastForward: true, dc: 13, request: 'misc:init'};
+const interactorToken = canvas.tokens?.controlled[0];
 game.MonksTokenBar.requestRoll([interactorToken],options);
 ```
 

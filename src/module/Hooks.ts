@@ -5,6 +5,11 @@ export const readyHooks = async () => {
   // Register hook callbacks
   // @ts-ignore
   getGame().EnvironmentInteraction.registerHooks();
+
+  Hooks.on('tokenBarUpdateRoll', (tokenBarApp: any, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
+    // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
+    const checkout = msgtokenRoll.total;
+  });
 };
 
 export const initHooks = async () => {

@@ -1,4 +1,5 @@
 import { Document } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/module.mjs';
+import { ACTION_TYPE, ENVIROMENT_TYPE } from './environment-interaction-models';
 import { getCanvas, getGame } from './settings';
 
 export function getTokenByTokenID(id) {
@@ -108,3 +109,41 @@ export const getActorByUuid = async function (uuid) {
   const actor = actorToken?.actor ? actorToken?.actor : actorToken;
   return actor;
 };
+
+export const converToEnviromentType = function(action:string):string{
+  let actionType;
+  switch (action) {
+    case ACTION_TYPE.mwak:
+    case ACTION_TYPE.msak:
+    case ACTION_TYPE.rwak:
+    case ACTION_TYPE.rsak: {
+      actionType = ENVIROMENT_TYPE.ATTACK;
+      break;
+    }
+    case ACTION_TYPE.abil: {
+      actionType = ENVIROMENT_TYPE.ABILITY;
+      break;
+    }
+    case ACTION_TYPE.save: {
+      actionType = ENVIROMENT_TYPE.SAVE;
+      break;
+    }
+    case ACTION_TYPE.heal: {
+      actionType = ENVIROMENT_TYPE.ATTACK;
+      break;
+    }
+    case ACTION_TYPE.util: {
+      actionType = ENVIROMENT_TYPE.OTHER;
+      break;
+    }
+    case ACTION_TYPE.other: {
+      actionType = ENVIROMENT_TYPE.OTHER;
+      break;
+    }
+    default: {
+      actionType = ENVIROMENT_TYPE.OTHER;
+      break;
+    }
+  }
+  return actionType;
+}
