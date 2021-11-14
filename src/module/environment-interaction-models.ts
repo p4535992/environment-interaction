@@ -1,12 +1,27 @@
 export const ENVIROMENT_TYPE = {
+  // From DnD5e system
   SAVE: 'save',
   ABILITY: 'ability',
-  DAMAGE: 'damage',
+  // DAMAGE: 'damage',
   ATTACK: 'attack',
-  OTHER: 'other',
+  UTILITY: 'utility',
+};
+
+export const MACRO_TYPE = {
+  ABILITY: 'ability',
+  SKILL: 'skill',
+  ABILITY_SAVE: 'abilitySave',
+  ABILITY_CHECK: 'abilityCheck',
+  ITEM: 'item',
+  SPELL: 'spell',
+  FEAT: 'feat',
+  UTILITY: 'utility',
+  EFFECT: 'effect',
+  CONDITION: 'condition',
 };
 
 export const ACTION_TYPE = {
+  // From DnD5e system
   mwak: 'mwak', //Melee Weapon Attack
   rwak: 'rwak', //Ranged Weapon Attack
   msak: 'msak', //Melee Spell Attack

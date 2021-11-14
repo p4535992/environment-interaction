@@ -1,4 +1,5 @@
 import { i18n } from '../environment-interaction-main';
+import { RollHandler } from '../lib/tokenActionHUD/RollHandler';
 import { MonksTokenBarAPI } from './../lib/tokenbarapi/MonksTokenBarAPI';
 
 export const moduleName = 'environment-interaction';
@@ -37,6 +38,11 @@ export function getGame(): Game {
 export function getMonkTokenBarAPI(): MonksTokenBarAPI {
   //@ts-ignore
   return getGame().MonksTokenBar;
+}
+
+export function getTokenActionHUDRollHandler(): RollHandler {
+  //@ts-ignore
+  return getGame().tokenActionHUD.systemManager.getRollHandler();
 }
 
 export const registerSettings = function () {

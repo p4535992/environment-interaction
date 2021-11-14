@@ -33,6 +33,8 @@ export class MonkTokenBarRollOptions {
   fastForward = false;
   dc = NaN;
   request: string;
+  requestoptions = undefined; // { id: "skill", text: "MonksTokenBar.Skill", groups: this.config.skills }
+  hidenpcname = false;
 }
 
 // export class MonkTokenBarRequest{

@@ -10,6 +10,10 @@ export const readyHooks = async () => {
     // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
     const checkout = msgtokenRoll.total;
   });
+
+  Hooks.callAll("forceUpdateTokenActionHUD", (args) => {
+    const checkout = args;
+  });
 };
 
 export const initHooks = async () => {

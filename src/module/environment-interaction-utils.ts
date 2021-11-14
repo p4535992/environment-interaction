@@ -110,7 +110,7 @@ export const getActorByUuid = async function (uuid) {
   return actor;
 };
 
-export const converToEnviromentType = function(action:string):string{
+export const converToEnviromentType = function (action: string): string {
   let actionType;
   switch (action) {
     case ACTION_TYPE.mwak:
@@ -133,17 +133,17 @@ export const converToEnviromentType = function(action:string):string{
       break;
     }
     case ACTION_TYPE.util: {
-      actionType = ENVIROMENT_TYPE.OTHER;
+      actionType = ENVIROMENT_TYPE.UTILITY;
       break;
     }
     case ACTION_TYPE.other: {
-      actionType = ENVIROMENT_TYPE.OTHER;
+      actionType = ENVIROMENT_TYPE.UTILITY;
       break;
     }
     default: {
-      actionType = ENVIROMENT_TYPE.OTHER;
+      actionType = ENVIROMENT_TYPE.UTILITY;
       break;
     }
   }
   return actionType;
-}
+};

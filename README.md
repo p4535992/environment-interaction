@@ -5,11 +5,15 @@
 
 # Environment Interaction
 
-## THIS IS NOT A OFFICIAL MODULE, I'm just learning how to write code for Foundry VTT.
+## Note: This is more a experiment than a really developing... I'm just learning how to write code for Foundry VTT.
 
 Environment Interaction allows GM users to create "environment tokens" that characters can interact with. These interactions can include weapon attacks, skill checks and saves, and even executing macros.
 
-**Note: This is module is inspired from the  wonderful work done by [jessev14](https://github.com/jessev14) with its [Environment Interaction](https://github.com/jessev14/environment-interaction) module and the work done by [ironmonk88](https://github.com/ironmonk88) with [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar).
+**Note: This is module is inspired from the  wonderful work done by these developers:
+
+- [jessev14](https://github.com/jessev14) with its [Environment Interaction](https://github.com/jessev14/environment-interaction) module 
+- [ironmonk88](https://github.com/ironmonk88) with [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)  module 
+- [Drental](https://github.com/Drental) with [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
 If you want to support more modules of this kind, I invite you to go and support his patreon or kofi below the links**
 
 #### jessev14 Kofi
@@ -57,13 +61,46 @@ The type of interaction an item has depends on its item type:
 
 See [these images](./img/example-interactions) for example items.
 
-### Item Macro
+### Item Macro integration
 
 If an item on an environment token has a set Item Macro, after rolling the item to chat, the Item Macro will be executed.
 
-## System
+## Systems
 
-Environment Interaction currently only supports dnd5e, but please reach out if you'd like to help me support your system!
+The multi system is limited to the one supported from these two modules [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar) and [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
+
+| System Id | Token Action HUD | Monk's TokenBar | 
+|:---------:|:---------------:|:----------------:|
+| dnd5e | x | x |
+| dnd4ebeta | | x |
+| dungeonworld | x | | 
+| pf2e | x | x |
+| wfrp4e | x | | 
+| sfrpg | x | x | 
+| sw5e | x | x | 
+| demonlord | x | | 
+| pf1 | x | x | 
+| lancer | x | | 
+| d35e | x | x | 
+| swade | x | x | 
+| starwarsffg | x | | 
+| tormenta20 | x | x | 
+| blades-in-the-dark | x | | 
+| symbaroum | x | | 
+| od6s | x | | 
+| ose | | x |
+| alienrpg | x | | 
+| cthack | x | |
+| kamigakari | x | | 
+| tagmar | x | | 
+| tagmar_rpg | x | | 
+| ds4 | x | | 
+| coc | x | | 
+| cof | x | | 
+| coc7 | | x |
+| forbidden-lands | x | | 
+
+naturally in this module the various use cases will have to be foreseen...
 
 ## Compatibility
 
@@ -75,7 +112,7 @@ When an interaction is selected, the correponding item on the environment token'
 
 A similar method is used to handle attack and damage rolls. When attack/damage buttons are clicked, the weapon is temporarily created on the character's actor sheet and used for the attack/damage roll before being deleted. This allows the character's relevant game stats to be used for the roll.
 
-## Ironmonk Tokenbar Details of use
+## Ironmonk Tokenbar macro Details of use
 
 ### Little Reminder of the options of 'Monk Tokenbar module'
 
@@ -120,11 +157,15 @@ const interactorToken = canvas.tokens?.controlled[0];
 game.MonksTokenBar.requestRoll([interactorToken],options);
 ```
 
+## Supported systems
+
 ### System Dnd5e table reminder for player
 
 | Request Label | Description |
 |:-------------:|:------:|
 | misc:init     | Roll Initiative |
+
+### Other todo when i have time...
 
 # Build
 

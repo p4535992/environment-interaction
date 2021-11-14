@@ -1,43 +1,44 @@
-import { ACTION_TYPE, ENVIROMENT_TYPE, ITEM_TYPE, useData } from './environment-interaction-models';
+import { ACTION_TYPE, ENVIROMENT_TYPE, ITEM_TYPE, MACRO_TYPE, useData } from './environment-interaction-models';
 import { i18n } from '../environment-interaction-main.js';
 // import { libWrapper } from '../lib/shim.js';
-import { getCanvas, getGame, getMonkTokenBarAPI, moduleName } from './settings.js';
+import { getCanvas, getGame, getMonkTokenBarAPI, getTokenActionHUDRollHandler, moduleName } from './settings.js';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
-import { MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
+import { MonkTokenBarContestedRollRequest, MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
 import { data } from 'jquery';
 import { converToEnviromentType } from './environment-interaction-utils';
 
 export class EnvironmentInteraction {
   // Handlebars Helpers
   static registerHandlebarsHelpers() {
-    if (getGame().system.id == 'dnd5e') {
-      // dnd5e specific
-      Handlebars.registerHelper('ei-type', (item) => {
-        const { type } = item;
-        const actionType = <string>item.data.data.actionType;
-        let consumableLabel = 'Unknown';
-        if (actionType === ACTION_TYPE.abil) {
-          consumableLabel = i18n('DND5E.ActionAbil');
-        } else if (actionType === ACTION_TYPE.save) {
-          consumableLabel = i18n('DND5E.ActionSave');
-        } else {
-          consumableLabel = i18n(`${moduleName}.ActionSkill`);
-        }
-        const typeDict = {
-          weapon: i18n('DND5E.ItemTypeWeapon'),
-          consumable: consumableLabel,
-          loot: i18n(`${moduleName}.handlebarsHelper.Macro`),
-        };
+    // if (getGame().system.id == 'dnd5e') {
+    //   // dnd5e specific
+    //   Handlebars.registerHelper('ei-type', (item) => {
+    //     const { type } = item;
+    //     const actionType = <string>item.data.data.actionType;
+    //     let consumableLabel = 'Unknown';
+    //     if (actionType === ACTION_TYPE.abil) {
+    //       consumableLabel = i18n('DND5E.ActionAbil');
+    //     } else if (actionType === ACTION_TYPE.save) {
+    //       consumableLabel = i18n('DND5E.ActionSave');
+    //     } else {
+    //       consumableLabel = i18n(`${moduleName}.ActionSkill`);
+    //     }
+    //     const typeDict = {
+    //       weapon: i18n('DND5E.ItemTypeWeapon'),
+    //       consumable: consumableLabel,
+    //       loot: i18n(`${moduleName}.handlebarsHelper.Macro`),
+    //     };
 
-        return typeDict[type];
-      });
-    } else {
+    //     return typeDict[type];
+    //   });
+    // } else {
       // generic system
       Handlebars.registerHelper('ei-type', (item) => {
         const { type } = item;
         const actionType = <string>item.data.data.actionType;
         let consumableLabel = 'Unknown';
-        if (actionType === ACTION_TYPE.abil) {
+        // TODO to make this more... sense ???
+        if (actionType === ACTION_TYPE.abil || actionType === ACTION_TYPE.util) {
           consumableLabel = i18n(`${moduleName}.ActionAbil`);
         } else if (actionType === ACTION_TYPE.save) {
           consumableLabel = i18n(`${moduleName}.ActionSave`);
@@ -52,7 +53,7 @@ export class EnvironmentInteraction {
 
         return typeDict[type];
       });
-    }
+    // }
   }
 
   // Wrappers
@@ -174,15 +175,16 @@ export class EnvironmentInteraction {
     // TODO: dnd5e specific; create a helper function to handle different systems
     // Sort to mimic order of items on character sheet
     const items: Item[] = [];
-    const actionsType: string[] = [ITEM_TYPE.TOOL, ITEM_TYPE.WEAPON, ACTION_TYPE.abil, ACTION_TYPE.save, ITEM_TYPE.LOOT];
+    const actionsType: string[] = [ITEM_TYPE.TOOL, ITEM_TYPE.WEAPON, ACTION_TYPE.abil, ACTION_TYPE.save, ITEM_TYPE.LOOT, ITEM_TYPE.CONSUMABLE];
     for (const type of actionsType) {
       environmentToken.actor.items
         .filter((i) => {
-          if (i.type === ITEM_TYPE.CONSUMABLE) {
-            return i.data.data.actionType === type;
-          } else {
-            return i.type === type;
-          }
+          // if (i.type === ITEM_TYPE.CONSUMABLE) {
+          //   return i.data.data.actionType === type;
+          // } else {
+          //   return i.type === type;
+          // }
+          return i.type === type;
         })
         .sort((a, b) => (a.data.sort || 0) - (b.data.sort || 0))
         .forEach((i) => items.push(i));
@@ -220,7 +222,7 @@ export class EnvironmentInteraction {
         const ownedItem = <Item>ownedItemTmp;
         try {
           // REMOVED WE USE TOKENBAR  MODULE CHAT
-          
+          /*
           Hooks.once('preCreateChatMessage', (card, data, options, userID) => {
             const content = $(card.data.content);
             const actionType = converToEnviromentType(item.data.data.actionType);
@@ -245,7 +247,7 @@ export class EnvironmentInteraction {
             }
             card.data.update({ content: content.prop('outerHTML') });
           });
-          
+          */
           //@ts-ignore
           // const chatCard = await interactorToken.actor?.items?.get(<string>ownedItem.id)?.roll();
           // chatCard?.setFlag(moduleName, 'useData', {
@@ -265,13 +267,14 @@ export class EnvironmentInteraction {
           const actionType = converToEnviromentType(action);
 
           let interactorItem;
-          try{
-            if ([ENVIROMENT_TYPE.ATTACK, ENVIROMENT_TYPE.DAMAGE].includes(actionType)) {
+          try {
+            // if ([ENVIROMENT_TYPE.ATTACK, ENVIROMENT_TYPE.DAMAGE].includes(actionType)) {
+            if ([ENVIROMENT_TYPE.ATTACK].includes(actionType)) {
               [interactorItem] = <Item[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [ownedItem.toObject()]);
             }
-            Hooks.once('renderDialog', (dialog, html, dialogData) => {
-              dialog.setPosition({ top: event.clientY - 50 ?? null, left: window.innerWidth - 710 });
-            });
+            // Hooks.once('renderDialog', (dialog, html, dialogData) => {
+            //   dialog.setPosition({ top: event.clientY - 50 ?? null, left: window.innerWidth - 710 });
+            // });
             // Integration with item macro
             //@ts-ignore
             if (ownedItem.data.flags.itemacro?.macro && getGame().modules.get('itemacro')?.active) {
@@ -289,6 +292,8 @@ export class EnvironmentInteraction {
               switch (actionType) {
                 // may need to update certain item properties like proficiency/equipped
                 case ENVIROMENT_TYPE.ATTACK: {
+                  // Is managed from the system with manual intervetion
+                  /*
                   let prof: any = null;
                   if (getGame().settings.get(moduleName, 'autoProficiency')) {
                     prof = true;
@@ -304,14 +309,21 @@ export class EnvironmentInteraction {
                   } else {
                     await interactorItem.update({ proficiency: prof });
                   }
-
-                  await interactorItem.rollAttack({ event });
+                  */
+                  // await interactorItem.rollAttack({ event });
+                  // Macro type depends for now on the system used
+                  const macroType = MACRO_TYPE.ITEM;
+                  const tokenId = interactorToken.id;
+                  const actionId = interactorItem.id;
+                  const payload = macroType + '|' + tokenId + '|' + actionId;
+                  //@ts-ignore
+                  await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
                   break;
                 }
-                case ENVIROMENT_TYPE.DAMAGE: {
-                  await interactorItem.rollDamage({ critical: event.altKey, event });
-                  break;
-                }
+                // case ENVIROMENT_TYPE.DAMAGE: {
+                //   await interactorItem.rollDamage({ critical: event.altKey, event });
+                //   break;
+                // }
                 case ENVIROMENT_TYPE.ABILITY: {
                   //const ability = environmentItem.data.data.ability;
                   //interactor.rollAbilityTest(ability);
@@ -327,7 +339,8 @@ export class EnvironmentInteraction {
                   }
                   break;
                 }
-                case ENVIROMENT_TYPE.SAVE: {
+                case ENVIROMENT_TYPE.SAVE: 
+                case ENVIROMENT_TYPE.UTILITY: {
                   //const save = environmentItem.data.data.save.ability;
                   //interactor.rollAbilitySave(save);
                   const options = new MonkTokenBarRollOptions();
@@ -336,7 +349,28 @@ export class EnvironmentInteraction {
                   //@ts-ignore
                   options.request = ownedItem.data.data.source;
                   if (options.request.includes(':')) {
-                    getMonkTokenBarAPI().requestRoll([interactorToken], options);
+                    if(options.request.includes('|')){
+
+                      const [req0, req1] = options.request.split('|');
+
+                      // Is a contested roll
+                      const request1 = new MonkTokenBarContestedRollRequest();
+                      request1.token= environmentToken;
+                      //@ts-ignore
+                      request1.request = req1;//'save:'+ environmentItem.data.data.save.ability;
+
+                      const request0 = new MonkTokenBarContestedRollRequest();
+                      request0.token= interactorToken;
+                      //@ts-ignore
+                      request0.request = req0;//'save:'+ interactorItem.data.data.save.ability;
+                      //@ts-igno
+                      // options.dc = environmentItem.data.data.save.dc;
+                      //@ts-ignore
+                      options.request = undefined;
+                      getMonkTokenBarAPI().requestContestedRoll(request1, request0, options);
+                    }else{
+                      getMonkTokenBarAPI().requestRoll([interactorToken], options);
+                    }
                   } else {
                     ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                   }
@@ -344,7 +378,7 @@ export class EnvironmentInteraction {
                 }
               }
             }
-          }finally{
+          } finally {
             if (interactorItem) {
               await interactorToken.actor?.deleteEmbeddedDocuments('Item', [interactorItem.id]);
             }
