@@ -3,6 +3,7 @@ import { i18n } from '../environment-interaction-main.js';
 // import { libWrapper } from '../lib/shim.js';
 import { getCanvas, getGame, getMonkTokenBarAPI, moduleName } from './settings.js';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
+import { MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
 
 export class EnvironmentInteraction {
   // Handlebars Helpers
@@ -49,7 +50,7 @@ export class EnvironmentInteraction {
     // dnd5e handling of chat message buttons
     if (getGame().system.id === 'dnd5e') {
       //@ts-ignore
-      libWrapper.register(moduleName, 'CONFIG.Item.documentClass._onChatCardAction', getGame().EnvironmentInteraction._onChatCardAction, 'MIXED');
+      // libWrapper.register(moduleName, 'CONFIG.Item.documentClass._onChatCardAction', getGame().EnvironmentInteraction._onChatCardAction, 'MIXED');
     }
   }
 
@@ -80,82 +81,83 @@ export class EnvironmentInteraction {
     }
   }
 
-  static async _onChatCardAction(wrapped, event) {
-    const button = event.currentTarget;
-    const chatMessageID = <string>$(button).closest(`li.chat-message`).data('message-id');
-    const chatMessage = <ChatMessage>getGame().messages?.get(chatMessageID);
-    const useData = <useData>chatMessage.getFlag(moduleName, 'useData');
+  // static async _onChatCardAction(wrapped, event) {
+  //   const button = event.currentTarget;
+  //   const chatMessageID = <string>$(button).closest(`li.chat-message`).data('message-id');
+  //   const chatMessage = <ChatMessage>getGame().messages?.get(chatMessageID);
+  //   const useData = <useData>chatMessage.getFlag(moduleName, 'useData');
 
-    if (!useData) {
-      return wrapped(event);
-    }
-    const { itemID, environmentTokenID, interactorTokenID } = useData;
-    const environment = <Actor>getCanvas().tokens?.get(environmentTokenID)?.actor;
-    const interactor = <Actor>getCanvas().tokens?.get(interactorTokenID)?.actor;
-    const environmentItem = <Item>environment.items.get(itemID);
+  //   if (!useData) {
+  //     return wrapped(event);
+  //   }
+  //   const { itemID, environmentTokenID, interactorTokenID } = useData;
+  //   const environment = <Actor>getCanvas().tokens?.get(environmentTokenID)?.actor;
+  //   const interactor = <Actor>getCanvas().tokens?.get(interactorTokenID)?.actor;
+  //   const environmentItem = <Item>environment.items.get(itemID);
 
-    const action = $(button).data('action');
-    let interactorItem;
+  //   const action = $(button).data('action');
+  //   let interactorItem;
 
-    if ([ENVIROMENT_TYPE.ATTACK, ENVIROMENT_TYPE.DAMAGE].includes(action)) {
-      [interactorItem] = <Item[]>await interactor.createEmbeddedDocuments('Item', [environmentItem.toObject()]);
-    }
-    if ([ENVIROMENT_TYPE.ABILITY, ENVIROMENT_TYPE.SAVE].includes(action)) {
-      Hooks.once('renderDialog', (dialog, html, dialogData) => {
-        dialog.setPosition({ top: event.clientY - 50 ?? null, left: window.innerWidth - 710 });
-      });
-    }
+  //   if ([ENVIROMENT_TYPE.ATTACK, ENVIROMENT_TYPE.DAMAGE].includes(action)) {
+  //     [interactorItem] = <Item[]>await interactor.createEmbeddedDocuments('Item', [environmentItem.toObject()]);
+  //   }
+  //   if ([ENVIROMENT_TYPE.ABILITY, ENVIROMENT_TYPE.SAVE].includes(action)) {
+  //     Hooks.once('renderDialog', (dialog, html, dialogData) => {
+  //       dialog.setPosition({ top: event.clientY - 50 ?? null, left: window.innerWidth - 710 });
+  //     });
+  //   }
 
-    switch (action) {
-      // may need to update certain item properties like proficiency/equipped
-      case ENVIROMENT_TYPE.ATTACK: {
-        let prof: any = null;
-        if (getGame().settings.get(moduleName, 'autoProficiency')) {
-          prof = true;
-        } else {
-          prof = <boolean>await Dialog.confirm({
-            title: i18n(`${moduleName}.Proficiency`),
-            content: i18n(`${moduleName}.autoProficiency.content`),
-            options: { top: event.clientY ?? null, left: window.innerWidth - 560, width: 250 },
-          });
-        }
-        if (prof === null) {
-          return interactor.deleteEmbeddedDocuments('Item', [interactorItem.id]);
-        } else {
-          await interactorItem.update({ proficiency: prof });
-        }
+  //   switch (action) {
+  //     // may need to update certain item properties like proficiency/equipped
+  //     case ENVIROMENT_TYPE.ATTACK: {
+  //       let prof: any = null;
+  //       if (getGame().settings.get(moduleName, 'autoProficiency')) {
+  //         prof = true;
+  //       } else {
+  //         prof = <boolean>await Dialog.confirm({
+  //           title: i18n(`${moduleName}.Proficiency`),
+  //           content: i18n(`${moduleName}.autoProficiency.content`),
+  //           options: { top: event.clientY ?? null, left: window.innerWidth - 560, width: 250 },
+  //         });
+  //       }
+  //       if (prof === null) {
+  //         return interactor.deleteEmbeddedDocuments('Item', [interactorItem.id]);
+  //       } else {
+  //         await interactorItem.update({ proficiency: prof });
+  //       }
 
-        await interactorItem.rollAttack({ event });
-        break;
-      }
-      case ENVIROMENT_TYPE.DAMAGE: {
-        await interactorItem.rollDamage({ critical: event.altKey, event });
-        break;
-      }
-      case ENVIROMENT_TYPE.ABILITY: {
-        //const ability = environmentItem.data.data.ability;
-        //interactor.rollAbilityTest(ability);
-        getMonkTokenBarAPI().requestRoll([interactorTokenID]);
-        break;
-      }
-      case ENVIROMENT_TYPE.SAVE: {
-        //const save = environmentItem.data.data.save.ability;
-        //interactor.rollAbilitySave(save);
-        getMonkTokenBarAPI().requestRoll([interactorTokenID]);
-        // getMonkTokenBarAPI().requestContestedRoll([interactorTokenID]);
-        break;
-      }
-    }
+  //       await interactorItem.rollAttack({ event });
+  //       break;
+  //     }
+  //     case ENVIROMENT_TYPE.DAMAGE: {
+  //       await interactorItem.rollDamage({ critical: event.altKey, event });
+  //       break;
+  //     }
+  //     case ENVIROMENT_TYPE.ABILITY: {
+  //       //const ability = environmentItem.data.data.ability;
+  //       //interactor.rollAbilityTest(ability);
+  //       getMonkTokenBarAPI().requestRoll([interactorTokenID]);
+  //       break;
+  //     }
+  //     case ENVIROMENT_TYPE.SAVE: {
+  //       //const save = environmentItem.data.data.save.ability;
+  //       //interactor.rollAbilitySave(save);
+  //       getMonkTokenBarAPI().requestRoll([interactorTokenID]);
+  //       // getMonkTokenBarAPI().requestContestedRoll([interactorTokenID]);
+  //       break;
+  //     }
+  //   }
 
-    if (interactorItem) await interactor.deleteEmbeddedDocuments('Item', [interactorItem.id]);
-  }
+  //   if (interactorItem) await interactor.deleteEmbeddedDocuments('Item', [interactorItem.id]);
+  // }
 
   // Environment Interaction
   static async interactWithEnvironment(environmentToken, event) {
     // TODO: dnd5e specific; create a helper function to handle different systems
     // Sort to mimic order of items on character sheet
     const items: Item[] = [];
-    for (const type of [ITEM_TYPE.WEAPON, ACTION_TYPE.abil, ACTION_TYPE.save, ITEM_TYPE.LOOT]) {
+    const actionsType:string[] = [ITEM_TYPE.TOOL, ITEM_TYPE.WEAPON, ACTION_TYPE.abil, ACTION_TYPE.save, ITEM_TYPE.LOOT]
+    for (const type of actionsType) {
       environmentToken.actor.items
         .filter((i) => {
           if (i.type === ITEM_TYPE.CONSUMABLE) {
@@ -188,7 +190,9 @@ export class EnvironmentInteraction {
         }
         const itemID = event.currentTarget.id;
         const item = environmentToken.actor.items.get(itemID);
-        const [ownedItem] = <Document<any, Actor>[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [item.toObject()]);
+        const [ownedItemTmp] = <Document<any, Actor>[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [item.toObject()]);
+        const ownedItem = <Item>ownedItemTmp;
+
 
         // TODO Transfer to hooks file
 
@@ -211,30 +215,43 @@ export class EnvironmentInteraction {
         });
 
         //@ts-ignore
-        const chatCard = await interactorToken.actor?.items?.get(<string>ownedItem.id)?.roll();
-        chatCard?.setFlag(moduleName, 'useData', {
-          itemID,
-          environmentTokenID: environmentToken.id,
-          interactorTokenID: interactorToken.id,
-        });
+        // const chatCard = await interactorToken.actor?.items?.get(<string>ownedItem.id)?.roll();
+        // chatCard?.setFlag(moduleName, 'useData', {
+        //   itemID,
+        //   environmentTokenID: environmentToken.id,
+        //   interactorTokenID: interactorToken.id,
+        // });
+        // // Integration with item macro
+        // //@ts-ignore
+        // if (ownedItem.data.flags.itemacro?.macro && getGame().modules.get('itemacro')?.active) {
+        //   //@ts-ignore
+        //   ownedItem.executeMacro();
+        // }
+        // await interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>ownedItem.id]);
+
+        // if (getGame().settings.get(moduleName, 'closeDialog')) {
+        //   const appID = html.closest(`div.app`).data('appid');
+        //   ui.windows[appID].close();
+        // }
 
         // Integration with item macro
+        //@ts-ignore
         if (ownedItem.data.flags.itemacro?.macro && getGame().modules.get('itemacro')?.active) {
+          if (item.type === ITEM_TYPE.LOOT) {
+            const macroName = item.data.data.source;
+            const macro = <Macro>(<Macros>getGame().macros).getName(macroName);
+  
+            macro.execute({ actor: <Actor>interactorToken.actor, token: interactorToken });
+          }else{
+            //@ts-ignore
+            ownedItem.executeMacro();
+          }
+        }else{
+          const options = new MonkTokenBarRollOptions();
+          options.fastForward = true;
           //@ts-ignore
-          ownedItem.executeMacro();
-        }
-        await interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>ownedItem.id]);
-
-        if (getGame().settings.get(moduleName, 'closeDialog')) {
-          const appID = html.closest(`div.app`).data('appid');
-          ui.windows[appID].close();
-        }
-
-        if (item.type === ITEM_TYPE.LOOT) {
-          const macroName = item.data.data.source;
-          const macro = <Macro>(<Macros>getGame().macros).getName(macroName);
-
-          macro.execute({ actor: <Actor>interactorToken.actor, token: interactorToken });
+          options.request = ownedItem.data.data.source;
+          getMonkTokenBarAPI().requestRoll([interactorToken], options);
         }
       });
     };

@@ -75,6 +75,47 @@ When an interaction is selected, the correponding item on the environment token'
 
 A similar method is used to handle attack and damage rolls. When attack/damage buttons are clicked, the weapon is temporarily created on the character's actor sheet and used for the attack/damage roll before being deleted. This allows the character's relevant game stats to be used for the roll.
 
+## Ironmonk Tokenbar Details of use
+
+### Little Reminder of the options of 'Monk Tokenbar module'
+
+| Request Label | Request Type | Description |
+|:-------------:|:------:|:------:|
+| rollmode | string | Type of roll [roll = Public Roll, gmroll = Private GM Roll, blindroll = Blind GM Roll, selfroll = Self Roll, = Self Roll |
+| silent | boolean | avoid the dialog popup, but you must have been set a request string |
+| fastForward | boolean | the roll is automatic rolled without interaction of the player on the chat |
+| dc | number | the explicit dc you want for the roll |
+| request | string | the string compose from two string 'requestype':'request' e.g. misc:init |
+
+
+Full options example for MonTokenBar :
+
+```
+{rollmode : 'roll', silent : true, fastForward: true, dc: 13, request: misc:init}
+```
+
+Full example for Item Macro module :
+
+``` 
+const options = {rollmode : 'roll', silent : true, fastForward: true, dc: 13, request: 'misc:init'};
+const interactorToken = canvas.tokens?.controlled[0];
+game.MonksTokenBar.requestRoll([interactorToken],options);
+```
+
+other example but when you want the rol on the current token
+
+``` 
+const options = {rollmode : 'roll', silent : true, fastForward: true, dc: 13, request: 'misc:init'};
+const interactorToken = args[0];
+game.MonksTokenBar.requestRoll([interactorToken],options);
+```
+
+### System Dnd5e table reminder for player
+
+| Request Label | Description |
+|:-------------:|:------:|
+| misc:init     | Roll Initiative |
+
 # Build
 
 ## Install all packages
