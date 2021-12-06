@@ -48,6 +48,6 @@ export class MonkTokenBarRollOptions {
 // }
 
 export class MonkTokenBarContestedRollRequest {
-  token: Token;
+  token: Token|string;
   request: string;
 }
