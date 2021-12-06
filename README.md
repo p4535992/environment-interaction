@@ -56,16 +56,16 @@ To move an environment token, first select it by drag-selection.
 
 Interactions are automatically generated from the items on the environment token's actor sheet.
 
-### Interaction Types
+~~### Interaction Types~~
 
-The type of interaction an item has depends on its item type:
-* Weapon: Function as if the character had the item on its own actor sheet.
-* Consumable:
-  - If the item action type is set to "Ability Check," a chat card will be created allowing the character to perform the corresponding check, based on the ability select drop-down.
-  - If the item action type is set to "Saving Throw," the chat card will allow the character to perform the corresponding saving throw, based on the saving throw select drop-down.
-* Loot: Loot-type items allow the character to execute a macro. To set the macro to be executed, enter the macro's name (exactly) into the "source" input of the item.
+~~The type of interaction an item has depends on its item type:~~
+~~* Weapon: Function as if the character had the item on its own actor sheet.~~
+~~* Consumable:~~
+  ~~- If the item action type is set to "Ability Check," a chat card will be created allowing the character to perform the corresponding check, based on the ability select drop-down.~~
+  ~~- If the item action type is set to "Saving Throw," the chat card will allow the character to perform the corresponding saving throw, based on the saving throw select drop-down.~~
+~~* Loot: Loot-type items allow the character to execute a macro. To set the macro to be executed, enter the macro's name (exactly) into the "source" input of the item.~~
 
-See [these images](./img/example-interactions) for example items.
+~~See [these images](./img/example-interactions) for example items.~~
 
 ## Supported systems
 
@@ -74,6 +74,7 @@ The multi system is limited to the one supported from these modules:
 - [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)
 - [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
 - [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy)
+- [Item Macro](https://github.com/Kekilla0/Item-Macro)
 
 by default is "Monk's TokenBar" is present and active and support the  current system is used first else we try with "Token Action HUD", the module "Let Me Roll That For You!" is a special case where you want to display the dialog to the user instead make everything on background.
 
@@ -112,14 +113,13 @@ by default is "Monk's TokenBar" is present and active and support the  current s
 
 naturally in this module the various use cases will have to be foreseen...
 
-### IMPORTANT : There is a limitation for make this module the more generic possible the element i use for parsing the string request is `ownedItem.data.data.source` 
+### IMPORTANT : There is a limitation for make this module the more generic possible the element i use for parsing the string request is `item.data.data.source` 
 
 ## Technical Notes
 
 When an interaction is selected, the correponding item on the environment token's actor sheet is created on the character's actor sheet. After rolling the item to chat, the item is deleted from the character's actor sheet. In this way, the character's actor sheet is the same before and after the interaction.
 
 A similar method is used to handle attack and damage rolls. When attack/damage buttons are clicked, the weapon is temporarily created on the character's actor sheet and used for the attack/damage roll before being deleted. This allows the character's relevant game stats to be used for the roll.
-
 
 ## Item Macro integration
 
@@ -128,21 +128,25 @@ If a item is set with a item macro will be fired before check for any ironmonk t
 
 ## Ironmonk Token bar integration
 
-for pass a label information to the iron monk tokne bar use the 'Source' label for set
+for pass a label information to the iron monk token bar use the `item.data.data.source` label of the item sheet.
+
+`<Request Label>=<Macro Name Target>`
 
 ![e](./img/example_ironmonk_tokenbar.png)
+
+### System Dnd5e examples
 
 | Request Label (to put on the item.data.data.source label) | Description | Condition |
 |:------------------:|:------------------------:|:-----------------------------------:|
 | misc:init          | Roll Initiative          | Need to select a token              |
-| save:dex|save:dex  | Contested Save Dexterity | Need to select a token            |
+| save:dex\|save:dex | Contested Save Dexterity | Need to select a token              |
 | ability:str        | Ability Strength         | Need to select a token              |
 
 ### Other todo when i have time...
 
 #### Little Reminder of the options of 'Monk Tokenbar module'
 
-| Request Label | Request Type | Description |
+| Request Element | Request Type | Description |
 |:-------------:|:------:|:------:|
 | request | string | the string compose from two string 'requestype':'request' e.g. misc:init |
 | dc | number | the explicit dc you want for the roll |
@@ -150,7 +154,6 @@ for pass a label information to the iron monk tokne bar use the 'Source' label f
 | fastForward | boolean | MAKE SENSE ONLY WITH "silent=true" the roll is automatic rolled without interaction of the player on the chat |
 | flavor | string | the test to show for the roll
 | rollmode | string | Type of roll [roll = Public Roll, gmroll = Private GM Roll, blindroll = Blind GM Roll, selfroll = Self Roll, = Self Roll |
-
 
 Full options example for MonTokenBar :
 
@@ -188,7 +191,32 @@ game.MonksTokenBar.requestRoll([interactorToken],options);
 
 ## Token Action HUD integration
 
+for pass a label information to the iron monk token bar use the `item.data.data.source` label of the item sheet.
+
+`macroType|tokenId|actionId=<Macro Name Target>`
+
+**NOTE: tokenId = "multi" make start the action for all the selected tokens.**
+
+### System Dnd5e examples
+
+| Macro Type |
+|:----------:|
+| ability |
+| skill |
+| abilitySave |
+| abilityCheck |
+| item |
+| spell |
+| feat |
+| utility |
+| effect |
+| condition |
+
 ## Let me roll that for you integration
+
+for pass a label information to the iron monk token bar use the `item.data.data.source` label of the item sheet.
+
+`macroType|tokenId|actionId=<Macro Name Target>`
 
 # Build
 

@@ -1,4 +1,4 @@
-import { ACTION_TYPE, ENVIROMENT_TYPE, ITEM_TYPE, MACRO_TYPE, useData } from './environment-interaction-models';
+import { ACTION_TYPE, ENVIROMENT_TYPE, Flags, ITEM_TYPE, MACRO_TYPE, useData } from './environment-interaction-models';
 import { i18n } from '../environment-interaction-main.js';
 // import { libWrapper } from '../lib/shim.js';
 import {
@@ -19,6 +19,7 @@ import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundr
 import { MonkTokenBarContestedRollRequest, MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
 import { data } from 'jquery';
 import { converToEnviromentType } from './environment-interaction-utils';
+import { ContestedRoll } from '../lib/tokenbarapi/ContestedRoll';
 
 export class EnvironmentInteraction {
   // Handlebars Helpers
@@ -61,7 +62,7 @@ export class EnvironmentInteraction {
   static _canView(wrapped, ...args) {
     const token = <Token>(<unknown>this);
     // If token is an environment token, then any use can "view" (allow _clickLeft2 callback)
-    if (token.document.getFlag(moduleName, 'environmentToken')) {
+    if (token.document.getFlag(moduleName, Flags.environmentToken)) {
       return true;
     } else {
       return wrapped(...args);
@@ -71,14 +72,14 @@ export class EnvironmentInteraction {
   static _onClickLeft(wrapped, event) {
     const token = <Token>(<unknown>this);
     // Prevent deselection of currently controlled token when clicking environment token
-    if (!token.document.getFlag(moduleName, 'environmentToken')) {
+    if (!token.document.getFlag(moduleName, Flags.environmentToken)) {
       return wrapped(event);
     }
   }
 
   static _onClickLeft2(wrapped, event) {
     const token = <Token>(<unknown>this);
-    if (!token.document.getFlag(moduleName, 'environmentToken')) {
+    if (!token.document.getFlag(moduleName, Flags.environmentToken)) {
       return wrapped(event);
     } else {
       EnvironmentInteraction.interactWithEnvironment(token, event);
@@ -188,6 +189,9 @@ export class EnvironmentInteraction {
                     const payload = macroType + '|' + tokenId + '|' + actionId;
                     //@ts-ignore
                     await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
+                    Hooks.on('forceUpdateTokenActionHUD', (args) => {
+                      const checkout = args;
+                    });
                   } else {
                     ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
                     throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
@@ -217,6 +221,10 @@ export class EnvironmentInteraction {
                     options.request = macroType;
                     if (options.request.includes(':')) {
                       getMonkTokenBarAPI().requestRoll([interactorToken], options);
+                      Hooks.on('tokenBarUpdateRoll', (tokenBarApp: Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
+                        // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
+                        const checkout = msgtokenRoll.total;
+                      });
                     } else {
                       ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                     }
@@ -231,6 +239,9 @@ export class EnvironmentInteraction {
                     const payload = macroType + '|' + tokenId + '|' + actionId;
                     //@ts-ignore
                     await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
+                    Hooks.on('forceUpdateTokenActionHUD', (args) => {
+                      const checkout = args;
+                    });
                   } else {
                     ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
                     throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
@@ -270,10 +281,17 @@ export class EnvironmentInteraction {
                         // options.dc = environmentItem.data.data.save.dc;
                         //@ts-ignore
                         options.request = undefined;
+                        // eslint-disable-next-line @typescript-eslint/no-array-constructor
+                        options.requestoptions.push({id:'save',text:req0.split(":")[1],groups:[]});
+                        options.requestoptions.push({id:'save',text:req1.split(":")[1],groups:[]});
                         getMonkTokenBarAPI().requestContestedRoll(request1, request0, options);
                       } else {
                         getMonkTokenBarAPI().requestRoll([interactorToken], options);
                       }
+                      Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll|Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
+                        // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
+                        const checkout = msgtokenRoll.total;
+                      });                    
                     } else {
                       ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                     }
@@ -288,6 +306,9 @@ export class EnvironmentInteraction {
                     const payload = macroType + '|' + tokenId + '|' + actionId;
                     //@ts-ignore
                     await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
+                    Hooks.on('forceUpdateTokenActionHUD', (args) => {
+                      const checkout = args;
+                    });                
                   } else {
                     ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
                     throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
@@ -334,11 +355,11 @@ export class EnvironmentInteraction {
       if (!getGame().user?.isGM) {
         return;
       }
-      const checked = app.object.getFlag(moduleName, 'environmentToken') ? 'checked' : '';
+      const checked = app.object.getFlag(moduleName, Flags.environmentToken) ? 'checked' : '';
       const snippet = `
                 <div class="form-group">
                     <label>${i18n(`${moduleName}.tokenConfig.label`)}</label>
-                    <input type="checkbox" name="flags.${moduleName}.environmentToken" data-dtype="Boolean" ${checked} />
+                    <input type="checkbox" name="flags.${moduleName}.${Flags.environmentToken}" data-dtype="Boolean" ${checked} />
                 </div>
             `;
       html.find(`div[data-tab="character"]`).append(snippet);

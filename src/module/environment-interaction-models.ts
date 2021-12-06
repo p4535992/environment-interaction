@@ -45,3 +45,7 @@ export class useData {
   environmentTokenID: string;
   interactorTokenID: string;
 }
+
+export const Flags = {
+  environmentToken : 'environmentToken'
+}

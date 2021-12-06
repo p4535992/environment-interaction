@@ -6,14 +6,14 @@ export const readyHooks = async () => {
   // @ts-ignore
   getGame().EnvironmentInteraction.registerHooks();
 
-  Hooks.on('tokenBarUpdateRoll', (tokenBarApp: any, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
-    // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
-    const checkout = msgtokenRoll.total;
-  });
+  // Hooks.on('tokenBarUpdateRoll', (tokenBarApp: any, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
+  //   // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
+  //   const checkout = msgtokenRoll.total;
+  // });
 
-  Hooks.callAll('forceUpdateTokenActionHUD', (args) => {
-    const checkout = args;
-  });
+  // Hooks.on('forceUpdateTokenActionHUD', (args) => {
+  //   const checkout = args;
+  // });
 };
 
 export const initHooks = async () => {
