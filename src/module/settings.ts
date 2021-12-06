@@ -1,8 +1,11 @@
 import { i18n } from '../environment-interaction-main';
 import { RollHandler } from '../lib/tokenActionHUD/RollHandler';
 import { MonksTokenBarAPI } from './../lib/tokenbarapi/MonksTokenBarAPI';
+import { ENVIROMENT_TYPE } from './environment-interaction-models';
 
 export const moduleName = 'environment-interaction';
+
+export const ENVIROMENT_INTERACTION_ITEM_MACRO_MODULE_NAME = 'itemacro';
 
 /**
  * Because typescript doesn't know when in the lifecycle of foundry your code runs, we have to assume that the
@@ -87,6 +90,18 @@ const systemsLmrtfySupported = ['dnd5ejp', 'dnd5e', 'sw5e', 'pf1', 'pf2e', 'd35e
 
 export function isSystemLmrtfySupported() {
   return systemsLmrtfySupported.includes(getGame()?.system.id.toLowerCase());
+}
+
+const systemsItemMacroSupported = [
+  'dnd5e', 'sfrpg', 'swade', 'dungeonworld', 'ose', 'demonlord', 'cyberpunk-red-core'
+];
+
+export function isSystemItemMacroSupported() {
+  return systemsItemMacroSupported.includes(getGame()?.system.id.toLowerCase());
+}
+
+export function isItemMacroModuleActive(){
+  return <boolean>getGame().modules.get(ENVIROMENT_INTERACTION_ITEM_MACRO_MODULE_NAME)?.active;
 }
 
 export const registerSettings = function () {

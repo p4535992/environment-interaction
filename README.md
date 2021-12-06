@@ -18,8 +18,9 @@ Environment Interaction allows GM users to create "environment tokens" that char
 - [ironmonk88](https://github.com/ironmonk88) with [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)  module 
 - [Drental](https://github.com/Drental) with [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
 - [League-of-Foundry-Developers](https://github.com/League-of-Foundry-Developers) for the module [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy)
+- [Kekilla0](https://github.com/Kekilla0) for the module [Item Macro](https://github.com/Kekilla0/Item-Macro)
 
-**If you want to support more modules of this kind, I invite you to go and support his patreon or kofi below the links**
+**If you want to support more modules of this kind, I invite you to go and support their patreons or kofis account below the links (sorry if i miss someone)**
 
 #### jessev14 Kofi
 
@@ -33,7 +34,7 @@ Environment Interaction allows GM users to create "environment tokens" that char
 
 - Learn new things on foundry
 - Manage the multisystem 
-- Integration with a automatic rolls
+- Integration with a automatic rolls from other "ready to use" modules
 - Make a PR to the official master project [Environment Interaction](https://github.com/jessev14/environment-interaction)
 - Some friend request
 
@@ -80,40 +81,42 @@ The multi system is limited to the one supported from these modules:
 
 by default is "Monk's TokenBar" is present and active and support the  current system is used first else we try with "Token Action HUD", the module "Let Me Roll That For You!" is a special case where you want to display the dialog to the user instead make everything on background.
 
-
-| System Id (lowercase) | Token Action HUD | Monk's TokenBar | Let me roll that for you |
-|:---------:|:---------------:|:----------------:|:----------------:|
-| dnd5ejp | | | x |
-| dnd5e | x | x | x |
-| dnd4ebeta | | x | |
-| dungeonworld | x | |  |
-| pf2e | x | x | x |
-| wfrp4e | x | |  |
-| sfrpg | x | x |  |
-| sw5e | x | x | x |
-| demonlord | x | |  |
-| pf1 | x | x | x |
-| lancer | x | |  |
-| d35e | x | x | x |
-| swade | x | x |  |
-| starwarsffg | x | |  |
-| tormenta20 | x | x |  |
-| blades-in-the-dark | x | |  |
-| symbaroum | x | |  |
-| od6s | x | |  |
-| ose | | x | |
-| alienrpg | x | |  |
-| cthack | x | | |
-| kamigakari | x | |  |
-| tagmar | x | |  |
-| tagmar_rpg | x | |  |
-| ds4 | x | |  |
-| coc | x | | x |
-| cof | x | | x |
-| coc7 | | x | |
-| forbidden-lands | x | |  |
+| System Id (lowercase) | Token Action HUD | Monk's TokenBar | Let me roll that for you | Item Macro |
+|:---------:|:---------------:|:----------------:|:----------------:|:----------------:|
+| dnd5ejp | | | x | |
+| dnd5e | x | x | x | x |
+| dnd4ebeta | | x | | |
+| dungeonworld | x | |  | x |
+| pf2e | x | x | x | |
+| wfrp4e | x | |  | |
+| sfrpg | x | x |  | x |
+| sw5e | x | x | x | |
+| demonlord | x | |  | x |
+| pf1 | x | x | x | |
+| lancer | x | |  | |
+| d35e | x | x | x | |
+| swade | x | x |  | x |
+| starwarsffg | x | |  | |
+| tormenta20 | x | x |  | |
+| blades-in-the-dark | x | |  | |
+| symbaroum | x | |  | |
+| od6s | x | |  | |
+| ose | | x | | x |
+| alienrpg | x | |  | |
+| cthack | x | | | |
+| kamigakari | x | |  | |
+| tagmar | x | |  | |
+| tagmar_rpg | x | |  | |
+| ds4 | x | |  | |
+| coc | x | | x | |
+| cof | x | | x | |
+| coc7 | | x | | |
+| forbidden-lands | x | |  | |
+| cyberpunk-red-core | | |  | x |
 
 naturally in this module the various use cases will have to be foreseen...
+
+### IMPORTANT : There is a limitation for make this module the more generic possible the element i use for parsing the string request is `ownedItem.data.data.source` 
 
 ## Compatibility
 
@@ -270,13 +273,15 @@ Any issues, bugs, or feature requests are always welcome to be reported directly
 
 ## License
 
-- **[Environment Interaction](https://github.com/jessev14/environment-interaction)**: [MIT](https://github.com/jessev14/environment-interaction/blob/main/LICENSE)
+- **[Environment Interaction](https://github.com/jessev14/environment-interaction)** : [MIT](https://github.com/jessev14/environment-interaction/blob/main/LICENSE)
 
-- **[Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)**: [GPL-3.0 License](https://github.com/ironmonk88/monks-tokenbar/blob/main/LICENSE)
+- **[Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)** : [GPL-3.0 License](https://github.com/ironmonk88/monks-tokenbar/blob/main/LICENSE)
 
 - **[Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)** : [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/)
 
 - **[Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy)** : [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/)
+
+- **[Item Macro](https://github.com/Kekilla0/Item-Macro)** : [MIT](https://raw.githubusercontent.com/Kekilla0/Item-Macro/master/LICENSE)
 
 This package is under an [GPL-3.0 License](LICENSE) and the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/).
 
@@ -286,10 +291,8 @@ This package is under an [GPL-3.0 License](LICENSE) and the [Foundry Virtual Tab
 - [ironmonk88](https://github.com/ironmonk88) for the module [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)
 - [Drental](https://github.com/Drental) for the module [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
 - [League-of-Foundry-Developers](https://github.com/League-of-Foundry-Developers) for the module [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy)
-
+- [Kekilla0](https://github.com/Kekilla0) for the module [Item Macro](https://github.com/Kekilla0/Item-Macro)
 ## Acknowledgements
-
-Feel free to reach out on Discord (`enso#0361`) if you want to discuss any aspect of the module!
 
 Bootstrapped with League of Extraordinary FoundryVTT Developers  [foundry-vtt-types](https://github.com/League-of-Foundry-Developers/foundry-vtt-types).
 

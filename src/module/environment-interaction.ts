@@ -1,7 +1,7 @@
 import { ACTION_TYPE, ENVIROMENT_TYPE, ITEM_TYPE, MACRO_TYPE, useData } from './environment-interaction-models';
 import { i18n } from '../environment-interaction-main.js';
 // import { libWrapper } from '../lib/shim.js';
-import { getCanvas, getGame, getMonkTokenBarAPI, getTokenActionHUDRollHandler, isSystemMonkTokenBarSupported, isSystemTokenActionHUDSupported, moduleName } from './settings.js';
+import { ENVIROMENT_INTERACTION_ITEM_MACRO_MODULE_NAME, getCanvas, getGame, getMonkTokenBarAPI, getTokenActionHUDRollHandler, isSystemItemMacroSupported, isSystemMonkTokenBarSupported, isSystemTokenActionHUDSupported, moduleName } from './settings.js';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { MonkTokenBarContestedRollRequest, MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
 import { data } from 'jquery';
@@ -277,16 +277,25 @@ export class EnvironmentInteraction {
             // });
             // Integration with item macro
             //@ts-ignore
-            if (ownedItem.data.flags.itemacro?.macro && getGame().modules.get('itemacro')?.active) {
-              if (ownedItem.type === ITEM_TYPE.LOOT) {
+            if (ownedItem.data.flags.itemacro?.macro && getGame().modules.get(ENVIROMENT_INTERACTION_ITEM_MACRO_MODULE_NAME)?.active) {
+              //if (ownedItem.type === ITEM_TYPE.LOOT) {
+              //@ts-ignore
+              if(isSystemItemMacroSupported() && ownedItem.hasMacro()){
+                //@ts-ignore
+                ownedItem.executeMacro();
+              }
+              //@ts-ignore
+              else if(ownedItem.data.data.source){
                 //@ts-ignore
                 const macroName = ownedItem.data.data.source;
                 const macro = <Macro>(<Macros>getGame().macros).getName(macroName);
-
+                if(!macro){
+                  ui.notifications?.error(moduleName + ' | No macro found with name/id : ' + macroName);
+                }
                 macro.execute({ actor: <Actor>interactorToken.actor, token: interactorToken });
-              } else {
-                //@ts-ignore
-                ownedItem.executeMacro();
+              }else{
+                ui.notifications?.error(moduleName + ' | Can\'t interact with item for launch a macro');
+                throw new Error(moduleName + ' | Can\'t interact with item for launch a macro');
               }
             } else {
               switch (actionType) {
@@ -321,7 +330,8 @@ export class EnvironmentInteraction {
                     //@ts-ignore
                     await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
                   } else {
-                    throw new Error('System not supported : ' + getGame().system?.id);
+                    ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                    throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
                   }
                   break;
                 }
@@ -352,7 +362,8 @@ export class EnvironmentInteraction {
                     //@ts-ignore
                     await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
                   } else {
-                    throw new Error('System not supported : ' + getGame().system?.id);
+                    ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                    throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
                   }
                   break;
                 }
@@ -400,7 +411,8 @@ export class EnvironmentInteraction {
                     //@ts-ignore
                     await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
                   } else {
-                    throw new Error('System not supported : ' + getGame().system?.id);
+                    ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                    throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
                   }
                   break;
                 }
