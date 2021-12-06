@@ -45,6 +45,50 @@ export function getTokenActionHUDRollHandler(): RollHandler {
   return getGame().tokenActionHUD.systemManager.getRollHandler();
 }
 
+const systemsMonkTokenBarSupported = ['dnd5e', 'sw5e', 'd35e', 'dnd4ebeta', 'pf1', 'pf2e', 'tormenta20', 'sfrpg', 'ose', 'swade', 'coc7'];
+
+export function isSystemMonkTokenBarSupported() {
+  return systemsMonkTokenBarSupported.includes(getGame()?.system.id.toLowerCase());
+}
+
+const systemsTokenActionHUDSupported = [
+  'dnd5e',
+  'dungeonworld',
+  'pf2e',
+  'wfrp4e',
+  'sfrpg',
+  'sw5e',
+  'demonlord',
+  'pf1',
+  'lancer',
+  'd35e',
+  'swade',
+  'starwarsffg',
+  'tormenta20',
+  'blades-in-the-dark',
+  'symbaroum',
+  'od6s',
+  'alienrpg',
+  'cthack',
+  'kamigakari',
+  'tagmar',
+  'tagmar_rpg',
+  'ds4',
+  'coc',
+  'cof',
+  'forbidden-lands',
+];
+
+export function isSystemTokenActionHUDSupported() {
+  return systemsTokenActionHUDSupported.includes(getGame()?.system.id.toLowerCase());
+}
+
+const systemsLmrtfySupported = ['dnd5ejp', 'dnd5e', 'sw5e', 'pf1', 'pf2e', 'd35e', 'cof', 'coc'];
+
+export function isSystemLmrtfySupported() {
+  return systemsLmrtfySupported.includes(getGame()?.system.id.toLowerCase());
+}
+
 export const registerSettings = function () {
   // Automatically close interaction selection dialog
   getGame().settings.register(moduleName, 'closeDialog', {

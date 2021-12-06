@@ -1,7 +1,7 @@
 import { ACTION_TYPE, ENVIROMENT_TYPE, ITEM_TYPE, MACRO_TYPE, useData } from './environment-interaction-models';
 import { i18n } from '../environment-interaction-main.js';
 // import { libWrapper } from '../lib/shim.js';
-import { getCanvas, getGame, getMonkTokenBarAPI, getTokenActionHUDRollHandler, moduleName } from './settings.js';
+import { getCanvas, getGame, getMonkTokenBarAPI, getTokenActionHUDRollHandler, isSystemMonkTokenBarSupported, isSystemTokenActionHUDSupported, moduleName } from './settings.js';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { MonkTokenBarContestedRollRequest, MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
 import { data } from 'jquery';
@@ -32,27 +32,27 @@ export class EnvironmentInteraction {
     //     return typeDict[type];
     //   });
     // } else {
-      // generic system
-      Handlebars.registerHelper('ei-type', (item) => {
-        const { type } = item;
-        const actionType = <string>item.data.data.actionType;
-        let consumableLabel = 'Unknown';
-        // TODO to make this more... sense ???
-        if (actionType === ACTION_TYPE.abil || actionType === ACTION_TYPE.util) {
-          consumableLabel = i18n(`${moduleName}.ActionAbil`);
-        } else if (actionType === ACTION_TYPE.save) {
-          consumableLabel = i18n(`${moduleName}.ActionSave`);
-        } else {
-          consumableLabel = i18n(`${moduleName}.ActionSkill`);
-        }
-        const typeDict = {
-          weapon: i18n(`${moduleName}.ItemTypeWeapon`),
-          consumable: consumableLabel,
-          loot: i18n(`${moduleName}.handlebarsHelper.Macro`),
-        };
+    // generic system
+    Handlebars.registerHelper('ei-type', (item) => {
+      const { type } = item;
+      const actionType = <string>item.data.data.actionType;
+      let consumableLabel = 'Unknown';
+      // TODO to make this more... sense ???
+      if (actionType === ACTION_TYPE.abil || actionType === ACTION_TYPE.util) {
+        consumableLabel = i18n(`${moduleName}.ActionAbil`);
+      } else if (actionType === ACTION_TYPE.save) {
+        consumableLabel = i18n(`${moduleName}.ActionSave`);
+      } else {
+        consumableLabel = i18n(`${moduleName}.ActionSkill`);
+      }
+      const typeDict = {
+        weapon: i18n(`${moduleName}.ItemTypeWeapon`),
+        consumable: consumableLabel,
+        loot: i18n(`${moduleName}.handlebarsHelper.Macro`),
+      };
 
-        return typeDict[type];
-      });
+      return typeDict[type];
+    });
     // }
   }
 
@@ -312,12 +312,17 @@ export class EnvironmentInteraction {
                   */
                   // await interactorItem.rollAttack({ event });
                   // Macro type depends for now on the system used
-                  const macroType = MACRO_TYPE.ITEM;
-                  const tokenId = interactorToken.id;
-                  const actionId = interactorItem.id;
-                  const payload = macroType + '|' + tokenId + '|' + actionId;
-                  //@ts-ignore
-                  await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
+                  if (isSystemTokenActionHUDSupported()) {
+                    //@ts-ignore
+                    const macroType = ownedItem.data.data.source ?? MACRO_TYPE.ITEM;
+                    const tokenId = interactorToken.id;
+                    const actionId = interactorItem.id;
+                    const payload = macroType + '|' + tokenId + '|' + actionId;
+                    //@ts-ignore
+                    await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
+                  } else {
+                    throw new Error('System not supported : ' + getGame().system?.id);
+                  }
                   break;
                 }
                 // case ENVIROMENT_TYPE.DAMAGE: {
@@ -325,54 +330,77 @@ export class EnvironmentInteraction {
                 //   break;
                 // }
                 case ENVIROMENT_TYPE.ABILITY: {
-                  //const ability = environmentItem.data.data.ability;
-                  //interactor.rollAbilityTest(ability);
-                  const options = new MonkTokenBarRollOptions();
-                  options.silent = true;
-                  options.fastForward = true;
-                  //@ts-ignore
-                  options.request = ownedItem.data.data.source;
-                  if (options.request.includes(':')) {
-                    getMonkTokenBarAPI().requestRoll([interactorToken], options);
+                  if (isSystemMonkTokenBarSupported()) {
+                    //@ts-ignore
+                    const macroType = ownedItem.data.data.source ?? MACRO_TYPE.ITEM;
+                    const options = new MonkTokenBarRollOptions();
+                    options.silent = true;
+                    options.fastForward = true;
+                    //@ts-ignore
+                    options.request = macroType;
+                    if (options.request.includes(':')) {
+                      getMonkTokenBarAPI().requestRoll([interactorToken], options);
+                    } else {
+                      ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
+                    }
+                  } else if (isSystemTokenActionHUDSupported()) {
+                    //@ts-ignore
+                    const macroType = ownedItem.data.data.source ?? MACRO_TYPE.ITEM;
+                    const tokenId = interactorToken.id;
+                    const actionId = interactorItem.id;
+                    const payload = macroType + '|' + tokenId + '|' + actionId;
+                    //@ts-ignore
+                    await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
                   } else {
-                    ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
+                    throw new Error('System not supported : ' + getGame().system?.id);
                   }
                   break;
                 }
-                case ENVIROMENT_TYPE.SAVE: 
+                case ENVIROMENT_TYPE.SAVE:
                 case ENVIROMENT_TYPE.UTILITY: {
-                  //const save = environmentItem.data.data.save.ability;
-                  //interactor.rollAbilitySave(save);
-                  const options = new MonkTokenBarRollOptions();
-                  options.silent = true;
-                  options.fastForward = true;
-                  //@ts-ignore
-                  options.request = ownedItem.data.data.source;
-                  if (options.request.includes(':')) {
-                    if(options.request.includes('|')){
+                  if (isSystemMonkTokenBarSupported()) {
+                    //const save = environmentItem.data.data.save.ability;
+                    //interactor.rollAbilitySave(save);
+                    const options = new MonkTokenBarRollOptions();
+                    options.silent = true;
+                    options.fastForward = true;
+                    //@ts-ignore
+                    options.request = ownedItem.data.data.source;
+                    if (options.request.includes(':')) {
+                      if (options.request.includes('|')) {
+                        const [req0, req1] = options.request.split('|');
 
-                      const [req0, req1] = options.request.split('|');
+                        // Is a contested roll
+                        const request1 = new MonkTokenBarContestedRollRequest();
+                        request1.token = environmentToken;
+                        //@ts-ignore
+                        request1.request = req1; //'save:'+ environmentItem.data.data.save.ability;
 
-                      // Is a contested roll
-                      const request1 = new MonkTokenBarContestedRollRequest();
-                      request1.token= environmentToken;
-                      //@ts-ignore
-                      request1.request = req1;//'save:'+ environmentItem.data.data.save.ability;
-
-                      const request0 = new MonkTokenBarContestedRollRequest();
-                      request0.token= interactorToken;
-                      //@ts-ignore
-                      request0.request = req0;//'save:'+ interactorItem.data.data.save.ability;
-                      //@ts-igno
-                      // options.dc = environmentItem.data.data.save.dc;
-                      //@ts-ignore
-                      options.request = undefined;
-                      getMonkTokenBarAPI().requestContestedRoll(request1, request0, options);
-                    }else{
-                      getMonkTokenBarAPI().requestRoll([interactorToken], options);
+                        const request0 = new MonkTokenBarContestedRollRequest();
+                        request0.token = interactorToken;
+                        //@ts-ignore
+                        request0.request = req0; //'save:'+ interactorItem.data.data.save.ability;
+                        //@ts-igno
+                        // options.dc = environmentItem.data.data.save.dc;
+                        //@ts-ignore
+                        options.request = undefined;
+                        getMonkTokenBarAPI().requestContestedRoll(request1, request0, options);
+                      } else {
+                        getMonkTokenBarAPI().requestRoll([interactorToken], options);
+                      }
+                    } else {
+                      ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                     }
+                  } else if (isSystemTokenActionHUDSupported()) {
+                    //@ts-ignore
+                    const macroType = ownedItem.data.data.source ?? MACRO_TYPE.ITEM;
+                    const tokenId = interactorToken.id;
+                    const actionId = interactorItem.id;
+                    const payload = macroType + '|' + tokenId + '|' + actionId;
+                    //@ts-ignore
+                    await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
                   } else {
-                    ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
+                    throw new Error('System not supported : ' + getGame().system?.id);
                   }
                   break;
                 }

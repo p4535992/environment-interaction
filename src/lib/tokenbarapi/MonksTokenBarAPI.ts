@@ -28,11 +28,12 @@ export interface MonksTokenBarAPI {
 }
 
 export class MonkTokenBarRollOptions {
-  rollmode = 'roll';
+  request: string;
+  dc = NaN;
   silent = false;
   fastForward = false;
-  dc = NaN;
-  request: string;
+  flavor: string;
+  rollmode = 'roll';
   requestoptions = undefined; // { id: "skill", text: "MonksTokenBar.Skill", groups: this.config.skills }
   hidenpcname = false;
 }

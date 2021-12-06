@@ -11,7 +11,7 @@ export const readyHooks = async () => {
     const checkout = msgtokenRoll.total;
   });
 
-  Hooks.callAll("forceUpdateTokenActionHUD", (args) => {
+  Hooks.callAll('forceUpdateTokenActionHUD', (args) => {
     const checkout = args;
   });
 };

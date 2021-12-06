@@ -12,12 +12,14 @@
 
 Environment Interaction allows GM users to create "environment tokens" that characters can interact with. These interactions can include weapon attacks, skill checks and saves, and even executing macros.
 
-**Note: This is module is inspired from the  wonderful work done by these developers:
+**Note: This is module is inspired from the  wonderful work done by these developers:**
 
 - [jessev14](https://github.com/jessev14) with its [Environment Interaction](https://github.com/jessev14/environment-interaction) module 
 - [ironmonk88](https://github.com/ironmonk88) with [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)  module 
 - [Drental](https://github.com/Drental) with [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
-If you want to support more modules of this kind, I invite you to go and support his patreon or kofi below the links**
+- [League-of-Foundry-Developers](https://github.com/League-of-Foundry-Developers) for the module [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy)
+
+**If you want to support more modules of this kind, I invite you to go and support his patreon or kofi below the links**
 
 #### jessev14 Kofi
 
@@ -70,38 +72,46 @@ If an item on an environment token has a set Item Macro, after rolling the item 
 
 ## Systems
 
-The multi system is limited to the one supported from these two modules [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar) and [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
+The multi system is limited to the one supported from these modules: 
 
-| System Id | Token Action HUD | Monk's TokenBar | 
-|:---------:|:---------------:|:----------------:|
-| dnd5e | x | x |
-| dnd4ebeta | | x |
-| dungeonworld | x | | 
-| pf2e | x | x |
-| wfrp4e | x | | 
-| sfrpg | x | x | 
-| sw5e | x | x | 
-| demonlord | x | | 
-| pf1 | x | x | 
-| lancer | x | | 
-| d35e | x | x | 
-| swade | x | x | 
-| starwarsffg | x | | 
-| tormenta20 | x | x | 
-| blades-in-the-dark | x | | 
-| symbaroum | x | | 
-| od6s | x | | 
-| ose | | x |
-| alienrpg | x | | 
-| cthack | x | |
-| kamigakari | x | | 
-| tagmar | x | | 
-| tagmar_rpg | x | | 
-| ds4 | x | | 
-| coc | x | | 
-| cof | x | | 
-| coc7 | | x |
-| forbidden-lands | x | | 
+- [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)
+- [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
+- [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy)
+
+by default is "Monk's TokenBar" is present and active and support the  current system is used first else we try with "Token Action HUD", the module "Let Me Roll That For You!" is a special case where you want to display the dialog to the user instead make everything on background.
+
+
+| System Id (lowercase) | Token Action HUD | Monk's TokenBar | Let me roll that for you |
+|:---------:|:---------------:|:----------------:|:----------------:|
+| dnd5ejp | | | x |
+| dnd5e | x | x | x |
+| dnd4ebeta | | x | |
+| dungeonworld | x | |  |
+| pf2e | x | x | x |
+| wfrp4e | x | |  |
+| sfrpg | x | x |  |
+| sw5e | x | x | x |
+| demonlord | x | |  |
+| pf1 | x | x | x |
+| lancer | x | |  |
+| d35e | x | x | x |
+| swade | x | x |  |
+| starwarsffg | x | |  |
+| tormenta20 | x | x |  |
+| blades-in-the-dark | x | |  |
+| symbaroum | x | |  |
+| od6s | x | |  |
+| ose | | x | |
+| alienrpg | x | |  |
+| cthack | x | | |
+| kamigakari | x | |  |
+| tagmar | x | |  |
+| tagmar_rpg | x | |  |
+| ds4 | x | |  |
+| coc | x | | x |
+| cof | x | | x |
+| coc7 | | x | |
+| forbidden-lands | x | |  |
 
 naturally in this module the various use cases will have to be foreseen...
 
@@ -119,13 +129,20 @@ A similar method is used to handle attack and damage rolls. When attack/damage b
 
 ### Little Reminder of the options of 'Monk Tokenbar module'
 
+Example `game.MonksTokenBar.requestRoll([{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}], {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'})`
+
 | Request Label | Request Type | Description |
 |:-------------:|:------:|:------:|
-| rollmode | string | Type of roll [roll = Public Roll, gmroll = Private GM Roll, blindroll = Blind GM Roll, selfroll = Self Roll, = Self Roll |
-| silent | boolean | avoid the dialog popup, but you must have been set a request string |
-| fastForward | boolean | the roll is automatic rolled without interaction of the player on the chat |
-| dc | number | the explicit dc you want for the roll |
 | request | string | the string compose from two string 'requestype':'request' e.g. misc:init |
+| dc | number | the explicit dc you want for the roll |
+| silent | boolean | avoid the dialog popup, but you must have been set a request string |
+| fastForward | boolean | MAKE SENSE ONLY WITH "silent=true" the roll is automatic rolled without interaction of the player on the chat |
+| flavor | string | the test to show for the roll
+| rollmode | string | Type of roll [roll = Public Roll, gmroll = Private GM Roll, blindroll = Blind GM Roll, selfroll = Self Roll, = Self Roll |
+
+
+
+
 
 
 Full options example for MonTokenBar :
@@ -257,12 +274,18 @@ Any issues, bugs, or feature requests are always welcome to be reported directly
 
 - **[Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)**: [GPL-3.0 License](https://github.com/ironmonk88/monks-tokenbar/blob/main/LICENSE)
 
+- **[Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)** : [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/)
+
+- **[Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy)** : [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/)
+
 This package is under an [GPL-3.0 License](LICENSE) and the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/).
 
 ## Credits
 
 - [jessev14](https://github.com/jessev14) for the module [Environment Interaction](https://github.com/jessev14/environment-interaction)
 - [ironmonk88](https://github.com/ironmonk88) for the module [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)
+- [Drental](https://github.com/Drental) for the module [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
+- [League-of-Foundry-Developers](https://github.com/League-of-Foundry-Developers) for the module [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy)
 
 ## Acknowledgements
 
