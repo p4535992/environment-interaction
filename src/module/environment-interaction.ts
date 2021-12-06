@@ -1,7 +1,17 @@
 import { ACTION_TYPE, ENVIROMENT_TYPE, ITEM_TYPE, MACRO_TYPE, useData } from './environment-interaction-models';
 import { i18n } from '../environment-interaction-main.js';
 // import { libWrapper } from '../lib/shim.js';
-import { ENVIROMENT_INTERACTION_ITEM_MACRO_MODULE_NAME, getCanvas, getGame, getMonkTokenBarAPI, getTokenActionHUDRollHandler, isSystemItemMacroSupported, isSystemMonkTokenBarSupported, isSystemTokenActionHUDSupported, moduleName } from './settings.js';
+import {
+  ENVIROMENT_INTERACTION_ITEM_MACRO_MODULE_NAME,
+  getCanvas,
+  getGame,
+  getMonkTokenBarAPI,
+  getTokenActionHUDRollHandler,
+  isSystemItemMacroSupported,
+  isSystemMonkTokenBarSupported,
+  isSystemTokenActionHUDSupported,
+  moduleName,
+} from './settings.js';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { MonkTokenBarContestedRollRequest, MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
 import { data } from 'jquery';
@@ -280,22 +290,22 @@ export class EnvironmentInteraction {
             if (ownedItem.data.flags.itemacro?.macro && getGame().modules.get(ENVIROMENT_INTERACTION_ITEM_MACRO_MODULE_NAME)?.active) {
               //if (ownedItem.type === ITEM_TYPE.LOOT) {
               //@ts-ignore
-              if(isSystemItemMacroSupported() && ownedItem.hasMacro()){
+              if (isSystemItemMacroSupported() && ownedItem.hasMacro()) {
                 //@ts-ignore
                 ownedItem.executeMacro();
               }
               //@ts-ignore
-              else if(ownedItem.data.data.source){
+              else if (ownedItem.data.data.source) {
                 //@ts-ignore
                 const macroName = ownedItem.data.data.source;
                 const macro = <Macro>(<Macros>getGame().macros).getName(macroName);
-                if(!macro){
+                if (!macro) {
                   ui.notifications?.error(moduleName + ' | No macro found with name/id : ' + macroName);
                 }
                 macro.execute({ actor: <Actor>interactorToken.actor, token: interactorToken });
-              }else{
-                ui.notifications?.error(moduleName + ' | Can\'t interact with item for launch a macro');
-                throw new Error(moduleName + ' | Can\'t interact with item for launch a macro');
+              } else {
+                ui.notifications?.error(moduleName + " | Can't interact with item for launch a macro");
+                throw new Error(moduleName + " | Can't interact with item for launch a macro");
               }
             } else {
               switch (actionType) {
@@ -323,7 +333,10 @@ export class EnvironmentInteraction {
                   // Macro type depends for now on the system used
                   if (isSystemTokenActionHUDSupported()) {
                     //@ts-ignore
-                    const macroType = ownedItem.data.data.source ?? MACRO_TYPE.ITEM;
+                    const macroType = Object.values(MACRO_TYPE).includes(ownedItem.data.data.source) 
+                      //@ts-ignore
+                      ? ownedItem.data.data.source
+                      : MACRO_TYPE.ITEM;
                     const tokenId = interactorToken.id;
                     const actionId = interactorItem.id;
                     const payload = macroType + '|' + tokenId + '|' + actionId;
@@ -340,9 +353,16 @@ export class EnvironmentInteraction {
                 //   break;
                 // }
                 case ENVIROMENT_TYPE.ABILITY: {
+                  // (
+                  //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}], 
+                  //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
+                  // )
                   if (isSystemMonkTokenBarSupported()) {
                     //@ts-ignore
-                    const macroType = ownedItem.data.data.source ?? MACRO_TYPE.ITEM;
+                    const macroType = Object.values(MACRO_TYPE).includes(ownedItem.data.data.source) 
+                      //@ts-ignore
+                      ? ownedItem.data.data.source
+                      : MACRO_TYPE.ITEM;
                     const options = new MonkTokenBarRollOptions();
                     options.silent = true;
                     options.fastForward = true;
@@ -355,7 +375,10 @@ export class EnvironmentInteraction {
                     }
                   } else if (isSystemTokenActionHUDSupported()) {
                     //@ts-ignore
-                    const macroType = ownedItem.data.data.source ?? MACRO_TYPE.ITEM;
+                    const macroType = Object.values(MACRO_TYPE).includes(ownedItem.data.data.source) 
+                      //@ts-ignore
+                      ? ownedItem.data.data.source
+                      : MACRO_TYPE.ITEM;
                     const tokenId = interactorToken.id;
                     const actionId = interactorItem.id;
                     const payload = macroType + '|' + tokenId + '|' + actionId;
@@ -369,6 +392,10 @@ export class EnvironmentInteraction {
                 }
                 case ENVIROMENT_TYPE.SAVE:
                 case ENVIROMENT_TYPE.UTILITY: {
+                  // (
+                  //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}], 
+                  //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
+                  // )
                   if (isSystemMonkTokenBarSupported()) {
                     //const save = environmentItem.data.data.save.ability;
                     //interactor.rollAbilitySave(save);
@@ -404,7 +431,10 @@ export class EnvironmentInteraction {
                     }
                   } else if (isSystemTokenActionHUDSupported()) {
                     //@ts-ignore
-                    const macroType = ownedItem.data.data.source ?? MACRO_TYPE.ITEM;
+                    const macroType = Object.values(MACRO_TYPE).includes(ownedItem.data.data.source) 
+                      //@ts-ignore
+                      ? ownedItem.data.data.source
+                      : MACRO_TYPE.ITEM;
                     const tokenId = interactorToken.id;
                     const actionId = interactorItem.id;
                     const payload = macroType + '|' + tokenId + '|' + actionId;
@@ -420,11 +450,11 @@ export class EnvironmentInteraction {
             }
           } finally {
             if (interactorItem) {
-              await interactorToken.actor?.deleteEmbeddedDocuments('Item', [interactorItem.id]);
+              interactorToken.actor?.deleteEmbeddedDocuments('Item', [interactorItem.id]);
             }
           }
         } finally {
-          await interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>ownedItem.id]);
+          interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>ownedItem.id]);
         }
 
         if (getGame().settings.get(moduleName, 'closeDialog')) {

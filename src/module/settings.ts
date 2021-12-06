@@ -92,15 +92,13 @@ export function isSystemLmrtfySupported() {
   return systemsLmrtfySupported.includes(getGame()?.system.id.toLowerCase());
 }
 
-const systemsItemMacroSupported = [
-  'dnd5e', 'sfrpg', 'swade', 'dungeonworld', 'ose', 'demonlord', 'cyberpunk-red-core'
-];
+const systemsItemMacroSupported = ['dnd5e', 'sfrpg', 'swade', 'dungeonworld', 'ose', 'demonlord', 'cyberpunk-red-core'];
 
 export function isSystemItemMacroSupported() {
   return systemsItemMacroSupported.includes(getGame()?.system.id.toLowerCase());
 }
 
-export function isItemMacroModuleActive(){
+export function isItemMacroModuleActive() {
   return <boolean>getGame().modules.get(ENVIROMENT_INTERACTION_ITEM_MACRO_MODULE_NAME)?.active;
 }
 
