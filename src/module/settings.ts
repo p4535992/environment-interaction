@@ -6,6 +6,9 @@ import { ENVIROMENT_TYPE } from './environment-interaction-models';
 export const moduleName = 'environment-interaction';
 
 export const ENVIROMENT_INTERACTION_ITEM_MACRO_MODULE_NAME = 'itemacro';
+export const ENVIROMENT_INTERACTION_MONKS_TOKENBAR_MODULE_NAME = 'monks-tokenbar';
+export const ENVIROMENT_INTERACTION_LMRTFY = 'lmrtfy';
+export const ENVIROMENT_INTERACTION_TOKEN_ACTION_HUD = 'token-action-hud';
 
 /**
  * Because typescript doesn't know when in the lifecycle of foundry your code runs, we have to assume that the
@@ -100,6 +103,18 @@ export function isSystemItemMacroSupported() {
 
 export function isItemMacroModuleActive() {
   return <boolean>getGame().modules.get(ENVIROMENT_INTERACTION_ITEM_MACRO_MODULE_NAME)?.active;
+}
+
+export function isMonkTokensBarModuleActive() {
+  return <boolean>getGame().modules.get(ENVIROMENT_INTERACTION_MONKS_TOKENBAR_MODULE_NAME)?.active;
+}
+
+export function isLmrtfyActive(){
+  return <boolean>getGame().modules.get(ENVIROMENT_INTERACTION_LMRTFY)?.active;
+}
+
+export function isTokenActionHudActive(){
+  return <boolean>getGame().modules.get(ENVIROMENT_INTERACTION_TOKEN_ACTION_HUD)?.active;
 }
 
 export const registerSettings = function () {

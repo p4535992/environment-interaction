@@ -1,4 +1,4 @@
-# Environment Interaction
+# Environment Interaction (multisystem)
 
 ![Latest Release Download Count](https://img.shields.io/github/downloads/p4535992/environment-interaction/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) 
 
@@ -67,11 +67,7 @@ The type of interaction an item has depends on its item type:
 
 See [these images](./img/example-interactions) for example items.
 
-### Item Macro integration
-
-If an item on an environment token has a set Item Macro, after rolling the item to chat, the Item Macro will be executed.
-
-## Systems
+## Supported systems
 
 The multi system is limited to the one supported from these modules: 
 
@@ -118,21 +114,33 @@ naturally in this module the various use cases will have to be foreseen...
 
 ### IMPORTANT : There is a limitation for make this module the more generic possible the element i use for parsing the string request is `ownedItem.data.data.source` 
 
-## Compatibility
-
-Environment Interactions *should* be compatible with custom rollers (e.g. Midi-QOL, Better Rolls for 5e, MRE), but please submit an issue if anything seems to not work correctly.
-
 ## Technical Notes
 
 When an interaction is selected, the correponding item on the environment token's actor sheet is created on the character's actor sheet. After rolling the item to chat, the item is deleted from the character's actor sheet. In this way, the character's actor sheet is the same before and after the interaction.
 
 A similar method is used to handle attack and damage rolls. When attack/damage buttons are clicked, the weapon is temporarily created on the character's actor sheet and used for the attack/damage roll before being deleted. This allows the character's relevant game stats to be used for the roll.
 
-## Ironmonk Tokenbar macro Details of use
 
-### Little Reminder of the options of 'Monk Tokenbar module'
+## Item Macro integration
 
-Example `game.MonksTokenBar.requestRoll([{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}], {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'})`
+If an item on an environment token has a set Item Macro, after rolling the item to chat, the Item Macro will be executed.
+If a item is set with a item macro will be fired before check for any ironmonk token bar or token action hud integration.
+
+## Ironmonk Token bar integration
+
+for pass a label information to the iron monk tokne bar use the 'Source' label for set
+
+![e](./img/example_ironmonk_tokenbar.png)
+
+| Request Label (to put on the item.data.data.source label) | Description | Condition |
+|:------------------:|:------------------------:|:-----------------------------------:|
+| misc:init          | Roll Initiative          | Need to select a token              |
+| save:dex|save:dex  | Contested Save Dexterity | Need to select a token            |
+| ability:str        | Ability Strength         | Need to select a token              |
+
+### Other todo when i have time...
+
+#### Little Reminder of the options of 'Monk Tokenbar module'
 
 | Request Label | Request Type | Description |
 |:-------------:|:------:|:------:|
@@ -144,17 +152,11 @@ Example `game.MonksTokenBar.requestRoll([{token:"Thoramir", altKey: true},"John 
 | rollmode | string | Type of roll [roll = Public Roll, gmroll = Private GM Roll, blindroll = Blind GM Roll, selfroll = Self Roll, = Self Roll |
 
 
-
-
-
-
 Full options example for MonTokenBar :
 
 ```
 {rollmode : 'roll', silent : true, fastForward: true, dc: 13, request: misc:init}
 ```
-
-### Full example for Item Macro module :
 
 #### Request Roll (Initiave, Death Save, Saving Throw ecc.)
 
@@ -172,6 +174,10 @@ const interactorToken = args[0];
 game.MonksTokenBar.requestRoll([interactorToken],options);
 ```
 
+```
+game.MonksTokenBar.requestRoll([{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}], {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'})
+```
+
 #### Contested Request Roll (Initiave, Death Save, Saving Throw ecc.)
 
 ``` 
@@ -180,15 +186,9 @@ const interactorToken = canvas.tokens?.controlled[0];
 game.MonksTokenBar.requestRoll([interactorToken],options);
 ```
 
-## Supported systems
+## Token Action HUD integration
 
-### System Dnd5e table reminder for player
-
-| Request Label | Description |
-|:-------------:|:------:|
-| misc:init     | Roll Initiative |
-
-### Other todo when i have time...
+## Let me roll that for you integration
 
 # Build
 

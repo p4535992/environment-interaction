@@ -8,9 +8,11 @@ import {
   getMonkTokenBarAPI,
   getTokenActionHUDRollHandler,
   isItemMacroModuleActive,
+  isMonkTokensBarModuleActive,
   isSystemItemMacroSupported,
   isSystemMonkTokenBarSupported,
   isSystemTokenActionHUDSupported,
+  isTokenActionHudActive,
   moduleName,
 } from './settings.js';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
@@ -175,7 +177,7 @@ export class EnvironmentInteraction {
                 case ENVIROMENT_TYPE.ATTACK: {
                   // Is managed from the system with manual intervetion
                   // Macro type depends for now on the system used
-                  if (isSystemTokenActionHUDSupported()) {
+                  if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
                     //@ts-ignore
                     const macroType = Object.values(MACRO_TYPE).includes(ownedItem.data.data.source)
                       ? //@ts-ignore
@@ -201,7 +203,7 @@ export class EnvironmentInteraction {
                   //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}],
                   //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
                   // )
-                  if (isSystemMonkTokenBarSupported()) {
+                  if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
                     //@ts-ignore
                     const macroType = Object.values(MACRO_TYPE).includes(ownedItem.data.data.source)
                       ? //@ts-ignore
@@ -218,7 +220,7 @@ export class EnvironmentInteraction {
                     } else {
                       ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                     }
-                  } else if (isSystemTokenActionHUDSupported()) {
+                  } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
                     //@ts-ignore
                     const macroType = Object.values(MACRO_TYPE).includes(ownedItem.data.data.source)
                       ? //@ts-ignore
@@ -241,7 +243,7 @@ export class EnvironmentInteraction {
                   //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}],
                   //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
                   // )
-                  if (isSystemMonkTokenBarSupported()) {
+                  if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
                     //const save = environmentItem.data.data.save.ability;
                     //interactor.rollAbilitySave(save);
                     const options = new MonkTokenBarRollOptions();
@@ -275,7 +277,7 @@ export class EnvironmentInteraction {
                     } else {
                       ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                     }
-                  } else if (isSystemTokenActionHUDSupported()) {
+                  } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
                     //@ts-ignore
                     const macroType = Object.values(MACRO_TYPE).includes(ownedItem.data.data.source)
                       ? //@ts-ignore
