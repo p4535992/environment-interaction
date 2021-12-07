@@ -140,12 +140,24 @@ export class EnvironmentInteraction {
           const action = ownedItem.data.data.actionType; //$(button).data('action');
           const actionType = converToEnviromentType(action);
 
-          let interactorItem;
+          let interactorItem:Item = new Item();
           try {
             // if ([ENVIROMENT_TYPE.ATTACK, ENVIROMENT_TYPE.DAMAGE].includes(actionType)) {
             if ([ENVIROMENT_TYPE.ATTACK].includes(actionType)) {
               [interactorItem] = <Item[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [ownedItem.toObject()]);
             }
+            const REQUEST_LABEL = <string>interactorItem.getFlag(moduleName,Flags.notes);
+            if(!REQUEST_LABEL){
+              return;
+            }
+            const myRequestArray = REQUEST_LABEL.split("|") ?? [];
+            if(myRequestArray.length == 0){
+              return;
+            }
+            // <ACTION_TYPE>|<MACRO_NAME>|<LABEL_REQUEST>|
+            const macroTypeReq = myRequestArray[0];
+            const macroNameReq = myRequestArray[1];
+
             // Hooks.once('renderDialog', (dialog, html, dialogData) => {
             //   dialog.setPosition({ top: event.clientY - 50 ?? null, left: window.innerWidth - 710 });
             // });
@@ -159,9 +171,9 @@ export class EnvironmentInteraction {
                 ownedItem.executeMacro();
               }
               //@ts-ignore
-              else if (ownedItem.data.data.source) {
+              else if (macroNameReq) {
                 //@ts-ignore
-                const macroName = ownedItem.data.data.source;
+                const macroName = macroNameReq;
                 const macro = <Macro>(<Macros>getGame().macros).getName(macroName);
                 if (!macro) {
                   ui.notifications?.error(moduleName + ' | No macro found with name/id : ' + macroName);
