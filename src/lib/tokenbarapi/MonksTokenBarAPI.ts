@@ -34,14 +34,14 @@ export class MonkTokenBarRollOptions {
   fastForward = false;
   flavor: string;
   rollmode = 'roll';
-  requestoptions:MonkTokenBarRequestOptions[] = []; // { id: "skill", text: "MonksTokenBar.Skill", groups: this.config.skills }
+  requestoptions: MonkTokenBarRequestOptions[] = []; // { id: "skill", text: "MonksTokenBar.Skill", groups: this.config.skills }
   hidenpcname = false;
 }
 
 export class MonkTokenBarRequestOptions {
-  id:string;
-  text:string;
-  groups:[]
+  id: string;
+  text: string;
+  groups: [];
 }
 
 // export class MonkTokenBarRequest{
@@ -54,6 +54,6 @@ export class MonkTokenBarRequestOptions {
 // }
 
 export class MonkTokenBarContestedRollRequest {
-  token: Token|string;
+  token: Token | string;
   request: string;
 }

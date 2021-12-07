@@ -1,0 +1,20 @@
+<form class="editable">
+    {{#if isGM}}
+        <!--
+        {{#if showExtraButtons}}
+            <div class="controlls">
+                <button class="moveToNote">{{localize "GMNote.moveToNote"}}</button>
+                <button class="moveToDescription">{{localize "GMNote.moveToDescription"}}</button>
+            </div>
+        {{/if}}
+        -->
+        <p class="controlls">{{localize "enviroment-interaction.note.event"}}</p><br></br>
+        {{editor content=flags.enviroment-interaction.notes target="flags.enviroment-interaction.notes" button=true owner=owner editable=true}}<br></br>
+        <p class="controlls">{{localize "enviroment-interaction.note.event-condition"}}</p><br></br>
+        {{editor content=flags.enviroment-interaction.notes-condition target="flags.enviroment-interaction.notes-condition" button=true owner=owner editable=true}}<br></br>
+        <p class="controlls">{{localize "enviroment-interaction.note.event-success"}}</p><br></br>
+        {{editor content=flags.enviroment-interaction.notes-success target="flags.enviroment-interaction.notes-success" button=true owner=owner editable=true}}<br></br>
+        <p class="controlls">{{localize "enviroment-interaction.note.event-failure"}}</p><br></br>
+        {{editor content=flags.enviroment-interaction.notes-failure target="flags.enviroment-interaction.notes-failure" button=true owner=owner editable=true}}<br></br>
+    {{/if}}
+</form>

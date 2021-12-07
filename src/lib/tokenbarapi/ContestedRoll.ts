@@ -1,25 +1,25 @@
 export interface ContestedRoll {
-    rollDice(dice):Roll;
+  rollDice(dice): Roll;
 
-    returnRoll (id, roll, actor, rollmode): { id: string, roll: Roll, finish: { id:string, reveal:boolean, userid:string }};
+  returnRoll(id, roll, actor, rollmode): { id: string; roll: Roll; finish: { id: string; reveal: boolean; userid: string } };
 
-    _rollAbility(data, request, requesttype, rollmode, ffwd, e):Roll;
-    
-    onRollAbility(ids, message, fastForward:boolean, evt):void
+  _rollAbility(data, request, requesttype, rollmode, ffwd, e): Roll;
 
-    updateMessage(updates, message, reveal):void;
+  onRollAbility(ids, message, fastForward: boolean, evt): void;
 
-    finishRolling(updates, message):void;
+  updateMessage(updates, message, reveal): void;
 
-    getTokens(message):Token[];
+  finishRolling(updates, message): void;
 
-    checkResult(message):void;
+  getTokens(message): Token[];
 
-    checkReveal(actors):boolean;
+  checkResult(message): void;
 
-    setRollSuccess(tokenid, message, success):void;
+  checkReveal(actors): boolean;
 
-    onRollAll(tokentype, message, e):Roll;
+  setRollSuccess(tokenid, message, success): void;
 
-    _onClickToken(tokenId, event):boolean;
+  onRollAll(tokentype, message, e): Roll;
+
+  _onClickToken(tokenId, event): boolean;
 }

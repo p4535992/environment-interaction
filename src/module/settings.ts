@@ -109,11 +109,11 @@ export function isMonkTokensBarModuleActive() {
   return <boolean>getGame().modules.get(ENVIROMENT_INTERACTION_MONKS_TOKENBAR_MODULE_NAME)?.active;
 }
 
-export function isLmrtfyActive(){
+export function isLmrtfyActive() {
   return <boolean>getGame().modules.get(ENVIROMENT_INTERACTION_LMRTFY)?.active;
 }
 
-export function isTokenActionHudActive(){
+export function isTokenActionHudActive() {
   return <boolean>getGame().modules.get(ENVIROMENT_INTERACTION_TOKEN_ACTION_HUD)?.active;
 }
 
@@ -129,18 +129,36 @@ export const registerSettings = function () {
   });
 
   // Automatically add proficiency to attack rolls
-  getGame().settings.register(moduleName, 'autoProficiency', {
-    name: getGame().i18n.localize(`${moduleName}.settings.autoProficiency.name`),
-    hint: '',
+  // getGame().settings.register(moduleName, 'autoProficiency', {
+  //   name: getGame().i18n.localize(`${moduleName}.settings.autoProficiency.name`),
+  //   hint: '',
+  //   scope: 'world',
+  //   config: true,
+  //   type: Boolean,
+  //   default: true,
+  // });
+
+  // getGame().settings.register(moduleName, 'integrationWithPolyglot', {
+  //   name: i18n(`${moduleName}.settings.integrationWithPolyglot.name`),
+  //   hint: i18n(`${moduleName}.settings.integrationWithPolyglot.hint`),
+  //   scope: 'world',
+  //   config: true,
+  //   default: false,
+  //   type: Boolean,
+  // });
+
+  getGame().settings.register(moduleName, 'hideLabel', {
+    name: i18n(`${moduleName}.settings.notehidelabel.name`),
+    hint: i18n(`${moduleName}.settings.notehidelabel.hint`),
     scope: 'world',
     config: true,
+    default: false,
     type: Boolean,
-    default: true,
   });
 
-  getGame().settings.register(moduleName, 'integrationWithPolyglot', {
-    name: i18n(`${moduleName}.settings.integrationWithPolyglot.name`),
-    hint: i18n(`${moduleName}.settings.integrationWithPolyglot.hint`),
+  getGame().settings.register(moduleName, 'colorLabel', {
+    name: i18n(`${moduleName}.settings.notecolorlabel.name`),
+    hint: i18n(`${moduleName}.settings.notecolorlabel.hint`),
     scope: 'world',
     config: true,
     default: false,

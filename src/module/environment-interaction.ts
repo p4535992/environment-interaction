@@ -17,7 +17,6 @@ import {
 } from './settings.js';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { MonkTokenBarContestedRollRequest, MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
-import { data } from 'jquery';
 import { converToEnviromentType } from './environment-interaction-utils';
 import { ContestedRoll } from '../lib/tokenbarapi/ContestedRoll';
 
@@ -189,9 +188,9 @@ export class EnvironmentInteraction {
                     const payload = macroType + '|' + tokenId + '|' + actionId;
                     //@ts-ignore
                     await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
-                    Hooks.on('forceUpdateTokenActionHUD', (args) => {
-                      const checkout = args;
-                    });
+                    // Hooks.on('forceUpdateTokenActionHUD', (args) => {
+                    //   const checkout = args;
+                    // });
                   } else {
                     ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
                     throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
@@ -221,10 +220,10 @@ export class EnvironmentInteraction {
                     options.request = macroType;
                     if (options.request.includes(':')) {
                       getMonkTokenBarAPI().requestRoll([interactorToken], options);
-                      Hooks.on('tokenBarUpdateRoll', (tokenBarApp: Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
-                        // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
-                        const checkout = msgtokenRoll.total;
-                      });
+                      // Hooks.on('tokenBarUpdateRoll', (tokenBarApp: Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
+                      //   // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
+                      //   const checkout = msgtokenRoll.total;
+                      // });
                     } else {
                       ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                     }
@@ -239,9 +238,9 @@ export class EnvironmentInteraction {
                     const payload = macroType + '|' + tokenId + '|' + actionId;
                     //@ts-ignore
                     await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
-                    Hooks.on('forceUpdateTokenActionHUD', (args) => {
-                      const checkout = args;
-                    });
+                    // Hooks.on('forceUpdateTokenActionHUD', (args) => {
+                    //   const checkout = args;
+                    // });
                   } else {
                     ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
                     throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
@@ -268,12 +267,12 @@ export class EnvironmentInteraction {
                         const [req0, req1] = options.request.split('|');
 
                         // Is a contested roll
-                        const request1:any = new Object();
+                        const request1: any = new Object();
                         request1.token = environmentToken.id;
                         //@ts-ignore
                         request1.request = req1; //'save:'+ environmentItem.data.data.save.ability;
 
-                        const request0:any = new Object();
+                        const request0: any = new Object();
                         request0.token = interactorToken.id;
                         //@ts-ignore
                         request0.request = req0; //'save:'+ interactorItem.data.data.save.ability;
@@ -282,16 +281,16 @@ export class EnvironmentInteraction {
                         //@ts-ignore
                         options.request = undefined;
                         // eslint-disable-next-line @typescript-eslint/no-array-constructor
-                        options.requestoptions.push({id:'save',text:req0.split(":")[1],groups:[]});
-                        options.requestoptions.push({id:'save',text:req1.split(":")[1],groups:[]});
+                        options.requestoptions.push({ id: 'save', text: req0.split(':')[1], groups: [] });
+                        options.requestoptions.push({ id: 'save', text: req1.split(':')[1], groups: [] });
                         getMonkTokenBarAPI().requestContestedRoll(request1, request0, options);
                       } else {
                         getMonkTokenBarAPI().requestRoll([interactorToken], options);
                       }
-                      Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll|Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
-                        // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
-                        const checkout = msgtokenRoll.total;
-                      });                    
+                      // Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll|Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
+                      //   // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
+                      //   const checkout = msgtokenRoll.total;
+                      // });
                     } else {
                       ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                     }
@@ -306,9 +305,9 @@ export class EnvironmentInteraction {
                     const payload = macroType + '|' + tokenId + '|' + actionId;
                     //@ts-ignore
                     await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
-                    Hooks.on('forceUpdateTokenActionHUD', (args) => {
-                      const checkout = args;
-                    });                
+                    // Hooks.on('forceUpdateTokenActionHUD', (args) => {
+                    //   const checkout = args;
+                    // });
                   } else {
                     ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
                     throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);

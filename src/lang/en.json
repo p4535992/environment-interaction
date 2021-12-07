@@ -12,6 +12,14 @@
       "integrationWithPolyglot": {
         "name": "Integration with Polyglot",
         "hint": "Set up different rolltable one for each language and change the audio file with customized one for that language"
+      },
+      "notehidelabel": {
+        "name": "Hide Enviroment Interaction Note Label",
+        "hint": "If checked only the icon will appear"
+      },
+      "notecolorlabel": {
+        "name": "Change Color when Notes are present",
+        "hint": "Change Color when Notes are present"
       }
     },
     "handlebarsHelper": {
@@ -39,6 +47,14 @@
     "ActionAbil": "Ability",
     "ActionSave": "Saving Throw",
     "ActionSkill": "Skill Check",
-    "Proficiency": "Proficiency"
+    "Proficiency": "Proficiency",
+    "note": {
+      "label": "Enviroment Interaction Note",
+      "event": "Event Macro/Code",
+      "event-condition": "Condition Macro/Code",
+      "event-success": "Success Macro/Code",
+      "event-failure": "Failure Macro/Code"
+    },
+    "macroExecution": "There was an error in your macro syntax. See the console (F12) for details"
   }
 }

@@ -113,13 +113,14 @@ by default is "Monk's TokenBar" is present and active and support the  current s
 
 naturally in this module the various use cases will have to be foreseen...
 
-### IMPORTANT : There is a limitation for make this module the more generic possible the element i use for parsing the string request is `item.data.data.source` 
-
-## Technical Notes
+~~### IMPORTANT : There is a limitation for make this module the more generic possible the element i use for parsing the string request is `item.data.data.source`~~
+## Hot to use
 
 When an interaction is selected, the correponding item on the environment token's actor sheet is created on the character's actor sheet. After rolling the item to chat, the item is deleted from the character's actor sheet. In this way, the character's actor sheet is the same before and after the interaction.
 
 A similar method is used to handle attack and damage rolls. When attack/damage buttons are clicked, the weapon is temporarily created on the character's actor sheet and used for the attack/damage roll before being deleted. This allows the character's relevant game stats to be used for the roll.
+
+On the item sheet you can se a button "Enviroment Interaction note", click wil open a dialog where you can put a text, the text must respect
 
 ## Item Macro integration
 
