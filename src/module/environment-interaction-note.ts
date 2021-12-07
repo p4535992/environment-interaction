@@ -60,42 +60,57 @@ export class EnvironmentInteractionNote extends FormApplication {
         //   author: getGame().user?.id,
         // });
         // await this.entity.setFlag(moduleName, Flags.notesmacro, macro);
+      }else{
+        await this.entity.setFlag(moduleName, Flags.notes, null);
       }
 
       if (formData[`flags.${moduleName}.${Flags.notescondition}`]) {
-        await this.entity.setFlag(moduleName, Flags.notescondition, formData[`flags.${moduleName}.${Flags.notescondition}`]);
-        const macroCondition = new Macro({
-          name: this.entity.data.name + ' - condition',
-          type: 'script',
-          scope: 'global',
-          command: formData[`flags.${moduleName}.${Flags.notescondition}`],
-          author: getGame().user?.id,
-        });
-        await this.entity.setFlag(moduleName, Flags.notesconditionmacro, macroCondition);
+        let macroCondition = formData[`flags.${moduleName}.${Flags.notescondition}`];
+        if(!macroCondition?.startsWith("return")){
+          macroCondition = "return " + macroCondition;
+        }
+        await this.entity.setFlag(moduleName, Flags.notescondition, macroCondition);
+        // const macroCondition = new Macro({
+        //   name: this.entity.data.name + ' - condition',
+        //   type: 'script',
+        //   scope: 'global',
+        //   command: formData[`flags.${moduleName}.${Flags.notescondition}`],
+        //   author: getGame().user?.id,
+        // });
+        // await this.entity.setFlag(moduleName, Flags.notesconditionmacro, macroCondition);
+      }else{
+        await this.entity.setFlag(moduleName, Flags.notescondition, null);
+        // await this.entity.setFlag(moduleName, Flags.notesconditionmacro, null);
       }
 
       if (formData[`flags.${moduleName}.${Flags.notessuccess}`]) {
         await this.entity.setFlag(moduleName, Flags.notessuccess, formData[`flags.${moduleName}.${Flags.notessuccess}`]);
-        const macroSuccess = new Macro({
-          name: this.entity.data.name + ' - success',
-          type: 'script',
-          scope: 'global',
-          command: formData[`flags.${moduleName}.${Flags.notessuccess}`],
-          author: getGame().user?.id,
-        });
-        await this.entity.setFlag(moduleName, Flags.notessuccessmacro, macroSuccess);
+        // const macroSuccess = new Macro({
+        //   name: this.entity.data.name + ' - success',
+        //   type: 'script',
+        //   scope: 'global',
+        //   command: formData[`flags.${moduleName}.${Flags.notessuccess}`],
+        //   author: getGame().user?.id,
+        // });
+        // await this.entity.setFlag(moduleName, Flags.notessuccessmacro, macroSuccess);
+      }else{
+        await this.entity.setFlag(moduleName, Flags.notessuccess, null);
+        // await this.entity.setFlag(moduleName, Flags.notessuccessmacro, null);
       }
 
       if (formData[`flags.${moduleName}.${Flags.notesfailure}`]) {
         await this.entity.setFlag(moduleName, Flags.notesfailure, formData[`flags.${moduleName}.${Flags.notesfailure}`]);
-        const macroFailure = new Macro({
-          name: this.entity.data.name + ' - failure',
-          type: 'script',
-          scope: 'global',
-          command: formData[`flags.${moduleName}.${Flags.notesfailure}`],
-          author: getGame().user?.id,
-        });
-        await this.entity.setFlag(moduleName, Flags.notesfailuremacro, macroFailure);
+        // const macroFailure = new Macro({
+        //   name: this.entity.data.name + ' - failure',
+        //   type: 'script',
+        //   scope: 'global',
+        //   command: formData[`flags.${moduleName}.${Flags.notesfailure}`],
+        //   author: getGame().user?.id,
+        // });
+        // await this.entity.setFlag(moduleName, Flags.notesfailuremacro, macroFailure);
+      }else{
+        await this.entity.setFlag(moduleName, Flags.notesfailure, null);
+        // await this.entity.setFlag(moduleName, Flags.notesfailuremacro, null);
       }
 
       // await this.updateMacro(

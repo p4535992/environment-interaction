@@ -1,6 +1,7 @@
 import { Document } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/module.mjs';
-import { ACTION_TYPE, ENVIRONMENT_TYPE } from './environment-interaction-models';
-import { getCanvas, getGame } from './settings';
+import { debug, error, i18n } from '../environment-interaction-main';
+import { ACTION_TYPE, ENVIRONMENT_TYPE, Flags } from './environment-interaction-models';
+import { getCanvas, getGame, moduleName } from './settings';
 
 export function getTokenByTokenID(id) {
   // return await getGame().scenes.active.data.tokens.find( x => {return x.id === id});
@@ -146,4 +147,70 @@ export const converToEnvironmentType = function (action: string): string {
     }
   }
   return actionType;
+};
+
+export const executeEIMacro = function (item:Item, macroFlag:string, ...args):any {
+  if(!item.getFlag(moduleName, macroFlag)){
+    return false;
+  }
+  // switch(this.getMacro().data.type){
+  //   case "chat" :
+  //     //left open if chat macros ever become a thing you would want to do inside an item?
+  //     break;
+  // case "script" :
+  // return _executeEIScript(item, macroFlag, ...args);
+  // }
+
+  //add variable to the evaluation of the script
+  // const item = <Item>this;
+  const macroContent = <string>item.getFlag(moduleName, macroFlag);
+  const macro = new Macro({
+    name: item.data.name,
+    type: 'script',
+    scope: 'global',
+    command: macroContent,
+    author: getGame().user?.id,
+  });
+  const speaker = ChatMessage.getSpeaker({ actor: <Actor>item.actor });
+  const actor = item.actor ?? getGame().actors?.get(<string>speaker.actor);
+  const token = item.actor?.token ?? getCanvas().tokens?.get(<string>speaker.token);
+  const character = getGame().user?.character;
+  const event = getEvent();
+  const interactorTokens = <Token[]>getCanvas().tokens?.controlled;
+
+  // debug(macro);
+  // debug(speaker);
+  // debug(actor);
+  // debug(token);
+  // debug(character);
+  // debug(item);
+  // debug(event);
+  // debug(args);
+
+  // new Function(reloadfunction).apply(t,[]) //immediate execute
+  // new Function(reloadfunction).bind(t,[]) //future execute (notice ie=>9)
+
+  //build script execution
+  // const body = `(async ()=>{
+  //   ${macro.data.command}
+  // })();`;
+  // const fn = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', body);
+  // const fn2 = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', macro.data.command);
+  const fn3 = new Function('item', 'speaker', 'actor', 'token', 'character', 'interactorTokens', 'event', 'args', macro.data.command);
+  //attempt script execution
+  try {
+    // return fn.call(macro, item, speaker, actor, token, character, event, args);
+    // return fn2.apply(item, [item, speaker, actor, token, character, event, ...args]);
+    return fn3.call(macro, item, speaker, actor, token, character, interactorTokens, event, args);
+  } catch (err) {
+    ui.notifications?.error(moduleName + ' | ' + i18n(`${moduleName}.macroExecution`));
+    error(err);
+  }
+
+  function getEvent() {
+    const a = args[0];
+    if (a instanceof Event) return args[0].shift();
+    if (a?.originalEvent instanceof Event) return args.shift().originalEvent;
+    return undefined;
+  }
 };

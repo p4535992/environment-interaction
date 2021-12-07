@@ -52,8 +52,8 @@ export const Flags = {
   notescondition: 'notes-condition',
   notessuccess: 'notes-success',
   notesfailure: 'notes-failure',
-  notesmacro: 'notes-macro',
-  notesconditionmacro: 'notes-condition-macro',
-  notessuccessmacro: 'notes-success-macro',
-  notesfailuremacro: 'notes-failure-macro',
+  // notesmacro: 'notes-macro',
+  // notesconditionmacro: 'notes-condition-macro',
+  // notessuccessmacro: 'notes-success-macro',
+  // notesfailuremacro: 'notes-failure-macro',
 };

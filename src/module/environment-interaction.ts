@@ -16,7 +16,7 @@ import {
 } from './settings.js';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { MonkTokenBarContestedRollRequest, MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
-import { converToEnvironmentType } from './environment-interaction-utils';
+import { converToEnvironmentType, executeEIMacro } from './environment-interaction-utils';
 import { ContestedRoll } from '../lib/tokenbarapi/ContestedRoll';
 
 export class EnvironmentInteraction {
@@ -89,7 +89,12 @@ export class EnvironmentInteraction {
     // TODO: dnd5e specific; create a helper function to handle different systems
     // Sort to mimic order of items on character sheet
     const items: Item[] = [];
-    const actionsType: string[] = [ITEM_TYPE.TOOL, ITEM_TYPE.WEAPON, ACTION_TYPE.abil, ACTION_TYPE.save, ITEM_TYPE.LOOT, ITEM_TYPE.CONSUMABLE];
+    const actionsType: string[] = 
+      [
+        ITEM_TYPE.TOOL, ITEM_TYPE.WEAPON, 
+        ACTION_TYPE.abil, ACTION_TYPE.save, 
+        ITEM_TYPE.LOOT, ITEM_TYPE.CONSUMABLE
+      ];
     for (const type of actionsType) {
       environmentToken.actor.items
         .filter((i) => {
@@ -98,10 +103,24 @@ export class EnvironmentInteraction {
           // } else {
           //   return i.type === type;
           // }
+          if(i.getFlag(moduleName, Flags.notescondition)){
+            const result = executeEIMacro(i, Flags.notescondition);
+            if(result){
+              return result; 
+            }else{
+              return false;
+            }
+          }      
           return i.type === type;
         })
         .sort((a, b) => (a.data.sort || 0) - (b.data.sort || 0))
-        .forEach((i) => items.push(i));
+        .forEach((i) => {
+          if (items.some(e => e.id === i.id)) {
+            // contains the element we're looking for
+          }else{
+            items.push(i);
+          }
+        });
     }
 
     const content = await renderTemplate(`/modules/${moduleName}/templates/interaction-dialog.hbs`, { items });
@@ -157,11 +176,10 @@ export class EnvironmentInteraction {
             const macroTypeReq = Object.values(MACRO_TYPE).includes(myRequestArray[0])
                       ? //@ts-ignore
                       myRequestArray[0]
-                      : MACRO_TYPE.ITEM;
+                      : (actionType ? actionType : MACRO_TYPE.ITEM);
             const macroNameReq = myRequestArray[1];
             //@ts-ignore
             const labelReq = myRequestArray[2] ?? ownedItem.data.data.source;
-
 
             // Hooks.once('renderDialog', (dialog, html, dialogData) => {
             //   dialog.setPosition({ top: event.clientY - 50 ?? null, left: window.innerWidth - 710 });

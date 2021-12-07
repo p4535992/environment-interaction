@@ -32,64 +32,64 @@ export const readyHooks = async () => {
     EnvironmentInteractionNote._initEntityHook(app, html, data);
   });
 
-  //@ts-ignore
-  Item.prototype.hasEIMacro = function () {
-    return !!this.getFlag(moduleName, Flags.notesmacro)?.data?.command;
-  };
-  //@ts-ignore
-  Item.prototype.executeEIMacro = function (...args) {
-    if (!this.hasEIMacro()) {
-      return;
-    }
-    // switch(this.getMacro().data.type){
-    //   case "chat" :
-    //     //left open if chat macros ever become a thing you would want to do inside an item?
-    //     break;
-    // case "script" :
-    return this._executeEIScript(...args);
-    // }
-  };
-  //@ts-ignore
-  Item.prototype._executeEIScript = function (macroFlag:string, ...args) {
-    //add variable to the evaluation of the script
-    const item = <Item>this;
-    const macro = <Macro>item.getFlag(moduleName, macroFlag);
-    const speaker = ChatMessage.getSpeaker({ actor: <Actor>item.actor });
-    const actor = item.actor ?? getGame().actors?.get(<string>speaker.actor);
-    const token = item.actor?.token ?? getCanvas().tokens?.get(<string>speaker.token);
-    const character = getGame().user?.character;
-    const event = getEvent();
+  // //@ts-ignore
+  // Item.prototype.hasEIMacro = function () {
+  //   return !!this.getFlag(moduleName, Flags.notes)?.data?.command;
+  // };
+  // //@ts-ignore
+  // Item.prototype.executeEIMacro = function (...args) {
+  //   if (!this.hasEIMacro()) {
+  //     return;
+  //   }
+  //   // switch(this.getMacro().data.type){
+  //   //   case "chat" :
+  //   //     //left open if chat macros ever become a thing you would want to do inside an item?
+  //   //     break;
+  //   // case "script" :
+  //   return this._executeEIScript(...args);
+  //   // }
+  // };
+  // //@ts-ignore
+  // Item.prototype._executeEIScript = function (macroFlag:string, ...args) {
+  //   //add variable to the evaluation of the script
+  //   const item = <Item>this;
+  //   const macro = <Macro>item.getFlag(moduleName, macroFlag);
+  //   const speaker = ChatMessage.getSpeaker({ actor: <Actor>item.actor });
+  //   const actor = item.actor ?? getGame().actors?.get(<string>speaker.actor);
+  //   const token = item.actor?.token ?? getCanvas().tokens?.get(<string>speaker.token);
+  //   const character = getGame().user?.character;
+  //   const event = getEvent();
 
-    debug(macro);
-    debug(speaker);
-    debug(actor);
-    debug(token);
-    debug(character);
-    debug(item);
-    debug(event);
-    debug(args);
+  //   debug(macro);
+  //   debug(speaker);
+  //   debug(actor);
+  //   debug(token);
+  //   debug(character);
+  //   debug(item);
+  //   debug(event);
+  //   debug(args);
 
-    //build script execution
-    const body = `(async ()=>{
-      ${macro.data.command}
-    })();`;
-    const fn = Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', body);
+  //   //build script execution
+  //   const body = `(async ()=>{
+  //     ${macro.data.command}
+  //   })();`;
+  //   const fn = Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', body);
 
-    //attempt script execution
-    try {
-      fn.call(macro, item, speaker, actor, token, character, event, args);
-    } catch (err) {
-      ui.notifications?.error(i18n(`${moduleName}.macroExecution`));
-      error(err);
-    }
+  //   //attempt script execution
+  //   try {
+  //     fn.call(macro, item, speaker, actor, token, character, event, args);
+  //   } catch (err) {
+  //     ui.notifications?.error(i18n(`${moduleName}.macroExecution`));
+  //     error(err);
+  //   }
 
-    function getEvent() {
-      const a = args[0];
-      if (a instanceof Event) return args[0].shift();
-      if (a?.originalEvent instanceof Event) return args.shift().originalEvent;
-      return undefined;
-    }
-  };
+  //   function getEvent() {
+  //     const a = args[0];
+  //     if (a instanceof Event) return args[0].shift();
+  //     if (a?.originalEvent instanceof Event) return args.shift().originalEvent;
+  //     return undefined;
+  //   }
+  // };
 };
 
 export const initHooks = async () => {
