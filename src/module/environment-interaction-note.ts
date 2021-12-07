@@ -150,7 +150,8 @@ export class EnvironmentInteractionNote extends FormApplication {
         labelStyle = "style='color:green;'";
       }
 
-      const openBtn = $(`<a class="open-enviroment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-people-carry${notes ? '-check' : ''}"></i>${labelTxt}</a>`);
+      // const openBtn = $(`<a class="open-enviroment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-people-carry${notes ? '-check' : ''}"></i>${labelTxt}</a>`);
+      const openBtn = $(`<a class="open-enviroment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-people-carry"></i>${labelTxt}</a>`);
       openBtn.click((ev) => {
         let noteApp:any = null;
         for (const key in app.entity.apps) {

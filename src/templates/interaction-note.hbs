@@ -1,5 +1,9 @@
-<form class="editable">
-    {{#if isGM}}
+<form class="flexcol editable" autocomplete="off">
+    {{!-- {{#if isGM}} --}}
+        <header class="sheet-header">
+            <img src="{{data.img}}" data-edit="img" title="{{data.name}}" height="64" width="64"/>
+            <h1><input name="name" type="text" value="{{data.name}}" placeholder="Name" disabled/></h1>
+        </header>
         <!--
         {{#if showExtraButtons}}
             <div class="controlls">
@@ -8,6 +12,7 @@
             </div>
         {{/if}}
         -->
+        <!--
         <p class="controlls">{{localize "environment-interaction.note.event"}}</p><br></br>
         {{editor content=flags.environment-interaction.notes target="flags.environment-interaction.notes" button=true owner=owner editable=true}}<br></br>
         <p class="controlls">{{localize "environment-interaction.note.event-condition"}}</p><br></br>
@@ -16,5 +21,30 @@
         {{editor content=flags.environment-interaction.notes-success target="flags.environment-interaction.notes-success" button=true owner=owner editable=true}}<br></br>
         <p class="controlls">{{localize "environment-interaction.note.event-failure"}}</p><br></br>
         {{editor content=flags.environment-interaction.notes-failure target="flags.environment-interaction.notes-failure" button=true owner=owner editable=true}}<br></br>
-    {{/if}}
+        -->
+
+        <div class="form-group stacked">
+            <label>{{localize "environment-interaction.note.event"}}</label>
+            <textarea name="flags.environment-interaction.notes">{{flags.environment-interaction.notes}}</textarea>
+        </div>
+        <div class="form-group stacked">
+            <label>{{localize "environment-interaction.note.event-condition"}}</label>
+            <textarea name="flags.environment-interaction.notes-condition">{{flags.environment-interaction.notes-condition}}</textarea>
+        </div>
+        <div class="form-group stacked">
+            <label>{{localize "environment-interaction.note.event-success"}}</label>
+            <textarea name="flags.environment-interaction.notes-success">{{flags.environment-interaction.notes-success}}</textarea>
+        </div>
+        <div class="form-group stacked">
+            <label>{{localize "environment-interaction.note.event-failure"}}</label>
+            <textarea name="flags.environment-interaction.notes-failure">{{flags.environment-interaction.notes-failure}}</textarea>
+        </div>
+
+        <footer class="sheet-footer flexrow">
+            <!--
+            <button type="submit"><i class="fas fa-save"></i> {{ localize "buttons.saveMacro" }}</button>
+            <button class="execute" type="button"><i class="fas fa-dice-d20"></i> {{ localize "buttons.executeMacro" }}</button>
+            -->
+        </footer>
+    {{!-- {{/if}} --}}
 </form>

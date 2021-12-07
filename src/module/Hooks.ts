@@ -117,7 +117,7 @@ export const setupHooks = async () => {
 export const setupTinyMCEEditor = function () {
   // Add custom stylesheet to TinyMCE Config
   //@ts-ignore
-  CONFIG.TinyMCE.content_css.push(`/modules/${moduleName}/environment-interaction-secret.css`);
+  CONFIG.TinyMCE.content_css.push(`/modules/${moduleName}/styles/environment-interaction-secret.css`);
   if (getGame().user?.isGM) {
     // Add GM Secret section type
     //@ts-ignore
@@ -139,7 +139,7 @@ export const setupTinyMCEEditor = function () {
 export const textEditorCreateHandler = function (wrapped, ...args) {
   // const oldCreate = TextEditor.create;
   // const editor = await oldCreate.apply(this, arguments);
-  const editor = this;
+  const editor = this as any;
   // If the user is a GM, add the "game-master" class to the tinyMCE iframe body.
   if (getGame().user?.isGM) {
     editor.dom.addClass('tinymce', 'game-master');
@@ -153,12 +153,12 @@ export const textEditorCreateHandler = function (wrapped, ...args) {
 export const textEditorEnrichHTMLHandler = function (wrapped, ...args) {
   // const oldEnrichHTML = TextEditor.enrichHTML;
   // const content = oldEnrichHTML.apply(this, arguments);
-  const content: string = this;
+  const content = this as string;
   const html = document.createElement('div');
   html.innerHTML = content;
 
   if (!getGame().user?.isGM) {
-    let elements: NodeListOf<Element> = html.querySelectorAll('section.gm-secret');
+    const elements: NodeListOf<Element> = html.querySelectorAll('section.gm-secret');
     elements.forEach((e) => e?.parentNode?.removeChild(e));
   }
   return html.innerHTML;
