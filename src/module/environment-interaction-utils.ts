@@ -1,5 +1,5 @@
 import { Document } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/module.mjs';
-import { ACTION_TYPE, ENVIROMENT_TYPE } from './environment-interaction-models';
+import { ACTION_TYPE, ENVIRONMENT_TYPE } from './environment-interaction-models';
 import { getCanvas, getGame } from './settings';
 
 export function getTokenByTokenID(id) {
@@ -110,38 +110,38 @@ export const getActorByUuid = async function (uuid) {
   return actor;
 };
 
-export const converToEnviromentType = function (action: string): string {
+export const converToEnvironmentType = function (action: string): string {
   let actionType;
   switch (action) {
     case ACTION_TYPE.mwak:
     case ACTION_TYPE.msak:
     case ACTION_TYPE.rwak:
     case ACTION_TYPE.rsak: {
-      actionType = ENVIROMENT_TYPE.ATTACK;
+      actionType = ENVIRONMENT_TYPE.ATTACK;
       break;
     }
     case ACTION_TYPE.abil: {
-      actionType = ENVIROMENT_TYPE.ABILITY;
+      actionType = ENVIRONMENT_TYPE.ABILITY;
       break;
     }
     case ACTION_TYPE.save: {
-      actionType = ENVIROMENT_TYPE.SAVE;
+      actionType = ENVIRONMENT_TYPE.SAVE;
       break;
     }
     case ACTION_TYPE.heal: {
-      actionType = ENVIROMENT_TYPE.ATTACK;
+      actionType = ENVIRONMENT_TYPE.ATTACK;
       break;
     }
     case ACTION_TYPE.util: {
-      actionType = ENVIROMENT_TYPE.UTILITY;
+      actionType = ENVIRONMENT_TYPE.UTILITY;
       break;
     }
     case ACTION_TYPE.other: {
-      actionType = ENVIROMENT_TYPE.UTILITY;
+      actionType = ENVIRONMENT_TYPE.UTILITY;
       break;
     }
     default: {
-      actionType = ENVIROMENT_TYPE.UTILITY;
+      actionType = ENVIRONMENT_TYPE.UTILITY;
       break;
     }
   }

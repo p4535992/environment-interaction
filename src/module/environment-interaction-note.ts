@@ -1,7 +1,7 @@
 import { i18n } from '../environment-interaction-main';
 import { Flags } from './environment-interaction-models';
 import { getGame, moduleName } from './settings';
-export class EnviromentInteractionNote extends FormApplication {
+export class EnvironmentInteractionNote extends FormApplication {
   constructor(object, options) {
     super(object, options);
     //@ts-ignore
@@ -18,7 +18,7 @@ export class EnviromentInteractionNote extends FormApplication {
 
   static get defaultOptions() {
     const options = <any>super.defaultOptions;
-    options.template = `modules/${moduleName}/interaction-note.hts`;
+    options.template = `modules/${moduleName}/templates/interaction-note.hbs`;
     options.width = '600';
     options.height = '700';
     options.classes = ['enviroment-interaction-notes', 'sheet'];
@@ -150,18 +150,18 @@ export class EnviromentInteractionNote extends FormApplication {
         labelStyle = "style='color:green;'";
       }
 
-      const openBtn = $(`<a class="open-enviroment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-clipboard${notes ? '-check' : ''}"></i>${labelTxt}</a>`);
+      const openBtn = $(`<a class="open-enviroment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-people-carry${notes ? '-check' : ''}"></i>${labelTxt}</a>`);
       openBtn.click((ev) => {
-        let noteApp = <any>{};
+        let noteApp:any = null;
         for (const key in app.entity.apps) {
           const obj = app.entity.apps[key];
-          if (obj instanceof EnviromentInteractionNote) {
+          if (obj instanceof EnvironmentInteractionNote) {
             noteApp = obj;
             break;
           }
         }
         if (!noteApp) {
-          noteApp = new EnviromentInteractionNote(app.entity, { submitOnClose: true, closeOnSubmit: false, submitOnUnfocus: true });
+          noteApp = new EnvironmentInteractionNote(app.entity, { submitOnClose: true, closeOnSubmit: false, submitOnUnfocus: true });
         }
         noteApp.render(true);
       });

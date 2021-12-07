@@ -1,4 +1,4 @@
-export const ENVIROMENT_TYPE = {
+export const ENVIRONMENT_TYPE = {
   // From DnD5e system
   SAVE: 'save',
   ABILITY: 'ability',

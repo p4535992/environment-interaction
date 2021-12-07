@@ -1,6 +1,6 @@
 import { debug, error, i18n } from '../environment-interaction-main';
 import { ContestedRoll } from '../lib/tokenbarapi/ContestedRoll';
-import { EnviromentInteractionNote } from './enviroment-interaction-note';
+import { EnvironmentInteractionNote } from './environment-interaction-note';
 import { EnvironmentInteraction } from './environment-interaction';
 import { Flags } from './environment-interaction-models';
 import { getCanvas, getGame, moduleName } from './settings';
@@ -29,7 +29,7 @@ export const readyHooks = async () => {
   */
 
   Hooks.on('renderItemSheet', (app, html, data) => {
-    EnviromentInteractionNote._initEntityHook(app, html, data);
+    EnvironmentInteractionNote._initEntityHook(app, html, data);
   });
 
   //@ts-ignore
@@ -50,11 +50,11 @@ export const readyHooks = async () => {
     // }
   };
   //@ts-ignore
-  Item.prototype._executeEIScript = function (...args) {
+  Item.prototype._executeEIScript = function (macroFlag:string, ...args) {
     //add variable to the evaluation of the script
-    const item = this;
-    const macro = item.getMacro();
-    const speaker = ChatMessage.getSpeaker({ actor: item.actor });
+    const item = <Item>this;
+    const macro = <Macro>item.getFlag(moduleName, macroFlag);
+    const speaker = ChatMessage.getSpeaker({ actor: <Actor>item.actor });
     const actor = item.actor ?? getGame().actors?.get(<string>speaker.actor);
     const token = item.actor?.token ?? getCanvas().tokens?.get(<string>speaker.token);
     const character = getGame().user?.character;
@@ -84,7 +84,7 @@ export const readyHooks = async () => {
     }
 
     function getEvent() {
-      let a = args[0];
+      const a = args[0];
       if (a instanceof Event) return args[0].shift();
       if (a?.originalEvent instanceof Event) return args.shift().originalEvent;
       return undefined;

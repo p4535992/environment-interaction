@@ -120,7 +120,7 @@ When an interaction is selected, the correponding item on the environment token'
 
 A similar method is used to handle attack and damage rolls. When attack/damage buttons are clicked, the weapon is temporarily created on the character's actor sheet and used for the attack/damage roll before being deleted. This allows the character's relevant game stats to be used for the roll.
 
-On the item sheet you can se a button "Enviroment Interaction note", click wil open a dialog where you can put a text, the text must respect
+On the item sheet you can se a button "Environment Interaction note", click wil open a dialog where you can put a text, the text must respect
 
 ## Item Macro integration
 

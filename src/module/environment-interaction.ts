@@ -1,8 +1,7 @@
-import { ACTION_TYPE, ENVIROMENT_TYPE, Flags, ITEM_TYPE, MACRO_TYPE, useData } from './environment-interaction-models';
+import { ACTION_TYPE, ENVIRONMENT_TYPE, Flags, ITEM_TYPE, MACRO_TYPE, useData } from './environment-interaction-models';
 import { i18n } from '../environment-interaction-main.js';
 // import { libWrapper } from '../lib/shim.js';
 import {
-  ENVIROMENT_INTERACTION_ITEM_MACRO_MODULE_NAME,
   getCanvas,
   getGame,
   getMonkTokenBarAPI,
@@ -17,7 +16,7 @@ import {
 } from './settings.js';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { MonkTokenBarContestedRollRequest, MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
-import { converToEnviromentType } from './environment-interaction-utils';
+import { converToEnvironmentType } from './environment-interaction-utils';
 import { ContestedRoll } from '../lib/tokenbarapi/ContestedRoll';
 
 export class EnvironmentInteraction {
@@ -138,12 +137,12 @@ export class EnvironmentInteraction {
         try {
           //@ts-ignore
           const action = ownedItem.data.data.actionType; //$(button).data('action');
-          const actionType = converToEnviromentType(action);
+          const actionType = converToEnvironmentType(action);
 
           let interactorItem:Item = new Item();
           try {
-            // if ([ENVIROMENT_TYPE.ATTACK, ENVIROMENT_TYPE.DAMAGE].includes(actionType)) {
-            if ([ENVIROMENT_TYPE.ATTACK].includes(actionType)) {
+            
+            if ([ENVIRONMENT_TYPE.ATTACK].includes(actionType)) {
               [interactorItem] = <Item[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [ownedItem.toObject()]);
             }
             const REQUEST_LABEL = <string>interactorItem.getFlag(moduleName,Flags.notes);
@@ -155,8 +154,14 @@ export class EnvironmentInteraction {
               return;
             }
             // <ACTION_TYPE>|<MACRO_NAME>|<LABEL_REQUEST>|
-            const macroTypeReq = myRequestArray[0];
+            const macroTypeReq = Object.values(MACRO_TYPE).includes(myRequestArray[0])
+                      ? //@ts-ignore
+                      myRequestArray[0]
+                      : MACRO_TYPE.ITEM;
             const macroNameReq = myRequestArray[1];
+            //@ts-ignore
+            const labelReq = myRequestArray[2] ?? ownedItem.data.data.source;
+
 
             // Hooks.once('renderDialog', (dialog, html, dialogData) => {
             //   dialog.setPosition({ top: event.clientY - 50 ?? null, left: window.innerWidth - 710 });
@@ -170,9 +175,7 @@ export class EnvironmentInteraction {
                 //@ts-ignore
                 ownedItem.executeMacro();
               }
-              //@ts-ignore
               else if (macroNameReq) {
-                //@ts-ignore
                 const macroName = macroNameReq;
                 const macro = <Macro>(<Macros>getGame().macros).getName(macroName);
                 if (!macro) {
@@ -186,19 +189,13 @@ export class EnvironmentInteraction {
             } else {
               switch (actionType) {
                 // may need to update certain item properties like proficiency/equipped
-                case ENVIROMENT_TYPE.ATTACK: {
+                case ENVIRONMENT_TYPE.ATTACK: {
                   // Is managed from the system with manual intervetion
                   // Macro type depends for now on the system used
                   if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
-                    //@ts-ignore
-                    const macroType = Object.values(MACRO_TYPE).includes(ownedItem.data.data.source)
-                      ? //@ts-ignore
-                        ownedItem.data.data.source
-                      : MACRO_TYPE.ITEM;
                     const tokenId = interactorToken.id;
                     const actionId = interactorItem.id;
-                    const payload = macroType + '|' + tokenId + '|' + actionId;
-                    //@ts-ignore
+                    const payload = macroTypeReq + '|' + tokenId + '|' + actionId;
                     await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
                     // Hooks.on('forceUpdateTokenActionHUD', (args) => {
                     //   const checkout = args;
@@ -209,27 +206,21 @@ export class EnvironmentInteraction {
                   }
                   break;
                 }
-                // case ENVIROMENT_TYPE.DAMAGE: {
+                // case ENVIRONMENT_TYPE.DAMAGE: {
                 //   await interactorItem.rollDamage({ critical: event.altKey, event });
                 //   break;
                 // }
-                case ENVIROMENT_TYPE.ABILITY: {
+                case ENVIRONMENT_TYPE.ABILITY: {
                   // (
                   //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}],
                   //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
                   // )
                   if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
-                    //@ts-ignore
-                    const macroType = Object.values(MACRO_TYPE).includes(ownedItem.data.data.source)
-                      ? //@ts-ignore
-                        ownedItem.data.data.source
-                      : MACRO_TYPE.ITEM;
                     const options = new MonkTokenBarRollOptions();
                     options.silent = true;
                     options.fastForward = true;
                     options.flavor = <string>ownedItem.name;
-                    //@ts-ignore
-                    options.request = macroType;
+                    options.request = macroTypeReq;
                     if (options.request.includes(':')) {
                       getMonkTokenBarAPI().requestRoll([interactorToken], options);
                       // Hooks.on('tokenBarUpdateRoll', (tokenBarApp: Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
@@ -240,15 +231,9 @@ export class EnvironmentInteraction {
                       ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                     }
                   } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
-                    //@ts-ignore
-                    const macroType = Object.values(MACRO_TYPE).includes(ownedItem.data.data.source)
-                      ? //@ts-ignore
-                        ownedItem.data.data.source
-                      : MACRO_TYPE.ITEM;
                     const tokenId = interactorToken.id;
                     const actionId = interactorItem.id;
-                    const payload = macroType + '|' + tokenId + '|' + actionId;
-                    //@ts-ignore
+                    const payload = macroTypeReq + '|' + tokenId + '|' + actionId;
                     await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
                     // Hooks.on('forceUpdateTokenActionHUD', (args) => {
                     //   const checkout = args;
@@ -259,8 +244,8 @@ export class EnvironmentInteraction {
                   }
                   break;
                 }
-                case ENVIROMENT_TYPE.SAVE:
-                case ENVIROMENT_TYPE.UTILITY: {
+                case ENVIRONMENT_TYPE.SAVE:
+                case ENVIRONMENT_TYPE.UTILITY: {
                   // (
                   //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}],
                   //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
@@ -272,8 +257,7 @@ export class EnvironmentInteraction {
                     options.silent = true;
                     options.fastForward = true;
                     options.flavor = <string>ownedItem.name;
-                    //@ts-ignore
-                    options.request = ownedItem.data.data.source;
+                    options.request = labelReq;
                     if (options.request.includes(':')) {
                       if (options.request.includes('|')) {
                         const [req0, req1] = options.request.split('|');
@@ -281,12 +265,10 @@ export class EnvironmentInteraction {
                         // Is a contested roll
                         const request1: any = new Object();
                         request1.token = environmentToken.id;
-                        //@ts-ignore
                         request1.request = req1; //'save:'+ environmentItem.data.data.save.ability;
 
                         const request0: any = new Object();
                         request0.token = interactorToken.id;
-                        //@ts-ignore
                         request0.request = req0; //'save:'+ interactorItem.data.data.save.ability;
                         //@ts-igno
                         // options.dc = environmentItem.data.data.save.dc;
@@ -307,15 +289,9 @@ export class EnvironmentInteraction {
                       ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                     }
                   } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
-                    //@ts-ignore
-                    const macroType = Object.values(MACRO_TYPE).includes(ownedItem.data.data.source)
-                      ? //@ts-ignore
-                        ownedItem.data.data.source
-                      : MACRO_TYPE.ITEM;
                     const tokenId = interactorToken.id;
                     const actionId = interactorItem.id;
-                    const payload = macroType + '|' + tokenId + '|' + actionId;
-                    //@ts-ignore
+                    const payload = macroTypeReq + '|' + tokenId + '|' + actionId;
                     await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
                     // Hooks.on('forceUpdateTokenActionHUD', (args) => {
                     //   const checkout = args;
@@ -329,8 +305,8 @@ export class EnvironmentInteraction {
               }
             }
           } finally {
-            if (interactorItem) {
-              interactorToken.actor?.deleteEmbeddedDocuments('Item', [interactorItem.id]);
+            if (interactorItem?.id) {
+              interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>interactorItem.id]);
             }
           }
         } finally {
