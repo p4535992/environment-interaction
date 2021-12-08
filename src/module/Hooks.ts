@@ -59,6 +59,9 @@ export const readyHooks = async () => {
           executeEIMacro(currentItem, Flags.notesfailure);
         }
       }
+    }else{
+      ui.notifications?.error(moduleName + ' | Can\'t retrieve original item');
+      throw new Error(moduleName + ' | Can\'t retrieve original item');
     }
   });
 
@@ -170,7 +173,7 @@ export const initHooks = async () => {
 
   // Register Handlebars helpers
   // @ts-ignore
-  getGame().EnvironmentInteraction.registerHandlebarsHelpers();
+  // getGame().EnvironmentInteraction.registerHandlebarsHelpers();
 };
 
 export const setupHooks = async () => {

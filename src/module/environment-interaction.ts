@@ -1,4 +1,4 @@
-import { ACTION_TYPE, ENVIRONMENT_TYPE, Flags, ITEM_TYPE, MACRO_TYPE, useData } from './environment-interaction-models';
+import { ENVIRONMENT_TYPE, Flags } from './environment-interaction-models';
 import { i18n, log } from '../environment-interaction-main.js';
 // import { libWrapper } from '../lib/shim.js';
 import {
@@ -20,30 +20,30 @@ import { executeEIMacro } from './environment-interaction-utils';
 
 export class EnvironmentInteraction {
   // Handlebars Helpers
-  static registerHandlebarsHelpers() {
-    // generic system
-    Handlebars.registerHelper('ei-type', (item: Item) => {
-      const { type } = item;
-      const noteDetail = item.getFlag(moduleName, Flags.notesdetail);
-      let consumableLabel = 'Unknown';
-      // TODO to make this more... sense ???
-      if (noteDetail === ACTION_TYPE.abil || noteDetail === ACTION_TYPE.util) {
-        consumableLabel = i18n(`${moduleName}.ActionAbil`);
-      } else if (noteDetail === ACTION_TYPE.save) {
-        consumableLabel = i18n(`${moduleName}.ActionSave`);
-      } else {
-        consumableLabel = i18n(`${moduleName}.ActionSkill`);
-      }
-      const typeDict = {
-        weapon: i18n(`${moduleName}.ItemTypeWeapon`),
-        consumable: consumableLabel,
-        loot: i18n(`${moduleName}.handlebarsHelper.Macro`),
-      };
+  // static registerHandlebarsHelpers() {
+  //   // generic system
+  //   Handlebars.registerHelper('ei-type', (item: Item) => {
+  //     const { type } = item;
+  //     const noteDetail = item.getFlag(moduleName, Flags.notesdetail);
+  //     let consumableLabel = 'Unknown';
+  //     // TODO to make this more... sense ???
+  //     if (noteDetail === ACTION_TYPE.abil || noteDetail === ACTION_TYPE.util) {
+  //       consumableLabel = i18n(`${moduleName}.ActionAbil`);
+  //     } else if (noteDetail === ACTION_TYPE.save) {
+  //       consumableLabel = i18n(`${moduleName}.ActionSave`);
+  //     } else {
+  //       consumableLabel = i18n(`${moduleName}.ActionSkill`);
+  //     }
+  //     const typeDict = {
+  //       weapon: i18n(`${moduleName}.ItemTypeWeapon`),
+  //       consumable: consumableLabel,
+  //       loot: i18n(`${moduleName}.handlebarsHelper.Macro`),
+  //     };
 
-      return typeDict[type];
-    });
-    // }
-  }
+  //     return typeDict[type];
+  //   });
+  //   // }
+  // }
 
   // Wrappers
   static registerWrappers() {
@@ -190,7 +190,7 @@ export class EnvironmentInteraction {
               //   : noteDetail
               //   ? noteDetail
               //   : MACRO_TYPE.ITEM;
-              const environmentTypeReq = myRequestArray[0] ?? MACRO_TYPE.ITEM;
+              const environmentTypeReq = myRequestArray[0] ?? ENVIRONMENT_TYPE.ITEM;
               // If MACRO is referenced to the name of a macro
               // If ATTACK is referenced to the macro type used form "Token Action HUD" e.g. "item"
               const macroNameOrTypeReq = myRequestArray[1];
@@ -233,9 +233,16 @@ export class EnvironmentInteraction {
                   // Is managed from the system with manual intervetion
                   // Macro type depends for now on the system used
                   if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
-                    const tokenId = interactorToken.id;
-                    const actionId = interactorItem.id;
-                    const payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
+                    let payload;
+                    if(macroNameOrTypeReq=='item'){
+                      const tokenId = interactorToken.id;
+                      const actionId = interactorItem.id;
+                      payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
+                    }else{
+                      const [refActionId, refId] = macroNameOrTypeReq.split(',');
+                      const tokenId = interactorToken.id;
+                      payload = refActionId + '|' + tokenId + '|' + refId;
+                    }
                     const some = await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
                     log(some);
                     // Hooks.on('forceUpdateTokenActionHUD', (args) => {
@@ -278,9 +285,16 @@ export class EnvironmentInteraction {
                       ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                     }
                   } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
-                    const tokenId = interactorToken.id;
-                    const actionId = interactorItem.id;
-                    const payload = environmentTypeReq + '|' + tokenId + '|' + actionId;
+                    let payload;
+                    if(macroNameOrTypeReq=='item'){
+                      const tokenId = interactorToken.id;
+                      const actionId = interactorItem.id;
+                      payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
+                    }else{
+                      const [refActionId, refId] = macroNameOrTypeReq.split(',');
+                      const tokenId = interactorToken.id;
+                      payload = refActionId + '|' + tokenId + '|' + refId;
+                    }
                     const some = await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
                     log(some);
                     // Hooks.on('forceUpdateTokenActionHUD', (args) => {
@@ -292,8 +306,7 @@ export class EnvironmentInteraction {
                   }
                   break;
                 }
-                case ENVIRONMENT_TYPE.SAVE:
-                case ENVIRONMENT_TYPE.UTILITY: {
+                case ENVIRONMENT_TYPE.SAVE: {
                   // (
                   //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}],
                   //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
@@ -346,9 +359,16 @@ export class EnvironmentInteraction {
                       ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                     }
                   } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
-                    const tokenId = interactorToken.id;
-                    const actionId = interactorItem.id;
-                    const payload = environmentTypeReq + '|' + tokenId + '|' + actionId;
+                    let payload;
+                    if(macroNameOrTypeReq=='item'){
+                      const tokenId = interactorToken.id;
+                      const actionId = interactorItem.id;
+                      payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
+                    }else{
+                      const [refActionId, refId] = macroNameOrTypeReq.split(',');
+                      const tokenId = interactorToken.id;
+                      payload = refActionId + '|' + tokenId + '|' + refId;
+                    }
                     const some = await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
                     log(some);
                     // Hooks.on('forceUpdateTokenActionHUD', (args) => {
