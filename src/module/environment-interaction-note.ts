@@ -60,14 +60,20 @@ export class EnvironmentInteractionNote extends FormApplication {
         //   author: getGame().user?.id,
         // });
         // await this.entity.setFlag(moduleName, Flags.notesmacro, macro);
-      }else{
+      } else {
         await this.entity.setFlag(moduleName, Flags.notes, null);
+      }
+
+      if (formData[`flags.${moduleName}.${Flags.notesdetail}`]) {
+        await this.entity.setFlag(moduleName, Flags.notesdetail, formData[`flags.${moduleName}.${Flags.notesdetail}`]);
+      } else {
+        await this.entity.setFlag(moduleName, Flags.notesdetail, null);
       }
 
       if (formData[`flags.${moduleName}.${Flags.notescondition}`]) {
         let macroCondition = formData[`flags.${moduleName}.${Flags.notescondition}`];
-        if(!macroCondition?.startsWith("return")){
-          macroCondition = "return " + macroCondition;
+        if (!macroCondition?.startsWith('return')) {
+          macroCondition = 'return ' + macroCondition;
         }
         await this.entity.setFlag(moduleName, Flags.notescondition, macroCondition);
         // const macroCondition = new Macro({
@@ -78,7 +84,7 @@ export class EnvironmentInteractionNote extends FormApplication {
         //   author: getGame().user?.id,
         // });
         // await this.entity.setFlag(moduleName, Flags.notesconditionmacro, macroCondition);
-      }else{
+      } else {
         await this.entity.setFlag(moduleName, Flags.notescondition, null);
         // await this.entity.setFlag(moduleName, Flags.notesconditionmacro, null);
       }
@@ -93,7 +99,7 @@ export class EnvironmentInteractionNote extends FormApplication {
         //   author: getGame().user?.id,
         // });
         // await this.entity.setFlag(moduleName, Flags.notessuccessmacro, macroSuccess);
-      }else{
+      } else {
         await this.entity.setFlag(moduleName, Flags.notessuccess, null);
         // await this.entity.setFlag(moduleName, Flags.notessuccessmacro, null);
       }
@@ -108,7 +114,7 @@ export class EnvironmentInteractionNote extends FormApplication {
         //   author: getGame().user?.id,
         // });
         // await this.entity.setFlag(moduleName, Flags.notesfailuremacro, macroFailure);
-      }else{
+      } else {
         await this.entity.setFlag(moduleName, Flags.notesfailure, null);
         // await this.entity.setFlag(moduleName, Flags.notesfailuremacro, null);
       }
@@ -168,7 +174,7 @@ export class EnvironmentInteractionNote extends FormApplication {
       // const openBtn = $(`<a class="open-enviroment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-people-carry${notes ? '-check' : ''}"></i>${labelTxt}</a>`);
       const openBtn = $(`<a class="open-enviroment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-people-carry"></i>${labelTxt}</a>`);
       openBtn.click((ev) => {
-        let noteApp:any = null;
+        let noteApp: any = null;
         for (const key in app.entity.apps) {
           const obj = app.entity.apps[key];
           if (obj instanceof EnvironmentInteractionNote) {

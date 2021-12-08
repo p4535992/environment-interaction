@@ -1,10 +1,10 @@
 export const ENVIRONMENT_TYPE = {
-  // From DnD5e system
   SAVE: 'save',
   ABILITY: 'ability',
   // DAMAGE: 'damage',
   ATTACK: 'attack',
   UTILITY: 'utility',
+  MACRO: 'macro',
 };
 
 export const MACRO_TYPE = {
@@ -49,6 +49,7 @@ export class useData {
 export const Flags = {
   environmentToken: 'environmentToken',
   notes: 'notes',
+  notesdetail: 'notes-detail',
   notescondition: 'notes-condition',
   notessuccess: 'notes-success',
   notesfailure: 'notes-failure',

@@ -149,8 +149,8 @@ export const converToEnvironmentType = function (action: string): string {
   return actionType;
 };
 
-export const executeEIMacro = function (item:Item, macroFlag:string, ...args):any {
-  if(!item.getFlag(moduleName, macroFlag)){
+export const executeEIMacro = function (item: Item, macroFlag: string, ...args): any {
+  if (!item.getFlag(moduleName, macroFlag)) {
     return false;
   }
   // switch(this.getMacro().data.type){

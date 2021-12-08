@@ -50,10 +50,11 @@
     "Proficiency": "Proficiency",
     "note": {
       "label": "Environment Interaction Note",
-      "event": "Event Macro/Code",
-      "event-condition": "Condition Macro/Code",
-      "event-success": "Success Macro/Code",
-      "event-failure": "Failure Macro/Code"
+      "event": "Event : the label for manage the interaction,   ",
+      "event-detail": "Detail: the sub-label with some additional info on the voice",
+      "event-condition": "Condition: Macro/Code for decide if the interactor token can see the voice",
+      "event-success": "Success : Macro/Code to run when the interaction is consider a success",
+      "event-failure": "Failure : Macro/Code to run when the interaction is consider a failure"
     },
     "macroExecution": "There was an error in your macro syntax. See the console (F12) for details"
   }

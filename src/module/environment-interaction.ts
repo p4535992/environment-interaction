@@ -1,5 +1,5 @@
 import { ACTION_TYPE, ENVIRONMENT_TYPE, Flags, ITEM_TYPE, MACRO_TYPE, useData } from './environment-interaction-models';
-import { i18n } from '../environment-interaction-main.js';
+import { i18n, log } from '../environment-interaction-main.js';
 // import { libWrapper } from '../lib/shim.js';
 import {
   getCanvas,
@@ -23,14 +23,14 @@ export class EnvironmentInteraction {
   // Handlebars Helpers
   static registerHandlebarsHelpers() {
     // generic system
-    Handlebars.registerHelper('ei-type', (item) => {
+    Handlebars.registerHelper('ei-type', (item:Item) => {
       const { type } = item;
-      const actionType = <string>item.data.data.actionType;
+      const noteDetail = item.getFlag(moduleName, Flags.notesdetail);
       let consumableLabel = 'Unknown';
       // TODO to make this more... sense ???
-      if (actionType === ACTION_TYPE.abil || actionType === ACTION_TYPE.util) {
+      if (noteDetail === ACTION_TYPE.abil || noteDetail === ACTION_TYPE.util) {
         consumableLabel = i18n(`${moduleName}.ActionAbil`);
-      } else if (actionType === ACTION_TYPE.save) {
+      } else if (noteDetail === ACTION_TYPE.save) {
         consumableLabel = i18n(`${moduleName}.ActionSave`);
       } else {
         consumableLabel = i18n(`${moduleName}.ActionSkill`);
@@ -89,39 +89,34 @@ export class EnvironmentInteraction {
     // TODO: dnd5e specific; create a helper function to handle different systems
     // Sort to mimic order of items on character sheet
     const items: Item[] = [];
-    const actionsType: string[] = 
-      [
-        ITEM_TYPE.TOOL, ITEM_TYPE.WEAPON, 
-        ACTION_TYPE.abil, ACTION_TYPE.save, 
-        ITEM_TYPE.LOOT, ITEM_TYPE.CONSUMABLE
-      ];
-    for (const type of actionsType) {
+    // const actionsType: string[] = [ITEM_TYPE.TOOL, ITEM_TYPE.WEAPON, ACTION_TYPE.abil, ACTION_TYPE.save, ITEM_TYPE.LOOT, ITEM_TYPE.CONSUMABLE];
+    // for (const type of actionsType) {
       environmentToken.actor.items
         .filter((i) => {
-          // if (i.type === ITEM_TYPE.CONSUMABLE) {
-          //   return i.data.data.actionType === type;
-          // } else {
-          //   return i.type === type;
-          // }
-          if(i.getFlag(moduleName, Flags.notescondition)){
-            const result = executeEIMacro(i, Flags.notescondition);
-            if(result){
-              return result; 
-            }else{
-              return false;
+          if (i.getFlag(moduleName, Flags.notes)) {
+            if (i.getFlag(moduleName, Flags.notescondition)) {
+              const result = executeEIMacro(i, Flags.notescondition);
+              if (result) {
+                return result;
+              } else {
+                return false;
+              }
             }
-          }      
-          return i.type === type;
+            // return i.type === type;
+            return true;
+          }else{
+            return false;
+          }
         })
         .sort((a, b) => (a.data.sort || 0) - (b.data.sort || 0))
         .forEach((i) => {
-          if (items.some(e => e.id === i.id)) {
+          if (items.some((e) => e.id === i.id)) {
             // contains the element we're looking for
-          }else{
-            items.push(i);
+          } else {
+            items.push(i); // not sure why i need this
           }
         });
-    }
+    // }
 
     const content = await renderTemplate(`/modules/${moduleName}/templates/interaction-dialog.hbs`, { items });
     const buttons = <any>{};
@@ -155,171 +150,179 @@ export class EnvironmentInteraction {
         const ownedItem = <Item>ownedItemTmp;
         try {
           //@ts-ignore
-          const action = ownedItem.data.data.actionType; //$(button).data('action');
-          const actionType = converToEnvironmentType(action);
-
-          let interactorItem:Item = new Item();
+          // const action = <string>ownedItem.getFlag(moduleName,Flags.notesdetail); //ownedItem.data.data.actionType; //$(button).data('action');
+          // const noteDetail = converToEnvironmentType(action);
+          const noteDetail = <string>ownedItem.getFlag(moduleName,Flags.notesdetail);
+          let interactorItem: Item = new Item();
           try {
-            
-            if ([ENVIRONMENT_TYPE.ATTACK].includes(actionType)) {
-              [interactorItem] = <Item[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [ownedItem.toObject()]);
-            }
-            const REQUEST_LABEL = <string>interactorItem.getFlag(moduleName,Flags.notes);
-            if(!REQUEST_LABEL){
+            const REQUEST_LABEL = <string>interactorItem.getFlag(moduleName, Flags.notes);
+            if (!REQUEST_LABEL) {
               return;
             }
-            const myRequestArray = REQUEST_LABEL.split("|") ?? [];
-            if(myRequestArray.length == 0){
+            const myRequestArray = REQUEST_LABEL.split('|') ?? [];
+            if (myRequestArray.length == 0) {
               return;
             }
-            // <ACTION_TYPE>|<MACRO_NAME>|<LABEL_REQUEST>|
-            const macroTypeReq = Object.values(MACRO_TYPE).includes(myRequestArray[0])
-                      ? //@ts-ignore
-                      myRequestArray[0]
-                      : (actionType ? actionType : MACRO_TYPE.ITEM);
-            const macroNameReq = myRequestArray[1];
+            // <ENVIRONMENT_TYPE>|<MACRO_NAME>|<LABEL_REQUEST>|
+            const environmentTypeReq = Object.values(MACRO_TYPE).includes(myRequestArray[0])
+              ? //@ts-ignore
+                myRequestArray[0]
+              : noteDetail
+              ? noteDetail
+              : MACRO_TYPE.ITEM;
+
+            // If MACRO is referenced to the name of a macro
+            // If ATTACK is referenced to the macro type used form "Token Action HUD" e.g. "item"
+            const macroNameOrTypeReq = myRequestArray[1];
             //@ts-ignore
             const labelReq = myRequestArray[2] ?? ownedItem.data.data.source;
-
+            // if ([ENVIRONMENT_TYPE.ATTACK].includes(noteDetail)) {
+            log(environmentTypeReq + '|' + macroNameOrTypeReq + '|' + labelReq);
+            if ([ENVIRONMENT_TYPE.ATTACK].includes(environmentTypeReq)) {
+              [interactorItem] = <Item[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [ownedItem.toObject()]);
+            }
             // Hooks.once('renderDialog', (dialog, html, dialogData) => {
             //   dialog.setPosition({ top: event.clientY - 50 ?? null, left: window.innerWidth - 710 });
             // });
-            // Integration with item macro
-            //@ts-ignore
-            if (ownedItem.data.flags.itemacro?.macro && isItemMacroModuleActive()) {
-              //if (ownedItem.type === ITEM_TYPE.LOOT) {
-              //@ts-ignore
-              if (isSystemItemMacroSupported() && ownedItem.hasMacro()) {
+            switch (noteDetail) {
+              case ENVIRONMENT_TYPE.MACRO: {
+                // Integration with item macro
                 //@ts-ignore
-                ownedItem.executeMacro();
+                if (ownedItem.data.flags.itemacro?.macro && isItemMacroModuleActive()) {
+                  //if (ownedItem.type === ITEM_TYPE.LOOT) {
+                  //@ts-ignore
+                  if (isSystemItemMacroSupported() && ownedItem.hasMacro()) {
+                    //@ts-ignore
+                    ownedItem.executeMacro();
+                  }
+                }
+                else if (macroNameOrTypeReq) {
+                  const macroName = macroNameOrTypeReq;
+                  const macro = <Macro>(getGame().macros?.getName(macroName) || getGame().macros?.get(macroName));
+                  if (!macro) {
+                    ui.notifications?.error(moduleName + ' | No macro found with name/id : ' + macroName);
+                  }
+                  macro.execute({ actor: <Actor>interactorToken.actor, token: interactorToken });
+                } 
+                else {
+                  ui.notifications?.error(moduleName + " | Can't interact with item for launch a macro");
+                  throw new Error(moduleName + " | Can't interact with item for launch a macro");
+                }
+                break;
               }
-              else if (macroNameReq) {
-                const macroName = macroNameReq;
-                const macro = <Macro>(<Macros>getGame().macros).getName(macroName);
-                if (!macro) {
-                  ui.notifications?.error(moduleName + ' | No macro found with name/id : ' + macroName);
+              // may need to update certain item properties like proficiency/equipped
+              case ENVIRONMENT_TYPE.ATTACK: {
+                // Is managed from the system with manual intervetion
+                // Macro type depends for now on the system used
+                if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
+                  const tokenId = interactorToken.id;
+                  const actionId = interactorItem.id;
+                  const payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
+                  const some = await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
+                  // Hooks.on('forceUpdateTokenActionHUD', (args) => {
+                  //   const checkout = args;
+                  // });
+                } else {
+                  ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                  throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
                 }
-                macro.execute({ actor: <Actor>interactorToken.actor, token: interactorToken });
-              } else {
-                ui.notifications?.error(moduleName + " | Can't interact with item for launch a macro");
-                throw new Error(moduleName + " | Can't interact with item for launch a macro");
+                break;
               }
-            } else {
-              switch (actionType) {
-                // may need to update certain item properties like proficiency/equipped
-                case ENVIRONMENT_TYPE.ATTACK: {
-                  // Is managed from the system with manual intervetion
-                  // Macro type depends for now on the system used
-                  if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
-                    const tokenId = interactorToken.id;
-                    const actionId = interactorItem.id;
-                    const payload = macroTypeReq + '|' + tokenId + '|' + actionId;
-                    await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
-                    // Hooks.on('forceUpdateTokenActionHUD', (args) => {
-                    //   const checkout = args;
+              // case ENVIRONMENT_TYPE.DAMAGE: {
+              //   await interactorItem.rollDamage({ critical: event.altKey, event });
+              //   break;
+              // }
+              case ENVIRONMENT_TYPE.ABILITY: {
+                // (
+                //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}],
+                //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
+                // )
+                if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
+                  const options = new MonkTokenBarRollOptions();
+                  options.silent = true;
+                  options.fastForward = true;
+                  options.flavor = <string>ownedItem.name;
+                  options.request = environmentTypeReq;
+                  if (options.request.includes(':')) {
+                    const some = getMonkTokenBarAPI().requestRoll([interactorToken], options);
+                    // Hooks.on('tokenBarUpdateRoll', (tokenBarApp: Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
+                    //   // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
+                    //   const checkout = msgtokenRoll.total;
                     // });
                   } else {
-                    ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
-                    throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                    ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                   }
-                  break;
+                } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
+                  const tokenId = interactorToken.id;
+                  const actionId = interactorItem.id;
+                  const payload = environmentTypeReq + '|' + tokenId + '|' + actionId;
+                  const some = await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
+                  // Hooks.on('forceUpdateTokenActionHUD', (args) => {
+                  //   const checkout = args;
+                  // });
+                } else {
+                  ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                  throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
                 }
-                // case ENVIRONMENT_TYPE.DAMAGE: {
-                //   await interactorItem.rollDamage({ critical: event.altKey, event });
-                //   break;
-                // }
-                case ENVIRONMENT_TYPE.ABILITY: {
-                  // (
-                  //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}],
-                  //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
-                  // )
-                  if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
-                    const options = new MonkTokenBarRollOptions();
-                    options.silent = true;
-                    options.fastForward = true;
-                    options.flavor = <string>ownedItem.name;
-                    options.request = macroTypeReq;
-                    if (options.request.includes(':')) {
-                      getMonkTokenBarAPI().requestRoll([interactorToken], options);
-                      // Hooks.on('tokenBarUpdateRoll', (tokenBarApp: Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
-                      //   // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
-                      //   const checkout = msgtokenRoll.total;
-                      // });
-                    } else {
-                      ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
-                    }
-                  } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
-                    const tokenId = interactorToken.id;
-                    const actionId = interactorItem.id;
-                    const payload = macroTypeReq + '|' + tokenId + '|' + actionId;
-                    await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
-                    // Hooks.on('forceUpdateTokenActionHUD', (args) => {
-                    //   const checkout = args;
-                    // });
-                  } else {
-                    ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
-                    throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
-                  }
-                  break;
-                }
-                case ENVIRONMENT_TYPE.SAVE:
-                case ENVIRONMENT_TYPE.UTILITY: {
-                  // (
-                  //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}],
-                  //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
-                  // )
-                  if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
-                    //const save = environmentItem.data.data.save.ability;
-                    //interactor.rollAbilitySave(save);
-                    const options = new MonkTokenBarRollOptions();
-                    options.silent = true;
-                    options.fastForward = true;
-                    options.flavor = <string>ownedItem.name;
-                    options.request = labelReq;
-                    if (options.request.includes(':')) {
-                      if (options.request.includes('|')) {
-                        const [req0, req1] = options.request.split('|');
+                break;
+              }
+              case ENVIRONMENT_TYPE.SAVE:
+              case ENVIRONMENT_TYPE.UTILITY: {
+                // (
+                //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}],
+                //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
+                // )
+                if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
+                  //const save = environmentItem.data.data.save.ability;
+                  //interactor.rollAbilitySave(save);
+                  const options = new MonkTokenBarRollOptions();
+                  options.silent = true;
+                  options.fastForward = true;
+                  options.flavor = <string>ownedItem.name;
+                  options.request = labelReq;
+                  if (options.request.includes(':')) {
+                    if (options.request.includes('|')) {
+                      const [req0, req1] = options.request.split('|');
 
-                        // Is a contested roll
-                        const request1: any = new Object();
-                        request1.token = environmentToken.id;
-                        request1.request = req1; //'save:'+ environmentItem.data.data.save.ability;
+                      // Is a contested roll
+                      const request1: any = new Object();
+                      request1.token = environmentToken.id;
+                      request1.request = req1; //'save:'+ environmentItem.data.data.save.ability;
 
-                        const request0: any = new Object();
-                        request0.token = interactorToken.id;
-                        request0.request = req0; //'save:'+ interactorItem.data.data.save.ability;
-                        //@ts-igno
-                        // options.dc = environmentItem.data.data.save.dc;
-                        //@ts-ignore
-                        options.request = undefined;
-                        // eslint-disable-next-line @typescript-eslint/no-array-constructor
-                        options.requestoptions.push({ id: 'save', text: req0.split(':')[1], groups: [] });
-                        options.requestoptions.push({ id: 'save', text: req1.split(':')[1], groups: [] });
-                        getMonkTokenBarAPI().requestContestedRoll(request1, request0, options);
-                      } else {
-                        getMonkTokenBarAPI().requestRoll([interactorToken], options);
-                      }
-                      // Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll|Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
-                      //   // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
-                      //   const checkout = msgtokenRoll.total;
-                      // });
+                      const request0: any = new Object();
+                      request0.token = interactorToken.id;
+                      request0.request = req0; //'save:'+ interactorItem.data.data.save.ability;
+                      //@ts-igno
+                      // options.dc = environmentItem.data.data.save.dc;
+                      //@ts-ignore
+                      options.request = undefined;
+                      // eslint-disable-next-line @typescript-eslint/no-array-constructor
+                      options.requestoptions.push({ id: 'save', text: req0.split(':')[1], groups: [] });
+                      options.requestoptions.push({ id: 'save', text: req1.split(':')[1], groups: [] });
+                      const some = getMonkTokenBarAPI().requestContestedRoll(request1, request0, options);
                     } else {
-                      ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
+                      const some = getMonkTokenBarAPI().requestRoll([interactorToken], options);
                     }
-                  } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
-                    const tokenId = interactorToken.id;
-                    const actionId = interactorItem.id;
-                    const payload = macroTypeReq + '|' + tokenId + '|' + actionId;
-                    await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
-                    // Hooks.on('forceUpdateTokenActionHUD', (args) => {
-                    //   const checkout = args;
+                    // Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll|Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
+                    //   // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
+                    //   const checkout = msgtokenRoll.total;
                     // });
                   } else {
-                    ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
-                    throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                    ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
                   }
-                  break;
+                } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
+                  const tokenId = interactorToken.id;
+                  const actionId = interactorItem.id;
+                  const payload = environmentTypeReq + '|' + tokenId + '|' + actionId;
+                  const some = await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
+                  // Hooks.on('forceUpdateTokenActionHUD', (args) => {
+                  //   const checkout = args;
+                  // });
+                } else {
+                  ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                  throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
                 }
+                break;
               }
             }
           } finally {
