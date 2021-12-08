@@ -35,6 +35,7 @@ export class EnvironmentInteractionNote extends FormApplication {
     data.flags = this.entity.data.flags;
     data.owner = getGame().user?.id;
     data.isGM = getGame().user?.isGM;
+    data.img = this.entity.img;
     // data.showExtraButtons = this.showExtraButtons;
 
     return data;
@@ -45,7 +46,28 @@ export class EnvironmentInteractionNote extends FormApplication {
 
     // html.find('.moveToNote').click(ev => this._moveToNotes());
     // html.find('.moveToDescription').click(ev => this._moveToDescription());
+    // html.find('.ei-info').click((ev) => this._showInfo());
   }
+
+  // _showInfo() {
+  //   let content = this.entity.getFlag(moduleName, Flags.notesinfo);
+  //   if(!content){
+  //     content = 'No info provided';
+  //   }
+  //   const d = new Dialog({
+  //     title: this.entity.data.name,
+  //     content: content,
+  //     buttons: {},
+  //     default: '',
+  //     render: (html) => {
+  //       //$(".ei.info").parent().next().addClass(".customcss");
+  //     },
+  //     close: (html) => {
+  //       console.log('Conferma finestra chiusa');
+  //     },
+  //   });
+  //   d.render(true);
+  // }
 
   async _updateObject(event, formData) {
     if (getGame().user?.isGM) {
@@ -62,6 +84,12 @@ export class EnvironmentInteractionNote extends FormApplication {
         // await this.entity.setFlag(moduleName, Flags.notesmacro, macro);
       } else {
         await this.entity.setFlag(moduleName, Flags.notes, null);
+      }
+
+      if (formData[`flags.${moduleName}.${Flags.notesinfo}`]) {
+        await this.entity.setFlag(moduleName, Flags.notesinfo, formData[`flags.${moduleName}.${Flags.notesinfo}`]);
+      } else {
+        await this.entity.setFlag(moduleName, Flags.notesinfo, null);
       }
 
       if (formData[`flags.${moduleName}.${Flags.notesdetail}`]) {

@@ -50,6 +50,7 @@ export const Flags = {
   environmentToken: 'environmentToken',
   notes: 'notes',
   notesdetail: 'notes-detail',
+  notesinfo: 'notes-info',
   notescondition: 'notes-condition',
   notessuccess: 'notes-success',
   notesfailure: 'notes-failure',

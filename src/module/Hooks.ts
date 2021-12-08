@@ -28,6 +28,27 @@ export const readyHooks = async () => {
   libWrapper.register(moduleName, 'TextEditor.create', textEditorCreateHandler, 'MIXED');
   */
 
+  Hooks.on('renderActorSheet', async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
+    const isgm = getGame().user?.isGM;
+    if (!isgm) {
+      const actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
+      // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
+      const list = htmlElement.find('li.item');
+      for (const li of list) {
+        const li2 = $(li);
+        const itemId = li2.attr('data-item-id');
+        const item = actorEntity.items?.find((item: Item) => {
+          return item && item.id == itemId;
+        });
+        if (item?.getFlag(moduleName, Flags.notes)) {
+          li2.hide();
+        }
+      }
+    } else {
+      //
+    }
+  });
+
   Hooks.on('renderItemSheet', (app, html, data) => {
     EnvironmentInteractionNote._initEntityHook(app, html, data);
   });

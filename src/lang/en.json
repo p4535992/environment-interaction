@@ -52,6 +52,7 @@
       "label": "Environment Interaction Note",
       "event": "Event : the label for manage the interaction,   ",
       "event-detail": "Detail: the sub-label with some additional info on the voice",
+      "event-info": "Info: dialog showed up when click on the information icon if you want to show some information before click",
       "event-condition": "Condition: Macro/Code for decide if the interactor token can see the voice",
       "event-success": "Success : Macro/Code to run when the interaction is consider a success",
       "event-failure": "Failure : Macro/Code to run when the interaction is consider a failure"

@@ -111,43 +111,43 @@ export const getActorByUuid = async function (uuid) {
   return actor;
 };
 
-export const converToEnvironmentType = function (action: string): string {
-  let actionType;
-  switch (action) {
-    case ACTION_TYPE.mwak:
-    case ACTION_TYPE.msak:
-    case ACTION_TYPE.rwak:
-    case ACTION_TYPE.rsak: {
-      actionType = ENVIRONMENT_TYPE.ATTACK;
-      break;
-    }
-    case ACTION_TYPE.abil: {
-      actionType = ENVIRONMENT_TYPE.ABILITY;
-      break;
-    }
-    case ACTION_TYPE.save: {
-      actionType = ENVIRONMENT_TYPE.SAVE;
-      break;
-    }
-    case ACTION_TYPE.heal: {
-      actionType = ENVIRONMENT_TYPE.ATTACK;
-      break;
-    }
-    case ACTION_TYPE.util: {
-      actionType = ENVIRONMENT_TYPE.UTILITY;
-      break;
-    }
-    case ACTION_TYPE.other: {
-      actionType = ENVIRONMENT_TYPE.UTILITY;
-      break;
-    }
-    default: {
-      actionType = ENVIRONMENT_TYPE.UTILITY;
-      break;
-    }
-  }
-  return actionType;
-};
+// export const converToEnvironmentType = function (action: string): string {
+//   let actionType;
+//   switch (action) {
+//     case ACTION_TYPE.mwak:
+//     case ACTION_TYPE.msak:
+//     case ACTION_TYPE.rwak:
+//     case ACTION_TYPE.rsak: {
+//       actionType = ENVIRONMENT_TYPE.ATTACK;
+//       break;
+//     }
+//     case ACTION_TYPE.abil: {
+//       actionType = ENVIRONMENT_TYPE.ABILITY;
+//       break;
+//     }
+//     case ACTION_TYPE.save: {
+//       actionType = ENVIRONMENT_TYPE.SAVE;
+//       break;
+//     }
+//     case ACTION_TYPE.heal: {
+//       actionType = ENVIRONMENT_TYPE.ATTACK;
+//       break;
+//     }
+//     case ACTION_TYPE.util: {
+//       actionType = ENVIRONMENT_TYPE.UTILITY;
+//       break;
+//     }
+//     case ACTION_TYPE.other: {
+//       actionType = ENVIRONMENT_TYPE.UTILITY;
+//       break;
+//     }
+//     default: {
+//       actionType = ENVIRONMENT_TYPE.UTILITY;
+//       break;
+//     }
+//   }
+//   return actionType;
+// };
 
 export const executeEIMacro = function (item: Item, macroFlag: string, ...args): any {
   if (!item.getFlag(moduleName, macroFlag)) {

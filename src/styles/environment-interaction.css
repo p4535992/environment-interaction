@@ -4,7 +4,7 @@
   border: 2px groove #eeede0;
   line-height: normal;
   padding: 0px;
-  margin: 0 0 5px;
+  /* margin: 0 0 5px; */
 }
 
 .ei-icon {
@@ -33,4 +33,12 @@
 .ei-type {
   font-size: 12px;
   color: #4b4a44;
+}
+
+.ei-info {
+  width: inherit;
+}
+
+.ei-cotrols {
+  display: inline-flex;
 }
