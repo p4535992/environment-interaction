@@ -16,7 +16,7 @@ export const readyHooks = async () => {
     // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
     const interactToken = <Token>getCanvas().tokens?.get(updateId);
     const monkTokenBarDetail = <MonkTokenBarMessageOptions>(<any>message.data.flags['monks-tokenbar'])?.options;
-    const dc = <number>monkTokenBarDetail.dc;
+    
     const actorId = <string>getCanvas().tokens?.controlled[0].data.actorId;
     const currentActor = <Actor>getGame().actors?.get(actorId);
     const interactActor = <Actor>getGame().actors?.get(<string>interactToken.data.actorId);
@@ -25,6 +25,9 @@ export const readyHooks = async () => {
     //   ? <HTMLElement>$(message.data.content).find('.item')[0]
     //   : undefined;
     // const itemId = <string>$((<HTMLElement>itemRef).outerHTML).attr('data-item-id');
+
+    const dc = <number>monkTokenBarDetail.dc;
+    const total = <number>msgtokenRoll?.total;
     const itemId = monkTokenBarDetail.flavor;
 
     // TODO find a better method this is ugly
@@ -47,7 +50,7 @@ export const readyHooks = async () => {
     // });
     if (currentItem) {
       if (dc != null && dc != undefined && !isNaN(dc)) {
-        if (<number>msgtokenRoll?.total >= dc) {
+        if (total >= dc) {
           executeEIMacro(currentItem, Flags.notessuccess);
         } else {
           executeEIMacro(currentItem, Flags.notesfailure);
@@ -65,9 +68,72 @@ export const readyHooks = async () => {
     }
   });
 
-  Hooks.on('forceUpdateTokenActionHUD', (args) => {
-    const checkout = args;
+  // Hooks.on('forceUpdateTokenActionHUD', (args) => {
+  //   const checkout = args;
+  // });
+
+  /*
+  Hooks.on('renderChatMessage', async (message: ChatMessage, html: JQuery<HTMLElement>, speakerInfo) => {
+    if(!message.roll){
+      return;
+    }
+    const scene = getGame().scenes?.find((scene:Scene) =>{
+      return scene.id == speakerInfo.message.speaker.scene;
+    });
+    const actor = getGame().actors?.find((actor:Actor) =>{
+      return actor.id == speakerInfo.message.speaker.actor;
+    });
+    const token = getCanvas().tokens?.placeables.find((token:Token) =>{
+      return token.id == speakerInfo.message.speaker.token;
+    });
+    const alias = speakerInfo.message.speaker.alias;
+
+    const totalRef:HTMLElement|undefined = $(message.data.content).find('.part-total').length > 0
+      ? <HTMLElement>$(message.data.content).find('.part-total')[0]
+      : undefined;
+
+    const dc = 0;
+    const total = 0;
+    const itemId = '';
+
+    // TODO find a better method this is ugly
+    let currentItem;
+    getCanvas().tokens?.placeables.find((token: Token) => {
+      const actor = <Actor>getGame().actors?.find((actor: Actor) => {
+        return token.data.actorId == actor.id;
+      });
+      if (actor) {
+        currentItem = actor.items.find((item: Item) => {
+          return item.id == itemId;
+        });
+        if (currentItem) {
+          return currentItem;
+        }
+      }
+    });
+    // const currentItem = <Item>interactActor.items.find((item:Item) =>{
+    //   return item.id == itemId;
+    // });
+    if (currentItem) {
+      if (dc != null && dc != undefined && !isNaN(dc)) {
+        if (total >= dc) {
+          executeEIMacro(currentItem, Flags.notessuccess);
+        } else {
+          executeEIMacro(currentItem, Flags.notesfailure);
+        }
+      } else {
+        const macroSuccess = currentItem?.getFlag(moduleName, Flags.notessuccess);
+        const macroFailure = currentItem?.getFlag(moduleName, Flags.notesfailure);
+        if (macroFailure) {
+          executeEIMacro(currentItem, Flags.notesfailure);
+        }
+      }
+    }else{
+      ui.notifications?.error(moduleName + ' | Can\'t retrieve original item');
+      throw new Error(moduleName + ' | Can\'t retrieve original item');
+    }
   });
+  */
 
   /*
   setupTinyMCEEditor();
