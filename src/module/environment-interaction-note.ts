@@ -21,7 +21,7 @@ export class EnvironmentInteractionNote extends FormApplication {
     options.template = `modules/${moduleName}/templates/interaction-note.hbs`;
     options.width = '600';
     options.height = '700';
-    options.classes = ['enviroment-interaction-notes', 'sheet'];
+    options.classes = ['environment-interaction-notes', 'sheet'];
     options.title = i18n(`${moduleName}.note.label`);
     options.resizable = true;
     options.editable = true;
@@ -36,6 +36,7 @@ export class EnvironmentInteractionNote extends FormApplication {
     data.owner = getGame().user?.id;
     data.isGM = getGame().user?.isGM;
     data.img = this.entity.img;
+    data.name = this.entity.name;
     // data.showExtraButtons = this.showExtraButtons;
 
     return data;
@@ -169,7 +170,7 @@ export class EnvironmentInteractionNote extends FormApplication {
       // );
       this.render();
     } else {
-      ui.notifications?.error('You have to be GM to edit Enviroment Interaction Notes.');
+      ui.notifications?.error('You have to be GM to edit Environment Interaction Notes.');
     }
   }
 
@@ -199,8 +200,8 @@ export class EnvironmentInteractionNote extends FormApplication {
         labelStyle = "style='color:green;'";
       }
 
-      // const openBtn = $(`<a class="open-enviroment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-people-carry${notes ? '-check' : ''}"></i>${labelTxt}</a>`);
-      const openBtn = $(`<a class="open-enviroment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-people-carry"></i>${labelTxt}</a>`);
+      // const openBtn = $(`<a class="open-environment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-people-carry${notes ? '-check' : ''}"></i>${labelTxt}</a>`);
+      const openBtn = $(`<a class="open-environment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-people-carry"></i>${labelTxt}</a>`);
       openBtn.click((ev) => {
         let noteApp: any = null;
         for (const key in app.entity.apps) {
@@ -215,7 +216,7 @@ export class EnvironmentInteractionNote extends FormApplication {
         }
         noteApp.render(true);
       });
-      html.closest('.app').find('.open-enviroment-interaction-note').remove();
+      html.closest('.app').find('.open-environment-interaction-note').remove();
       const titleElement = html.closest('.app').find('.window-title');
       openBtn.insertAfter(titleElement);
     }

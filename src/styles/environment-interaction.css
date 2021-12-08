@@ -36,9 +36,10 @@
 }
 
 .ei-info {
-  width: inherit;
+  width: 10%;
 }
 
-.ei-cotrols {
+.ei-controls {
   display: inline-flex;
+  width: 100%;
 }

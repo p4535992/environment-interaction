@@ -57,3 +57,46 @@ export class MonkTokenBarContestedRollRequest {
   token: Token | string;
   request: string;
 }
+
+
+
+export interface MonkTokenBarMessageOptions {
+  dc?: any;
+  silent: boolean;
+  fastForward: boolean;
+  rollmode: string;
+  requestoptions: MonkTokenBarMessageRequestoption[];
+  hidenpcname: boolean;
+  flavor: string;
+}
+
+export interface MonkTokenBarMessageRequestoption {
+  id: string;
+  text: string;
+  groups: any[];
+}
+
+export interface MonkTokenBarMessageToken {
+  id: string;
+  uuid: string;
+  actorid: string;
+  requesttype: string;
+  request: string;
+  requestname: string;
+  icon: string;
+  name: string;
+  showname: boolean;
+  showtoken: boolean;
+  npc: boolean;
+  passed: string;
+  keys: any;
+}
+
+export interface MonkTokenBarMessageRootObject {
+  rollmode: string;
+  modename: string;
+  options: MonkTokenBarMessageOptions;
+  what: string;
+  // token7GHIr1jkeR8FGgf8: Token7GHIr1jkeR8FGgf8;
+  // tokenocAADXgfeqOK5nvO: TokenocAADXgfeqOK5nvO;
+}

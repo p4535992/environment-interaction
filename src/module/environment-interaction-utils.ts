@@ -163,7 +163,17 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args):
 
   //add variable to the evaluation of the script
   // const item = <Item>this;
-  const macroContent = <string>item.getFlag(moduleName, macroFlag);
+  let macroContent = <string>item.getFlag(moduleName, macroFlag);
+  const entityMatchRgxTagger = `@(Macro)\\[([^\\]]+)\\]`;
+  const rgxTagger = new RegExp(entityMatchRgxTagger, 'ig');
+  const matchAllTags = macroContent.matchAll(rgxTagger) || [];
+  for (const matchTag of matchAllTags) {
+    if(matchTag){
+      const [textMatched, entity, id, label] = matchTag;
+      // Remove prefix '@Macro[' and suffix ']'
+      macroContent = textMatched.substring(7, textMatched.length-1);
+    }
+  }
   const macro = new Macro({
     name: item.data.name,
     type: 'script',

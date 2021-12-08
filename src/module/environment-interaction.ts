@@ -195,9 +195,9 @@ export class EnvironmentInteraction {
               // If ATTACK is referenced to the macro type used form "Token Action HUD" e.g. "item"
               const macroNameOrTypeReq = myRequestArray[1];
               //@ts-ignore
-              const labelReq = myRequestArray[2] ?? ownedItem.data.data.source;
+              const labelOrDcReq = myRequestArray[2] ?? ownedItem.data.data.source;
               // if ([ENVIRONMENT_TYPE.ATTACK].includes(noteDetail)) {
-              log(environmentTypeReq + '|' + macroNameOrTypeReq + '|' + labelReq);
+              log(environmentTypeReq + '|' + macroNameOrTypeReq + '|' + labelOrDcReq);
               // Hooks.once('renderDialog', (dialog, html, dialogData) => {
               //   dialog.setPosition({ top: event.clientY - 50 ?? null, left: window.innerWidth - 710 });
               // });
@@ -237,6 +237,7 @@ export class EnvironmentInteraction {
                     const actionId = interactorItem.id;
                     const payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
                     const some = await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
+                    log(some);
                     // Hooks.on('forceUpdateTokenActionHUD', (args) => {
                     //   const checkout = args;
                     // });
@@ -259,10 +260,15 @@ export class EnvironmentInteraction {
                     const options = new MonkTokenBarRollOptions();
                     options.silent = true;
                     options.fastForward = true;
-                    options.flavor = <string>labelReq;
+                    // TODO i use this for pass the itemId
+                    options.flavor = item.id; 
                     options.request = macroNameOrTypeReq;
+                    if(labelOrDcReq){
+                      options.dc = Number.parseInt(labelOrDcReq);
+                    }
                     if (options.request.includes(':')) {
-                      const some = getMonkTokenBarAPI().requestRoll([interactorToken], options);
+                      const some = await getMonkTokenBarAPI().requestRoll([interactorToken], options);
+                      log(some);
                       // Hooks.on('tokenBarUpdateRoll', (tokenBarApp: Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
                       //   // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
                       //   const checkout = msgtokenRoll.total;
@@ -275,6 +281,7 @@ export class EnvironmentInteraction {
                     const actionId = interactorItem.id;
                     const payload = environmentTypeReq + '|' + tokenId + '|' + actionId;
                     const some = await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
+                    log(some);
                     // Hooks.on('forceUpdateTokenActionHUD', (args) => {
                     //   const checkout = args;
                     // });
@@ -296,8 +303,12 @@ export class EnvironmentInteraction {
                     const options = new MonkTokenBarRollOptions();
                     options.silent = true;
                     options.fastForward = true;
-                    options.flavor = <string>labelReq;
+                    // TODO i use this for pass the itemId
+                    options.flavor = item.id;
                     options.request = macroNameOrTypeReq;
+                    if(labelOrDcReq){
+                      options.dc = Number.parseInt(labelOrDcReq);
+                    }
                     if (options.request.includes(':')) {
                       if (options.request.includes(',')) {
                         const [req0, req1] = options.request.split(',');
@@ -310,18 +321,20 @@ export class EnvironmentInteraction {
                         const request0: any = new Object();
                         request0.token = interactorToken.id;
                         request0.request = req0; //'save:'+ interactorItem.data.data.save.ability;
-                        //@ts-igno
-                        // options.dc = environmentItem.data.data.save.dc;
+
                         //@ts-ignore
                         options.request = undefined;
+
                         // eslint-disable-next-line @typescript-eslint/no-array-constructor
                         // options.requestoptions.push({ id: 'save', text: req0.split(':')[1], groups: [] });
                         // options.requestoptions.push({ id: 'save', text: req1.split(':')[1], groups: [] });
                         options.requestoptions.push({ id: req0.split(':')[0], text: req0.split(':')[1], groups: [] });
                         options.requestoptions.push({ id: req1.split(':')[0], text: req1.split(':')[1], groups: [] });
-                        const some = getMonkTokenBarAPI().requestContestedRoll(request1, request0, options);
+                        const some = await getMonkTokenBarAPI().requestContestedRoll(request1, request0, options);
+                        log(some);
                       } else {
-                        const some = getMonkTokenBarAPI().requestRoll([interactorToken], options);
+                        const some = await getMonkTokenBarAPI().requestRoll([interactorToken], options);
+                        log(some);
                       }
                       // Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll|Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
                       //   // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
@@ -335,6 +348,7 @@ export class EnvironmentInteraction {
                     const actionId = interactorItem.id;
                     const payload = environmentTypeReq + '|' + tokenId + '|' + actionId;
                     const some = await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
+                    log(some);
                     // Hooks.on('forceUpdateTokenActionHUD', (args) => {
                     //   const checkout = args;
                     // });

@@ -4,6 +4,8 @@ import { EnvironmentInteractionNote } from './environment-interaction-note';
 import { EnvironmentInteraction } from './environment-interaction';
 import { Flags } from './environment-interaction-models';
 import { getCanvas, getGame, moduleName } from './settings';
+import { MonkTokenBarMessageOptions, MonkTokenBarMessageRequestoption } from '../lib/tokenbarapi/MonksTokenBarAPI';
+import { executeEIMacro } from './environment-interaction-utils';
 
 export const readyHooks = async () => {
   // Register hook callbacks
@@ -12,8 +14,36 @@ export const readyHooks = async () => {
 
   Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll | Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
     // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
-    const token = getGame().actors?.get(updateId);
-    const checkout = msgtokenRoll.total;
+    const interactToken = <Token>getCanvas().tokens?.get(updateId);
+    const monkTokenBarDetail = <MonkTokenBarMessageOptions>(<any>message.data.flags["monks-tokenbar"])?.options;
+    const dc = <number>monkTokenBarDetail.dc;
+    const actorId = <string>getCanvas().tokens?.controlled[0].data.actorId;
+    const currentActor = <Actor>getGame().actors?.get(actorId);
+    const interactActor = <Actor>getGame().actors?.get(<string>interactToken.data.actorId);
+
+      // const itemRef:HTMLElement|undefined = $(message.data.content).find('.item').length > 0
+      //   ? <HTMLElement>$(message.data.content).find('.item')[0]
+      //   : undefined;
+      // const itemId = <string>$((<HTMLElement>itemRef).outerHTML).attr('data-item-id');
+    const itemId = monkTokenBarDetail.flavor;
+    const currentItem = <Item>interactActor.items.find((item:Item) =>{
+      return item.id == itemId;
+    });
+    if(currentItem){
+      if(dc != null && dc != undefined && !isNaN(dc)){
+        if(<number>msgtokenRoll?.total >= dc){
+          executeEIMacro(currentItem, Flags.notessuccess);
+        }else{
+          executeEIMacro(currentItem, Flags.notesfailure);
+        }
+      }else{
+        const macroSuccess = currentItem?.getFlag(moduleName,Flags.notessuccess);
+        const macroFailure = currentItem?.getFlag(moduleName,Flags.notesfailure);
+        if(macroFailure){
+          executeEIMacro(currentItem, Flags.notesfailure);
+        }
+      }
+    }
   });
 
   Hooks.on('forceUpdateTokenActionHUD', (args) => {
