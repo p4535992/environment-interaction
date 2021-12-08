@@ -58,8 +58,6 @@ export class MonkTokenBarContestedRollRequest {
   request: string;
 }
 
-
-
 export interface MonkTokenBarMessageOptions {
   dc?: any;
   silent: boolean;

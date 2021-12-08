@@ -168,10 +168,10 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args):
   const rgxTagger = new RegExp(entityMatchRgxTagger, 'ig');
   const matchAllTags = macroContent.matchAll(rgxTagger) || [];
   for (const matchTag of matchAllTags) {
-    if(matchTag){
+    if (matchTag) {
       const [textMatched, entity, id, label] = matchTag;
       // Remove prefix '@Macro[' and suffix ']'
-      macroContent = textMatched.substring(7, textMatched.length-1);
+      macroContent = textMatched.substring(7, textMatched.length - 1);
     }
   }
   const macro = new Macro({

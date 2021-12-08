@@ -261,11 +261,12 @@ export class EnvironmentInteraction {
                     options.silent = true;
                     options.fastForward = true;
                     // TODO i use this for pass the itemId
-                    options.flavor = item.id; 
+                    options.flavor = item.id;
                     options.request = macroNameOrTypeReq;
-                    if(labelOrDcReq){
+                    if (labelOrDcReq) {
                       options.dc = Number.parseInt(labelOrDcReq);
                     }
+                    options.requestoptions.push({ id: macroNameOrTypeReq.split(':')[0], text: macroNameOrTypeReq.split(':')[1], groups: [] });
                     if (options.request.includes(':')) {
                       const some = await getMonkTokenBarAPI().requestRoll([interactorToken], options);
                       log(some);
@@ -306,7 +307,7 @@ export class EnvironmentInteraction {
                     // TODO i use this for pass the itemId
                     options.flavor = item.id;
                     options.request = macroNameOrTypeReq;
-                    if(labelOrDcReq){
+                    if (labelOrDcReq) {
                       options.dc = Number.parseInt(labelOrDcReq);
                     }
                     if (options.request.includes(':')) {
@@ -333,6 +334,7 @@ export class EnvironmentInteraction {
                         const some = await getMonkTokenBarAPI().requestContestedRoll(request1, request0, options);
                         log(some);
                       } else {
+                        options.requestoptions.push({ id: macroNameOrTypeReq.split(':')[0], text: macroNameOrTypeReq.split(':')[1], groups: [] });
                         const some = await getMonkTokenBarAPI().requestRoll([interactorToken], options);
                         log(some);
                       }

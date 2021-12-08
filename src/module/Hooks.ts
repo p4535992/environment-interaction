@@ -15,31 +15,47 @@ export const readyHooks = async () => {
   Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll | Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
     // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
     const interactToken = <Token>getCanvas().tokens?.get(updateId);
-    const monkTokenBarDetail = <MonkTokenBarMessageOptions>(<any>message.data.flags["monks-tokenbar"])?.options;
+    const monkTokenBarDetail = <MonkTokenBarMessageOptions>(<any>message.data.flags['monks-tokenbar'])?.options;
     const dc = <number>monkTokenBarDetail.dc;
     const actorId = <string>getCanvas().tokens?.controlled[0].data.actorId;
     const currentActor = <Actor>getGame().actors?.get(actorId);
     const interactActor = <Actor>getGame().actors?.get(<string>interactToken.data.actorId);
 
-      // const itemRef:HTMLElement|undefined = $(message.data.content).find('.item').length > 0
-      //   ? <HTMLElement>$(message.data.content).find('.item')[0]
-      //   : undefined;
-      // const itemId = <string>$((<HTMLElement>itemRef).outerHTML).attr('data-item-id');
+    // const itemRef:HTMLElement|undefined = $(message.data.content).find('.item').length > 0
+    //   ? <HTMLElement>$(message.data.content).find('.item')[0]
+    //   : undefined;
+    // const itemId = <string>$((<HTMLElement>itemRef).outerHTML).attr('data-item-id');
     const itemId = monkTokenBarDetail.flavor;
-    const currentItem = <Item>interactActor.items.find((item:Item) =>{
-      return item.id == itemId;
+
+    // TODO find a better method this is ugly
+    let currentItem;
+    getCanvas().tokens?.placeables.find((token: Token) => {
+      const actor = <Actor>getGame().actors?.find((actor: Actor) => {
+        return token.data.actorId == actor.id;
+      });
+      if (actor) {
+        currentItem = actor.items.find((item: Item) => {
+          return item.id == itemId;
+        });
+        if (currentItem) {
+          return currentItem;
+        }
+      }
     });
-    if(currentItem){
-      if(dc != null && dc != undefined && !isNaN(dc)){
-        if(<number>msgtokenRoll?.total >= dc){
+    // const currentItem = <Item>interactActor.items.find((item:Item) =>{
+    //   return item.id == itemId;
+    // });
+    if (currentItem) {
+      if (dc != null && dc != undefined && !isNaN(dc)) {
+        if (<number>msgtokenRoll?.total >= dc) {
           executeEIMacro(currentItem, Flags.notessuccess);
-        }else{
+        } else {
           executeEIMacro(currentItem, Flags.notesfailure);
         }
-      }else{
-        const macroSuccess = currentItem?.getFlag(moduleName,Flags.notessuccess);
-        const macroFailure = currentItem?.getFlag(moduleName,Flags.notesfailure);
-        if(macroFailure){
+      } else {
+        const macroSuccess = currentItem?.getFlag(moduleName, Flags.notessuccess);
+        const macroFailure = currentItem?.getFlag(moduleName, Flags.notesfailure);
+        if (macroFailure) {
           executeEIMacro(currentItem, Flags.notesfailure);
         }
       }
