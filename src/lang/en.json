@@ -50,9 +50,11 @@
     "Proficiency": "Proficiency",
     "note": {
       "label": "Environment Interaction Note",
-      "event": "Event : the label for manage the interaction,   ",
+      "event-use-environment-interaction": "Enable this item from environment interaction, will become invisible for al non GM player and will show up on the interaction  item list",
+      "event-use-item-macro": "Enable the item macro integration, if this enable will launch the macro setted with the module 'item macro' (if present or it will do nothing), and will ignore the 'Event','success' and 'failure' settings",
       "event-detail": "Detail: the sub-label with some additional info on the voice",
       "event-info": "Info: dialog showed up when click on the information icon if you want to show some information before click",
+      "event": "Event : the label for manage the interaction,   ",
       "event-condition": "Condition: Macro/Code for decide if the interactor token can see the voice",
       "event-success": "Success : Macro/Code to run when the interaction is consider a success",
       "event-failure": "Failure : Macro/Code to run when the interaction is consider a failure"

@@ -36,6 +36,8 @@ export class MonkTokenBarRollOptions {
   rollmode = 'roll';
   requestoptions: MonkTokenBarRequestOptions[] = []; // { id: "skill", text: "MonksTokenBar.Skill", groups: this.config.skills }
   hidenpcname = false;
+  // Added for ei
+  ei;
 }
 
 export class MonkTokenBarRequestOptions {

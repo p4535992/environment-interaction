@@ -1,4 +1,4 @@
-import { ENVIRONMENT_TYPE, Flags } from './environment-interaction-models';
+import { customInfoEnvironmentInteraction, ENVIRONMENT_TYPE, Flags } from './environment-interaction-models';
 import { i18n, log } from '../environment-interaction-main.js';
 // import { libWrapper } from '../lib/shim.js';
 import {
@@ -84,17 +84,22 @@ export class EnvironmentInteraction {
   }
 
   // Environment Interaction
-  static async interactWithEnvironment(environmentToken, event) {
+  static async interactWithEnvironment(environmentToken:Token, event) {
+    if(!environmentToken.actor || !environmentToken.actor?.id){
+      ui.notifications?.warn(moduleName + ' | The environment interaction need the token is been liked to a actor');
+      return;
+    }
+
     // TODO: dnd5e specific; create a helper function to handle different systems
     // Sort to mimic order of items on character sheet
     const items: Item[] = [];
     // const actionsType: string[] = [ITEM_TYPE.TOOL, ITEM_TYPE.WEAPON, ACTION_TYPE.abil, ACTION_TYPE.save, ITEM_TYPE.LOOT, ITEM_TYPE.CONSUMABLE];
     // for (const type of actionsType) {
-    environmentToken.actor.items
-      .filter((i) => {
-        if (i.getFlag(moduleName, Flags.notes)) {
-          if (i.getFlag(moduleName, Flags.notescondition)) {
-            const result = executeEIMacro(i, Flags.notescondition);
+    environmentToken.actor?.items
+      .filter((environmentItemToCheck) => {
+        if (environmentItemToCheck.getFlag(moduleName, Flags.notesuseei)) {
+          if (environmentItemToCheck.getFlag(moduleName, Flags.notescondition)) {
+            const result = executeEIMacro(environmentItemToCheck, Flags.notescondition);
             if (result) {
               return result;
             } else {
@@ -122,7 +127,7 @@ export class EnvironmentInteraction {
     if (getGame().user?.isGM) {
       buttons.openSheet = {
         label: i18n(`${moduleName}.interactWithEnvironment.openCharacterSheet`),
-        callback: () => environmentToken.actor.sheet.render(true),
+        callback: () => environmentToken.actor?.sheet?.render(true),
       };
     }
     const dialogOptions = {
@@ -134,15 +139,15 @@ export class EnvironmentInteraction {
     const render = (html) => {
       html.on('click', `button.ei-info`, async (event) => {
         const itemID = <string>event.currentTarget.id;
-        const environment = <Actor>getCanvas().tokens?.get(environmentToken.id)?.actor;
-        const environmentItem = <Item>environment.items.get(itemID);
-        const item = <Item>environmentToken.actor.items.get(itemID);
-        let content = <string>item.getFlag(moduleName, Flags.notesinfo);
+        //const environment = <Actor>getCanvas().tokens?.get(environmentToken.id)?.actor;
+        //const environmentItem = <Item>environment.items.get(itemID);
+        const environmentItem = <Item>environmentToken.actor?.items.get(itemID);
+        let content = <string>environmentItem.getFlag(moduleName, Flags.notesinfo);
         if (!content) {
           content = 'No info provided';
         }
         const d = new Dialog({
-          title: item.data.name,
+          title: environmentItem.data.name,
           content: content,
           buttons: {},
           default: '',
@@ -156,33 +161,80 @@ export class EnvironmentInteraction {
         d.render(true);
       }),
         html.on('click', `button.ei-flex-container`, async (event) => {
+          // TODO integration mutlitoken ????
+          if(<number>getCanvas().tokens?.controlled.length > 1){
+            ui.notifications?.warn(moduleName + ' | The interaction support only one selected token at the time');
+            return;
+          }
+
           const interactorToken = <Token>getCanvas().tokens?.controlled[0];
           if (!interactorToken) {
-            return ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.selectTokenWarn`));
+            ui.notifications?.warn(moduleName + ' | ' + i18n(`${moduleName}.interactWithEnvironment.selectTokenWarn`));
+            return;
           }
+
+          if(interactorToken.id == environmentToken.id){
+            ui.notifications?.warn(moduleName + ' | The interactor token can\'t be same of the enviroment');
+            return;
+          }
+
           const itemID = event.currentTarget.id;
-          const environment = <Actor>getCanvas().tokens?.get(environmentToken.id)?.actor;
+          // const environment = <Actor>getCanvas().tokens?.get(environmentToken.id)?.actor;
           // const interactor = <Actor>getCanvas().tokens?.get(interactorToken.id)?.actor;
-          const environmentItem = <Item>environment.items.get(itemID);
+          // const environmentItem = <Item>environment.items.get(itemID);
+          const environmentItem = <Item>environmentToken.actor?.items.get(itemID);
+
           // We need to create a temporary token for applying all the feature of the player
-          const item = environmentToken.actor.items.get(itemID);
-          const [ownedItemTmp] = <Document<any, Actor>[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [item.toObject()]);
-          const ownedItem = <Item>ownedItemTmp;
+          const [ownedItemTmp] = <Document<any, Actor>[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [environmentItem.toObject()]);
+          const interactorItemTmp = <Item>ownedItemTmp;
           try {
             //@ts-ignore
             // const action = <string>ownedItem.getFlag(moduleName,Flags.notesdetail); //ownedItem.data.data.actionType; //$(button).data('action');
             // const noteDetail = converToEnvironmentType(action);
             // const noteDetail = <string>ownedItem.getFlag(moduleName, Flags.notesdetail);
-            let interactorItem = item;
+            // let interactorItem = environmentItem;
             try {
-              const REQUEST_LABEL = <string>item.getFlag(moduleName, Flags.notes);
+              // Integration with item macro
+              const useItemMacro = <boolean>environmentItem.getFlag(moduleName, Flags.notesuseitemmacro);
+              if (useItemMacro) {
+                //@ts-ignore
+                if (interactorItemTmp.data.flags.itemacro?.macro && isItemMacroModuleActive()) {
+                  //if (ownedItem.type === ITEM_TYPE.LOOT) {
+                  //@ts-ignore
+                  if (isSystemItemMacroSupported() && interactorItemTmp.hasMacro()) {
+                    //@ts-ignore
+                    interactorItemTmp.executeMacro();
+                    return;
+                  } else {
+                    ui.notifications?.warn(moduleName + ' | No macro found for the integration with \'item macro\' for launch a macro');
+                    return;
+                  }
+                } else {
+                  ui.notifications?.warn(moduleName + ' | Can\'t use the integration with \'item macro\' system not supported or hte module is not active');
+                  return;
+                }
+              }
+
+              const REQUEST_LABEL = <string>environmentItem.getFlag(moduleName, Flags.notes);
               if (!REQUEST_LABEL) {
+                ui.notifications?.warn(moduleName + ' | No label event is setted for the environment interaction with the item');
                 return;
               }
               const myRequestArray = REQUEST_LABEL.split('|') ?? [];
               if (myRequestArray.length == 0) {
+                ui.notifications?.warn(moduleName + ' | The label event setted for the environment interaction is invalid \'' + REQUEST_LABEL + '\'');
                 return;
               }
+
+              const customInfo = customInfoEnvironmentInteraction;
+              customInfo.environmentTokenID = <string>environmentToken.id;
+              customInfo.environmentActorID = <string>environmentToken.actor?.id;
+              customInfo.environmentItemID = <string>environmentItem.id;
+              customInfo.requestLabel = <string>REQUEST_LABEL;
+              customInfo.interactorTokenID = <string>interactorToken.id;
+              customInfo.interactorActorID = <string>interactorToken.actor?.id;
+              customInfo.interactorItemID = <string>interactorItemTmp.id;
+
               // <ENVIRONMENT_TYPE>|<MACRO_NAME>|<LABEL_REQUEST>|
               // const environmentTypeReq = Object.values(MACRO_TYPE).includes(myRequestArray[0])
               //   ? //@ts-ignore
@@ -195,36 +247,27 @@ export class EnvironmentInteraction {
               // If ATTACK is referenced to the macro type used form "Token Action HUD" e.g. "item"
               const macroNameOrTypeReq = myRequestArray[1];
               //@ts-ignore
-              const labelOrDcReq = myRequestArray[2] ?? ownedItem.data.data.source;
+              const labelOrDcReq = myRequestArray[2] ?? interactorItemTmp.data.data.source;
               // if ([ENVIRONMENT_TYPE.ATTACK].includes(noteDetail)) {
               log(environmentTypeReq + '|' + macroNameOrTypeReq + '|' + labelOrDcReq);
               // Hooks.once('renderDialog', (dialog, html, dialogData) => {
               //   dialog.setPosition({ top: event.clientY - 50 ?? null, left: window.innerWidth - 710 });
               // });
-              if ([ENVIRONMENT_TYPE.ATTACK].includes(environmentTypeReq)) {
-                [interactorItem] = <Item[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [ownedItem.toObject()]);
-              }
+              // if ([ENVIRONMENT_TYPE.ATTACK].includes(environmentTypeReq)) {
+              //   [interactorItem] = <Item[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [interactorItemTmp.toObject()]);
+              // }
               switch (environmentTypeReq) {
                 case ENVIRONMENT_TYPE.MACRO: {
-                  // Integration with item macro
-                  //@ts-ignore
-                  if (ownedItem.data.flags.itemacro?.macro && isItemMacroModuleActive()) {
-                    //if (ownedItem.type === ITEM_TYPE.LOOT) {
-                    //@ts-ignore
-                    if (isSystemItemMacroSupported() && ownedItem.hasMacro()) {
-                      //@ts-ignore
-                      ownedItem.executeMacro();
-                    }
-                  } else if (macroNameOrTypeReq) {
+                  if (macroNameOrTypeReq) {
                     const macroName = macroNameOrTypeReq;
                     const macro = <Macro>(getGame().macros?.getName(macroName) || getGame().macros?.get(macroName));
                     if (!macro) {
-                      ui.notifications?.error(moduleName + ' | No macro found with name/id : ' + macroName);
+                      ui.notifications?.warn(moduleName + ' | No macro found with name/id : ' + macroName);
                     }
                     macro.execute({ actor: <Actor>interactorToken.actor, token: interactorToken });
                   } else {
-                    ui.notifications?.error(moduleName + " | Can't interact with item for launch a macro");
-                    throw new Error(moduleName + " | Can't interact with item for launch a macro");
+                    ui.notifications?.warn(moduleName + ' | Can\'t interact with item for launch a macro');
+                    throw new Error(moduleName + ' | Can\'t interact with item for launch a macro');
                   }
                   break;
                 }
@@ -234,11 +277,12 @@ export class EnvironmentInteraction {
                   // Macro type depends for now on the system used
                   if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
                     let payload;
-                    if(macroNameOrTypeReq=='item'){
+                    // manage generic case with key 'item'
+                    if (macroNameOrTypeReq == 'item') {
                       const tokenId = interactorToken.id;
-                      const actionId = interactorItem.id;
+                      const actionId = interactorItemTmp.id;
                       payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
-                    }else{
+                    } else {
                       const [refActionId, refId] = macroNameOrTypeReq.split(',');
                       const tokenId = interactorToken.id;
                       payload = refActionId + '|' + tokenId + '|' + refId;
@@ -249,7 +293,7 @@ export class EnvironmentInteraction {
                     //   const checkout = args;
                     // });
                   } else {
-                    ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                    ui.notifications?.warn(moduleName + ' | System not supported : ' + getGame().system?.id);
                     throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
                   }
                   break;
@@ -265,10 +309,12 @@ export class EnvironmentInteraction {
                   // )
                   if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
                     const options = new MonkTokenBarRollOptions();
+                    options.ei = customInfo;
+
                     options.silent = true;
                     options.fastForward = true;
                     // TODO i use this for pass the itemId
-                    options.flavor = item.id;
+                    options.flavor = environmentItem.data.name;
                     options.request = macroNameOrTypeReq;
                     if (labelOrDcReq) {
                       options.dc = Number.parseInt(labelOrDcReq);
@@ -286,11 +332,11 @@ export class EnvironmentInteraction {
                     }
                   } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
                     let payload;
-                    if(macroNameOrTypeReq=='item'){
+                    if (macroNameOrTypeReq == 'item') {
                       const tokenId = interactorToken.id;
-                      const actionId = interactorItem.id;
+                      const actionId = interactorItemTmp.id;
                       payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
-                    }else{
+                    } else {
                       const [refActionId, refId] = macroNameOrTypeReq.split(',');
                       const tokenId = interactorToken.id;
                       payload = refActionId + '|' + tokenId + '|' + refId;
@@ -301,7 +347,7 @@ export class EnvironmentInteraction {
                     //   const checkout = args;
                     // });
                   } else {
-                    ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                    ui.notifications?.warn(moduleName + ' | System not supported : ' + getGame().system?.id);
                     throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
                   }
                   break;
@@ -315,10 +361,12 @@ export class EnvironmentInteraction {
                     //const save = environmentItem.data.data.save.ability;
                     //interactor.rollAbilitySave(save);
                     const options = new MonkTokenBarRollOptions();
+                    options.ei = customInfo;
+
                     options.silent = true;
                     options.fastForward = true;
                     // TODO i use this for pass the itemId
-                    options.flavor = item.id;
+                    options.flavor = environmentItem.data.name;
                     options.request = macroNameOrTypeReq;
                     if (labelOrDcReq) {
                       options.dc = Number.parseInt(labelOrDcReq);
@@ -360,11 +408,11 @@ export class EnvironmentInteraction {
                     }
                   } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
                     let payload;
-                    if(macroNameOrTypeReq=='item'){
+                    if (macroNameOrTypeReq == 'item') {
                       const tokenId = interactorToken.id;
-                      const actionId = interactorItem.id;
+                      const actionId = interactorItemTmp.id;
                       payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
-                    }else{
+                    } else {
                       const [refActionId, refId] = macroNameOrTypeReq.split(',');
                       const tokenId = interactorToken.id;
                       payload = refActionId + '|' + tokenId + '|' + refId;
@@ -375,19 +423,31 @@ export class EnvironmentInteraction {
                     //   const checkout = args;
                     // });
                   } else {
-                    ui.notifications?.error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                    ui.notifications?.warn(moduleName + ' | System not supported : ' + getGame().system?.id);
                     throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
                   }
                   break;
                 }
               }
             } finally {
-              if (interactorItem?.id) {
-                interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>interactorItem.id]);
+              if (interactorItemTmp && interactorItemTmp?.id) {
+                const found = interactorToken.actor?.items.find((itemCheck:Item) => {
+                  return itemCheck && itemCheck.id == interactorItemTmp?.id;
+                });
+                if(found){
+                  interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>interactorItemTmp.id]);
+                }
               }
             }
           } finally {
-            interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>ownedItem.id]);
+            if (interactorItemTmp && interactorItemTmp?.id) {
+              const found = interactorToken.actor?.items.find((itemCheck:Item) => {
+                return itemCheck && itemCheck.id == interactorItemTmp?.id;
+              });
+              if(found){
+                interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>interactorItemTmp.id]);
+              }
+            }
           }
 
           if (getGame().settings.get(moduleName, 'closeDialog')) {

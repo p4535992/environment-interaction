@@ -5,7 +5,7 @@ export const ENVIRONMENT_TYPE = {
   // DAMAGE: 'damage',
   ATTACK: 'attack',
   MACRO: 'macro',
-  ITEM: 'item'
+  ITEM: 'item',
 };
 
 // export const MACRO_TYPE = {
@@ -49,9 +49,11 @@ export const ENVIRONMENT_TYPE = {
 
 export const Flags = {
   environmentToken: 'environmentToken',
-  notes: 'notes',
+  notesuseei: 'notes-use-environment-interaction',
+  notesuseitemmacro: 'notes-use-item-macro',
   notesdetail: 'notes-detail',
   notesinfo: 'notes-info',
+  notes: 'notes',
   notescondition: 'notes-condition',
   notessuccess: 'notes-success',
   notesfailure: 'notes-failure',
@@ -60,3 +62,17 @@ export const Flags = {
   // notessuccessmacro: 'notes-success-macro',
   // notesfailuremacro: 'notes-failure-macro',
 };
+
+/**
+ * A model for embed all the info we need to decide a success or a failure
+*/
+export const customInfoEnvironmentInteraction = {
+  environmentTokenID: '',
+  environmentActorID:'',
+  environmentItemID:'',
+  // environmentDC:NaN,
+  interactorTokenID: '',
+  interactorActorID:'',
+  interactorItemID:'',
+  requestLabel:''
+}

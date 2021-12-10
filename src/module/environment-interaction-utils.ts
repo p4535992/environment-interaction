@@ -110,44 +110,6 @@ export const getActorByUuid = async function (uuid) {
   return actor;
 };
 
-// export const converToEnvironmentType = function (action: string): string {
-//   let actionType;
-//   switch (action) {
-//     case ACTION_TYPE.mwak:
-//     case ACTION_TYPE.msak:
-//     case ACTION_TYPE.rwak:
-//     case ACTION_TYPE.rsak: {
-//       actionType = ENVIRONMENT_TYPE.ATTACK;
-//       break;
-//     }
-//     case ACTION_TYPE.abil: {
-//       actionType = ENVIRONMENT_TYPE.ABILITY;
-//       break;
-//     }
-//     case ACTION_TYPE.save: {
-//       actionType = ENVIRONMENT_TYPE.SAVE;
-//       break;
-//     }
-//     case ACTION_TYPE.heal: {
-//       actionType = ENVIRONMENT_TYPE.ATTACK;
-//       break;
-//     }
-//     case ACTION_TYPE.util: {
-//       actionType = ENVIRONMENT_TYPE.UTILITY;
-//       break;
-//     }
-//     case ACTION_TYPE.other: {
-//       actionType = ENVIRONMENT_TYPE.UTILITY;
-//       break;
-//     }
-//     default: {
-//       actionType = ENVIRONMENT_TYPE.UTILITY;
-//       break;
-//     }
-//   }
-//   return actionType;
-// };
-
 export const executeEIMacro = function (item: Item, macroFlag: string, ...args): any {
   if (!item.getFlag(moduleName, macroFlag)) {
     return false;
@@ -181,11 +143,14 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args):
     author: getGame().user?.id,
   });
   const speaker = ChatMessage.getSpeaker({ actor: <Actor>item.actor });
-  const actor = item.actor ?? getGame().actors?.get(<string>speaker.actor);
   const token = item.actor?.token ?? getCanvas().tokens?.get(<string>speaker.token);
+  const actor = item.actor ?? getGame().actors?.get(<string>speaker.actor);
+
   const character = getGame().user?.character;
   const event = getEvent();
-  const interactorTokens = <Token[]>getCanvas().tokens?.controlled;
+
+  const interactorToken = <Token>getCanvas().tokens?.controlled[0];
+  const interactorActor = <Actor>interactorToken.actor;
 
   // debug(macro);
   // debug(speaker);
@@ -205,12 +170,12 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args):
   // })();`;
   // const fn = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', body);
   // const fn2 = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', macro.data.command);
-  const fn3 = new Function('item', 'speaker', 'actor', 'token', 'character', 'interactorTokens', 'event', 'args', macro.data.command);
+  const fn3 = new Function('item', 'speaker', 'actor', 'token', 'character', 'interactorToken', 'event', 'args', macro.data.command);
   //attempt script execution
   try {
     // return fn.call(macro, item, speaker, actor, token, character, event, args);
     // return fn2.apply(item, [item, speaker, actor, token, character, event, ...args]);
-    return fn3.call(macro, item, speaker, actor, token, character, interactorTokens, event, args);
+    return fn3.call(macro, item, speaker, actor, token, character, interactorToken, event, args);
   } catch (err) {
     ui.notifications?.error(moduleName + ' | ' + i18n(`${moduleName}.macroExecution`));
     error(err);

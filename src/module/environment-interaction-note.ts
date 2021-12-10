@@ -72,6 +72,30 @@ export class EnvironmentInteractionNote extends FormApplication {
 
   async _updateObject(event, formData) {
     if (getGame().user?.isGM) {
+      if (formData[`flags.${moduleName}.${Flags.notesuseei}`]) {
+        await this.entity.setFlag(moduleName, Flags.notesuseei, formData[`flags.${moduleName}.${Flags.notesuseei}`]);
+      } else {
+        await this.entity.setFlag(moduleName, Flags.notesuseei, null);
+      }
+
+      if (formData[`flags.${moduleName}.${Flags.notesuseitemmacro}`]) {
+        await this.entity.setFlag(moduleName, Flags.notesuseitemmacro, formData[`flags.${moduleName}.${Flags.notesuseitemmacro}`]);
+      } else {
+        await this.entity.setFlag(moduleName, Flags.notesuseitemmacro, null);
+      }
+
+      if (formData[`flags.${moduleName}.${Flags.notesdetail}`]) {
+        await this.entity.setFlag(moduleName, Flags.notesdetail, formData[`flags.${moduleName}.${Flags.notesdetail}`]);
+      } else {
+        await this.entity.setFlag(moduleName, Flags.notesdetail, null);
+      }
+
+      if (formData[`flags.${moduleName}.${Flags.notesinfo}`]) {
+        await this.entity.setFlag(moduleName, Flags.notesinfo, formData[`flags.${moduleName}.${Flags.notesinfo}`]);
+      } else {
+        await this.entity.setFlag(moduleName, Flags.notesinfo, null);
+      }
+
       if (formData[`flags.${moduleName}.${Flags.notes}`]) {
         await this.entity.setFlag(moduleName, Flags.notes, formData[`flags.${moduleName}.${Flags.notes}`]);
         // CANNOT BE A MACRO THERE IS ITEM MACRO FOR THAT
@@ -85,18 +109,6 @@ export class EnvironmentInteractionNote extends FormApplication {
         // await this.entity.setFlag(moduleName, Flags.notesmacro, macro);
       } else {
         await this.entity.setFlag(moduleName, Flags.notes, null);
-      }
-
-      if (formData[`flags.${moduleName}.${Flags.notesinfo}`]) {
-        await this.entity.setFlag(moduleName, Flags.notesinfo, formData[`flags.${moduleName}.${Flags.notesinfo}`]);
-      } else {
-        await this.entity.setFlag(moduleName, Flags.notesinfo, null);
-      }
-
-      if (formData[`flags.${moduleName}.${Flags.notesdetail}`]) {
-        await this.entity.setFlag(moduleName, Flags.notesdetail, formData[`flags.${moduleName}.${Flags.notesdetail}`]);
-      } else {
-        await this.entity.setFlag(moduleName, Flags.notesdetail, null);
       }
 
       if (formData[`flags.${moduleName}.${Flags.notescondition}`]) {
