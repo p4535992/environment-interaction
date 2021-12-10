@@ -1,3 +1,4 @@
+import { customInfoEnvironmentInteraction } from './../../module/environment-interaction-models';
 import { AppTokenBar } from './AppTokenBar';
 
 /**
@@ -37,7 +38,7 @@ export class MonkTokenBarRollOptions {
   requestoptions: MonkTokenBarRequestOptions[] = []; // { id: "skill", text: "MonksTokenBar.Skill", groups: this.config.skills }
   hidenpcname = false;
   // Added for ei
-  ei;
+  ei: typeof customInfoEnvironmentInteraction;
 }
 
 export class MonkTokenBarRequestOptions {
@@ -68,6 +69,8 @@ export interface MonkTokenBarMessageOptions {
   requestoptions: MonkTokenBarMessageRequestoption[];
   hidenpcname: boolean;
   flavor: string;
+  // Added for ei
+  ei: typeof customInfoEnvironmentInteraction;
 }
 
 export interface MonkTokenBarMessageRequestoption {

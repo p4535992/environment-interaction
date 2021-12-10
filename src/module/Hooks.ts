@@ -14,12 +14,14 @@ export const readyHooks = async () => {
 
   Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll | Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
     // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
-    const interactToken = <Token>getCanvas().tokens?.get(updateId);
+
     const monkTokenBarDetail = <MonkTokenBarMessageOptions>(<any>message.data.flags['monks-tokenbar'])?.options;
 
-    const actorId = <string>getCanvas().tokens?.controlled[0].data.actorId;
-    const currentActor = <Actor>getGame().actors?.get(actorId);
-    const interactActor = <Actor>getGame().actors?.get(<string>interactToken.data.actorId);
+    const environmentActorId = <string>getCanvas().tokens?.controlled[0].data.actorId;
+    const environmentActor = <Actor>getGame().actors?.get(environmentActorId);
+
+    const interactorToken = <Token>getCanvas().tokens?.get(updateId);
+    const interactorActor = <Actor>getGame().actors?.get(<string>interactorToken.data.actorId);
 
     // const itemRef:HTMLElement|undefined = $(message.data.content).find('.item').length > 0
     //   ? <HTMLElement>$(message.data.content).find('.item')[0]
@@ -28,38 +30,38 @@ export const readyHooks = async () => {
 
     const dc = <number>monkTokenBarDetail.dc;
     const total = <number>msgtokenRoll?.total;
-    const itemId = monkTokenBarDetail.flavor;
+    const environmentItemId = monkTokenBarDetail.ei.environmentItemID;//monkTokenBarDetail.flavor;
 
     // TODO find a better method this is ugly
-    let currentItem;
+    let environmentItem;
     getCanvas().tokens?.placeables.find((token: Token) => {
       const actor = <Actor>getGame().actors?.find((actor: Actor) => {
         return token.data.actorId == actor.id;
       });
       if (actor) {
-        currentItem = actor.items.find((item: Item) => {
-          return item.id == itemId;
+        environmentItem = actor.items.find((item: Item) => {
+          return item.id == environmentItemId;
         });
-        if (currentItem) {
-          return currentItem;
+        if (environmentItem) {
+          return environmentItem;
         }
       }
     });
     // const currentItem = <Item>interactActor.items.find((item:Item) =>{
     //   return item.id == itemId;
     // });
-    if (currentItem) {
+    if (environmentItem) {
       if (dc != null && dc != undefined && !isNaN(dc)) {
         if (total >= dc) {
-          executeEIMacro(currentItem, Flags.notessuccess);
+          executeEIMacro(environmentItem, Flags.notessuccess);
         } else {
-          executeEIMacro(currentItem, Flags.notesfailure);
+          executeEIMacro(environmentItem, Flags.notesfailure);
         }
       } else {
-        const macroSuccess = currentItem?.getFlag(moduleName, Flags.notessuccess);
-        const macroFailure = currentItem?.getFlag(moduleName, Flags.notesfailure);
+        const macroSuccess = environmentItem?.getFlag(moduleName, Flags.notessuccess);
+        const macroFailure = environmentItem?.getFlag(moduleName, Flags.notesfailure);
         if (macroFailure) {
-          executeEIMacro(currentItem, Flags.notesfailure);
+          executeEIMacro(environmentItem, Flags.notesfailure);
         }
       }
     } else {

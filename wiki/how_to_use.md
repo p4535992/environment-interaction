@@ -1,4 +1,15 @@
 
+# Steps to follow
+
+## Step 1: Activate a token like a 'Environment Token'
+
+An environment token is created like any other token. Once placed on the canvas, the token can be set as an "environment token" using the token configuration window.
+
+Double clicking an environment token will open its Select Action dialog window. GM users will also have a button to open the character sheet.
+
+![img](../img/steps/step1.png)
+
+After setting the token we add or create some objects
 
 
 | Environment Type | Description                | Module Involved       |

@@ -149,8 +149,8 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args):
   const character = getGame().user?.character;
   const event = getEvent();
 
-  const interactorToken = <Token>getCanvas().tokens?.controlled[0];
-  const interactorActor = <Actor>interactorToken.actor;
+  // const interactorToken = <Token>getCanvas().tokens?.controlled[0];
+  // const interactorActor = <Actor>interactorToken.actor;
 
   // debug(macro);
   // debug(speaker);
@@ -170,12 +170,12 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args):
   // })();`;
   // const fn = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', body);
   // const fn2 = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', macro.data.command);
-  const fn3 = new Function('item', 'speaker', 'actor', 'token', 'character', 'interactorToken', 'event', 'args', macro.data.command);
+  const fn3 = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', macro.data.command);
   //attempt script execution
   try {
     // return fn.call(macro, item, speaker, actor, token, character, event, args);
     // return fn2.apply(item, [item, speaker, actor, token, character, event, ...args]);
-    return fn3.call(macro, item, speaker, actor, token, character, interactorToken, event, args);
+    return fn3.call(macro, item, speaker, actor, token, character, event, args);
   } catch (err) {
     ui.notifications?.error(moduleName + ' | ' + i18n(`${moduleName}.macroExecution`));
     error(err);

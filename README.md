@@ -38,34 +38,10 @@ Environment Interaction allows GM users to create "environment tokens" that char
 - Make a PR to the official master project [Environment Interaction](https://github.com/jessev14/environment-interaction)
 - Some friend request
 
-## Usage
-
 <img src="./img/environment-interaction-demo.gif" height="450"/>
 
-An environment token is created like any other token. Once placed on the canvas, the token can be set as an "environment token" using the token configuration window.
 
-Double clicking an environment token will open its Select Action dialog window. GM users will also have a button to open the charcter sheet.
-
-<img src="./img/token-config.png" height="280"/> 
-
-<img src="./img/action-selection.png" height="280"/>
-
-Selecting an action will use the currently selected token (player character) as the character performing the action. The action will be rolled and carried out using the character's game stats.
-
-To move an environment token, first select it by drag-selection.
-
-Interactions are automatically generated from the items on the environment token's actor sheet.
-
-~~### Interaction Types~~
-
-~~The type of interaction an item has depends on its item type:~~
-~~* Weapon: Function as if the character had the item on its own actor sheet.~~
-~~* Consumable:~~
-  ~~- If the item action type is set to "Ability Check," a chat card will be created allowing the character to perform the corresponding check, based on the ability select drop-down.~~
-  ~~- If the item action type is set to "Saving Throw," the chat card will allow the character to perform the corresponding saving throw, based on the saving throw select drop-down.~~
-~~* Loot: Loot-type items allow the character to execute a macro. To set the macro to be executed, enter the macro's name (exactly) into the "source" input of the item.~~
-
-~~See [these images](./img/example-interactions) for example items.~~
+## [How to use](./wiki/) 
 
 ## Supported systems
 
@@ -122,28 +98,22 @@ A similar method is used to handle attack and damage rolls. When attack/damage b
 
 On the item sheet you can se a button "Environment Interaction note", click wil open a dialog where you can put a text, the text must respect
 
-## Item Macro integration
+## [Item Macro](https://github.com/Kekilla0/Item-Macro) integration
 
 If an item on an environment token has a set Item Macro, after rolling the item to chat, the Item Macro will be executed.
 If a item is set with a item macro will be fired before check for any ironmonk token bar or token action hud integration.
 
-## Ironmonk Token bar integration
-
-for pass a label information to the iron monk token bar use the `item.data.data.source` label of the item sheet.
-
-`<Request Label>=<Macro Name Target>`
-
-![e](./img/example_ironmonk_tokenbar.png)
+## [Ironmonk Token bar](https://github.com/ironmonk88/monks-tokenbar) integration
 
 ### System Dnd5e examples
 
-| Request Label (to put on the item.data.data.source label) | Description | Condition |
+| Request Label | Description | Condition |
 |:------------------:|:------------------------:|:-----------------------------------:|
 | misc:init          | Roll Initiative          | Need to select a token              |
 | save:dex\|save:dex | Contested Save Dexterity | Need to select a token              |
 | ability:str        | Ability Strength         | Need to select a token              |
 
-### Other todo when i have time...
+### Other example todo when i have time...
 
 #### Little Reminder of the options of 'Monk Tokenbar module'
 
@@ -190,14 +160,9 @@ const interactorToken = canvas.tokens?.controlled[0];
 game.MonksTokenBar.requestRoll([interactorToken],options);
 ```
 
-## Token Action HUD integration
-
-for pass a label information to the iron monk token bar use the `item.data.data.source` label of the item sheet.
-
-`macroType|tokenId|actionId=<Macro Name Target>`
+## [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud) integration
 
 **NOTE: tokenId = "multi" make start the action for all the selected tokens.**
-
 ### System Dnd5e examples
 
 | Macro Type |
@@ -213,11 +178,7 @@ for pass a label information to the iron monk token bar use the `item.data.data.
 | effect |
 | condition |
 
-## Let me roll that for you integration
-
-for pass a label information to the iron monk token bar use the `item.data.data.source` label of the item sheet.
-
-`macroType|tokenId|actionId=<Macro Name Target>`
+## [Let me roll that for you](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy) integration (not ready yet)
 
 # Build
 
