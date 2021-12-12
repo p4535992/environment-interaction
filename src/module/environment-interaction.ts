@@ -177,6 +177,9 @@ export class EnvironmentInteraction {
             ui.notifications?.warn(moduleName + ' | The interactor token can\'t be same of the enviroment');
             return;
           }
+          //Get current system config
+          //@ts-ignore
+          // const config = (getGame().system.id == "tormenta20" ? CONFIG.T20 : CONFIG[getGame().system.id.toUpperCase()]);
 
           const itemID = event.currentTarget.id;
           // const environment = <Actor>getCanvas().tokens?.get(environmentToken.id)?.actor;
@@ -184,9 +187,26 @@ export class EnvironmentInteraction {
           // const environmentItem = <Item>environment.items.get(itemID);
           const environmentItem = <Item>environmentToken.actor?.items.get(itemID);
 
-          // We need to create a temporary token for applying all the feature of the player
-          const [ownedItemTmp] = <Document<any, Actor>[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [environmentItem.toObject()]);
-          const interactorItemTmp = <Item>ownedItemTmp;
+          const customInfo = customInfoEnvironmentInteraction;
+          customInfo.environmentTokenID = <string>environmentToken.id;
+          customInfo.environmentActorID = <string>environmentToken.actor?.id;
+          customInfo.environmentItemID = <string>environmentItem.id;
+
+          let interactorItemTmp;
+          if(environmentItem.getFlag(moduleName,Flags.notesuseitemenvironment)){
+            interactorItemTmp = environmentItem;
+            customInfo.interactorTokenID = <string>environmentToken.id;
+            customInfo.interactorActorID = <string>environmentToken.actor?.id;
+            customInfo.interactorItemID = <string>environmentItem.id;
+          }else{
+            // We need to create a temporary token for applying all the feature of the player
+            const [ownedItemTmp] = <Document<any, Actor>[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [environmentItem.toObject()]);
+            interactorItemTmp = <Item>ownedItemTmp;
+            customInfo.interactorTokenID = <string>interactorToken.id;
+            customInfo.interactorActorID = <string>interactorToken.actor?.id;
+            customInfo.interactorItemID = <string>interactorItemTmp.id;
+          }
+
           try {
             //@ts-ignore
             // const action = <string>ownedItem.getFlag(moduleName,Flags.notesdetail); //ownedItem.data.data.actionType; //$(button).data('action');
@@ -226,36 +246,25 @@ export class EnvironmentInteraction {
                 return;
               }
 
-              const customInfo = customInfoEnvironmentInteraction;
-              customInfo.environmentTokenID = <string>environmentToken.id;
-              customInfo.environmentActorID = <string>environmentToken.actor?.id;
-              customInfo.environmentItemID = <string>environmentItem.id;
               customInfo.requestLabel = <string>REQUEST_LABEL;
-              customInfo.interactorTokenID = <string>interactorToken.id;
-              customInfo.interactorActorID = <string>interactorToken.actor?.id;
-              customInfo.interactorItemID = <string>interactorItemTmp.id;
 
-              // <ENVIRONMENT_TYPE>|<MACRO_NAME>|<LABEL_REQUEST>|
-              // const environmentTypeReq = Object.values(MACRO_TYPE).includes(myRequestArray[0])
-              //   ? //@ts-ignore
-              //     myRequestArray[0]
-              //   : noteDetail
-              //   ? noteDetail
-              //   : MACRO_TYPE.ITEM;
-              const environmentTypeReq = myRequestArray[0] ?? ENVIRONMENT_TYPE.ITEM;
+              // <ENVIRONMENT_TYPE>|<MACRO_NAME_OR_TYPE_REQUEST>|<REQUEST_LABEL>|<DC_OR_NUMBER_TO_PASS>
+              const environmentTypeReq = <string>myRequestArray[0]?.trim() ?? ENVIRONMENT_TYPE.ITEM;
               // If MACRO is referenced to the name of a macro
               // If ATTACK is referenced to the macro type used form "Token Action HUD" e.g. "item"
-              const macroNameOrTypeReq = myRequestArray[1];
+              const macroNameOrTypeReq = <string>myRequestArray[1]?.trim();
               //@ts-ignore
-              const labelOrDcReq = myRequestArray[2] ?? interactorItemTmp.data.data.source;
+              const labelOrDcReq = <string>myRequestArray[2]?.trim() ?? interactorItemTmp.data.data.source;
+
+              const dcReq = myRequestArray[3]?.trim() ? <number>Number.parseInt(myRequestArray[3]?.trim()) : 0;
+
+              const groupsReq = myRequestArray[4]?.trim() ? Array.from(myRequestArray[4]?.trim().split(',')) : [];
+
               // if ([ENVIRONMENT_TYPE.ATTACK].includes(noteDetail)) {
-              log(environmentTypeReq + '|' + macroNameOrTypeReq + '|' + labelOrDcReq);
+              log(environmentTypeReq + '|' + macroNameOrTypeReq + '|' + labelOrDcReq + '|' + dcReq);
               // Hooks.once('renderDialog', (dialog, html, dialogData) => {
               //   dialog.setPosition({ top: event.clientY - 50 ?? null, left: window.innerWidth - 710 });
               // });
-              // if ([ENVIRONMENT_TYPE.ATTACK].includes(environmentTypeReq)) {
-              //   [interactorItem] = <Item[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [interactorItemTmp.toObject()]);
-              // }
               switch (environmentTypeReq) {
                 case ENVIRONMENT_TYPE.MACRO: {
                   if (macroNameOrTypeReq) {
@@ -298,10 +307,6 @@ export class EnvironmentInteraction {
                   }
                   break;
                 }
-                // case ENVIRONMENT_TYPE.DAMAGE: {
-                //   await interactorItem.rollDamage({ critical: event.altKey, event });
-                //   break;
-                // }
                 case ENVIRONMENT_TYPE.ABILITY: {
                   // (
                   //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}],
@@ -316,10 +321,9 @@ export class EnvironmentInteraction {
                     // TODO i use this for pass the itemId
                     options.flavor = environmentItem.data.name;
                     options.request = macroNameOrTypeReq;
-                    if (labelOrDcReq) {
-                      options.dc = Number.parseInt(labelOrDcReq);
-                    }
-                    options.requestoptions.push({ id: macroNameOrTypeReq.split(':')[0], text: macroNameOrTypeReq.split(':')[1], groups: [] });
+                    options.dc = dcReq;
+
+                    options.requestoptions.push({ id: macroNameOrTypeReq.split(':')[0], text: macroNameOrTypeReq.split(':')[1], groups: groupsReq });
                     if (options.request.includes(':')) {
                       const some = await getMonkTokenBarAPI().requestRoll([interactorToken], options);
                       log(some);
@@ -368,9 +372,8 @@ export class EnvironmentInteraction {
                     // TODO i use this for pass the itemId
                     options.flavor = environmentItem.data.name;
                     options.request = macroNameOrTypeReq;
-                    if (labelOrDcReq) {
-                      options.dc = Number.parseInt(labelOrDcReq);
-                    }
+                    options.dc = dcReq;
+
                     if (options.request.includes(':')) {
                       if (options.request.includes(',')) {
                         const [req0, req1] = options.request.split(',');
@@ -390,16 +393,61 @@ export class EnvironmentInteraction {
                         // eslint-disable-next-line @typescript-eslint/no-array-constructor
                         // options.requestoptions.push({ id: 'save', text: req0.split(':')[1], groups: [] });
                         // options.requestoptions.push({ id: 'save', text: req1.split(':')[1], groups: [] });
-                        options.requestoptions.push({ id: req0.split(':')[0], text: req0.split(':')[1], groups: [] });
-                        options.requestoptions.push({ id: req1.split(':')[0], text: req1.split(':')[1], groups: [] });
+                        options.requestoptions.push({ id: req0.split(':')[0], text: req0.split(':')[1], groups: groupsReq });
+                        options.requestoptions.push({ id: req1.split(':')[0], text: req1.split(':')[1], groups: groupsReq });
                         const some = await getMonkTokenBarAPI().requestContestedRoll(request1, request0, options);
                         log(some);
                       } else {
-                        options.requestoptions.push({ id: macroNameOrTypeReq.split(':')[0], text: macroNameOrTypeReq.split(':')[1], groups: [] });
+                        options.requestoptions.push({ id: macroNameOrTypeReq.split(':')[0], text: macroNameOrTypeReq.split(':')[1], groups: groupsReq });
                         const some = await getMonkTokenBarAPI().requestRoll([interactorToken], options);
                         log(some);
                       }
                       // Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll|Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
+                      //   // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
+                      //   const checkout = msgtokenRoll.total;
+                      // });
+                    } else {
+                      ui.notifications?.warn(i18n(`${moduleName}.interactWithEnvironment.noValidRequestWarn`));
+                    }
+                  } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
+                    let payload;
+                    if (macroNameOrTypeReq == 'item') {
+                      const tokenId = interactorToken.id;
+                      const actionId = interactorItemTmp.id;
+                      payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
+                    } else {
+                      const [refActionId, refId] = macroNameOrTypeReq.split(',');
+                      const tokenId = interactorToken.id;
+                      payload = refActionId + '|' + tokenId + '|' + refId;
+                    }
+                    const some = await getTokenActionHUDRollHandler().doHandleActionEvent(event, payload);
+                    log(some);
+                    // Hooks.on('forceUpdateTokenActionHUD', (args) => {
+                    //   const checkout = args;
+                    // });
+                  } else {
+                    ui.notifications?.warn(moduleName + ' | System not supported : ' + getGame().system?.id);
+                    throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                  }
+                  break;
+                }
+                default:{
+                  if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
+                    const options = new MonkTokenBarRollOptions();
+                    options.ei = customInfo;
+
+                    options.silent = true;
+                    options.fastForward = true;
+                    // TODO i use this for pass the itemId
+                    options.flavor = environmentItem.data.name;
+                    options.request = macroNameOrTypeReq;
+                    options.dc = dcReq;
+
+                    options.requestoptions.push({ id: macroNameOrTypeReq.split(':')[0], text: macroNameOrTypeReq.split(':')[1], groups: groupsReq });
+                    if (options.request.includes(':')) {
+                      const some = await getMonkTokenBarAPI().requestRoll([interactorToken], options);
+                      log(some);
+                      // Hooks.on('tokenBarUpdateRoll', (tokenBarApp: Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
                       //   // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
                       //   const checkout = msgtokenRoll.total;
                       // });

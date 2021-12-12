@@ -44,7 +44,7 @@ export class MonkTokenBarRollOptions {
 export class MonkTokenBarRequestOptions {
   id: string;
   text: string;
-  groups: [];
+  groups: any[];
 }
 
 // export class MonkTokenBarRequest{

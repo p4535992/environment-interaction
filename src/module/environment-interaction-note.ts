@@ -84,6 +84,12 @@ export class EnvironmentInteractionNote extends FormApplication {
         await this.entity.setFlag(moduleName, Flags.notesuseitemmacro, null);
       }
 
+      if (formData[`flags.${moduleName}.${Flags.notesuseitemenvironment}`]) {
+        await this.entity.setFlag(moduleName, Flags.notesuseitemenvironment, formData[`flags.${moduleName}.${Flags.notesuseitemenvironment}`]);
+      } else {
+        await this.entity.setFlag(moduleName, Flags.notesuseitemenvironment, null);
+      }
+
       if (formData[`flags.${moduleName}.${Flags.notesdetail}`]) {
         await this.entity.setFlag(moduleName, Flags.notesdetail, formData[`flags.${moduleName}.${Flags.notesdetail}`]);
       } else {

@@ -1,6 +1,8 @@
 export const ENVIRONMENT_TYPE = {
+  MISC: 'misc',
   SAVE: 'save',
   ABILITY: 'ability',
+  SKILL: 'skill',
   DICE: 'dice',
   // DAMAGE: 'damage',
   ATTACK: 'attack',
@@ -51,6 +53,7 @@ export const Flags = {
   environmentToken: 'environmentToken',
   notesuseei: 'notes-use-environment-interaction',
   notesuseitemmacro: 'notes-use-item-macro',
+  notesuseitemenvironment: 'notes-use-item-environment',
   notesdetail: 'notes-detail',
   notesinfo: 'notes-info',
   notes: 'notes',

@@ -50,14 +50,15 @@
     "Proficiency": "Proficiency",
     "note": {
       "label": "Environment Interaction Note",
-      "event-use-environment-interaction": "Enable this item from environment interaction, will become invisible for al non GM player and will show up on the interaction  item list",
-      "event-use-item-macro": "Enable the item macro integration, if this enable will launch the macro setted with the module 'item macro' (if present or it will do nothing), and will ignore the 'Event','success' and 'failure' settings",
-      "event-detail": "Detail: the sub-label with some additional info on the voice",
-      "event-info": "Info: dialog showed up when click on the information icon if you want to show some information before click",
-      "event": "Event : the label for manage the interaction,   ",
-      "event-condition": "Condition: Macro/Code for decide if the interactor token can see the voice",
-      "event-success": "Success : Macro/Code to run when the interaction is consider a success",
-      "event-failure": "Failure : Macro/Code to run when the interaction is consider a failure"
+      "event-use-environment-interaction": "ENABLE: Enable this item from environment interaction, will become invisible for al non GM player and will show up on the interaction  item list",
+      "event-use-item-macro": "ITEM MACRO: Enable the item macro integration, if this enable will launch the macro setted with the module 'item macro' (if present or it will do nothing), and will ignore the 'Event','success' and 'failure' settings",
+      "event-use-item-environment": "ITEM ENVIRONMENT: Enable the use of the enviroment token instead the standard use, where the action is launched like tje item was in the inventory of the iteractor token (the player usually). ATTENTION : If is a contested roll is a contested roll with himself...",
+      "event-detail": "DETAIL: the sub-label with some additional info on the voice",
+      "event-info": "INFO: dialog showed up when click on the information icon if you want to show some information before click",
+      "event": "EVENT: the label for manage the interaction,   ",
+      "event-condition": "CONDITION: Macro/Code for decide if the interactor token can see the voice",
+      "event-success": "SUCCESS: Macro/Code to run when the interaction is consider a success",
+      "event-failure": "FAILURE: Macro/Code to run when the interaction is consider a failure"
     },
     "macroExecution": "There was an error in your macro syntax. See the console (F12) for details"
   }

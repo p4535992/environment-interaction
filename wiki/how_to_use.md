@@ -9,22 +9,38 @@ Double clicking an environment token will open its Select Action dialog window. 
 
 ![img](../img/steps/step1.png)
 
-After setting the token we add or create some objects
+After setting the token we add or create some objects.
 
+## The syntax of the code
+
+The syntax of the request label is
+
+<ENVIRONMENT_TYPE>|<MACRO_NAME_OR_TYPE_REQUEST>|<REQUEST_LABEL>|<DC_OR_NUMBER_TO_PASS>
+
+### Environment Type
 
 | Environment Type | Description                | Module Involved       |
 |:----------------:|:--------------------------:|:---------------------:|
-| save             |                            | Monk Token Bar        |
-| ability          |                            | Monk Token Bar        |
-| dice             |                            | Monk Token Bar        |
-| attack           |                            |                       |
-| utility          |                            |                       |
+| save             |                            | Monk Token Bar/Token Action HUD        |
+| ability          |                            | Monk Token Bar/Token Action HUD        |
+| dice             |                            | Monk Token Bar/Token Action HUD        |
+| attack           |                            | Token Action HUD      |
+| item             |                            | Token Action HUD                       |
 | macro            |                            |                       |
+| <EMPTY LABEL>    |                            | Monk Token Bar/Token Action HUD        |
+
+### Macro or type request
+
+only two value are presente here
+
+- **macro name** : name of the macro to run, WORK ONLY WITH ENVIROMENT TYPE 'macro'
+- **<MODULE LABEL TYPE>** : name key used for check the type of request for example Monk Token Bar with system dnd5e accept these labels _dice,misc,ability,save,skill_   
+
+**NOTE : If you set the 'macro' label on the 'Macro or type request' you mus set empty 'Request Label' here o anyway the code not read this label**
+
+| Request Label | Description                | Module Involved       |
 
 
-The syntax of the rquest label is
-
-<ENVIRONMENT_TYPE>|<REQUEST_LABEL>|<DC>
 
 The 'success' and 'failure' can indicate a external macro by is name or id with syntax `@macro[macro name or macro id]`
 
@@ -35,6 +51,7 @@ Examples
 | This is a sub label | some info  | save\|save:dex,save:dex | return item.name |  |  | Monk Token Bar   |
 | sub label 1         |            | save\|save:dex\|17       |                  |  |  | Monk Token Bar   |
 | sub label 2         |            | ability\|ability:dex\|17 |                  |  |  | Monk Token Bar   |
+| sleight of hand     | stole pouch| ability\|ability:dex\|17 |                  |  |  | Monk Token Bar   |
 | sub label 3         |            | dice\|dice:dex\|17       |                  |  |  | Monk Token Bar   |
 | sub label           |            | attack\|item\|           |                  |  |  | Token Action HUD |
 | sub label           |            | attack\|ability\|        |                  |  |  | Token Action HUD |
