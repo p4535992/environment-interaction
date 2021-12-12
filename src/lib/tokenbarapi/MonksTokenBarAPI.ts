@@ -38,7 +38,7 @@ export class MonkTokenBarRollOptions {
   requestoptions: MonkTokenBarRequestOptions[] = []; // { id: "skill", text: "MonksTokenBar.Skill", groups: this.config.skills }
   hidenpcname = false;
   // Added for ei
-  ei: typeof customInfoEnvironmentInteraction;
+  ei: customInfoEnvironmentInteraction;
 }
 
 export class MonkTokenBarRequestOptions {
@@ -70,7 +70,7 @@ export interface MonkTokenBarMessageOptions {
   hidenpcname: boolean;
   flavor: string;
   // Added for ei
-  ei: typeof customInfoEnvironmentInteraction;
+  ei: customInfoEnvironmentInteraction;
 }
 
 export interface MonkTokenBarMessageRequestoption {

@@ -2,7 +2,7 @@ import { debug, error, i18n } from '../environment-interaction-main';
 import { ContestedRoll } from '../lib/tokenbarapi/ContestedRoll';
 import { EnvironmentInteractionNote } from './environment-interaction-note';
 import { EnvironmentInteraction } from './environment-interaction';
-import { Flags } from './environment-interaction-models';
+import { customInfoEnvironmentInteraction, Flags } from './environment-interaction-models';
 import { getCanvas, getGame, moduleName } from './settings';
 import { MonkTokenBarMessageOptions, MonkTokenBarMessageRequestoption } from '../lib/tokenbarapi/MonksTokenBarAPI';
 import { executeEIMacro } from './environment-interaction-utils';
@@ -15,41 +15,41 @@ export const readyHooks = async () => {
   Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll | Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
     // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
 
-    const monkTokenBarDetail = <MonkTokenBarMessageOptions>(<any>message.data.flags['monks-tokenbar'])?.options;
+    const customInfo = <customInfoEnvironmentInteraction>(<any>message.data.flags['monks-tokenbar'])?.options?.ei;
 
-    const environmentActorId = <string>getCanvas().tokens?.controlled[0].data.actorId;
-    const environmentActor = <Actor>getGame().actors?.get(environmentActorId);
-
-    const interactorToken = <Token>getCanvas().tokens?.get(updateId);
-    const interactorActor = <Actor>getGame().actors?.get(<string>interactorToken.data.actorId);
-
-    // const itemRef:HTMLElement|undefined = $(message.data.content).find('.item').length > 0
-    //   ? <HTMLElement>$(message.data.content).find('.item')[0]
-    //   : undefined;
-    // const itemId = <string>$((<HTMLElement>itemRef).outerHTML).attr('data-item-id');
-
-    const dc = <number>monkTokenBarDetail.dc;
-    const total = <number>msgtokenRoll?.total;
-    const environmentItemId = monkTokenBarDetail.ei.environmentItemID;//monkTokenBarDetail.flavor;
-
+    // const monkTokenBarDetail = <MonkTokenBarMessageOptions>(<any>message.data.flags['monks-tokenbar'])?.options;
+    // const environmentActorId = <string>getCanvas().tokens?.controlled[0].data.actorId;
+    // const environmentActor = <Actor>getGame().actors?.get(environmentActorId);
+    // const interactorToken = <Token>getCanvas().tokens?.get(updateId);
+    // const interactorActor = <Actor>getGame().actors?.get(<string>interactorToken.data.actorId);
+    // const dc = <number>monkTokenBarDetail.dc;
+    // const total = <number>msgtokenRoll?.total;
+    // const environmentItemId = monkTokenBarDetail.ei.environmentItemID;//monkTokenBarDetail.flavor;
     // TODO find a better method this is ugly
-    let environmentItem;
-    getCanvas().tokens?.placeables.find((token: Token) => {
-      const actor = <Actor>getGame().actors?.find((actor: Actor) => {
-        return token.data.actorId == actor.id;
-      });
-      if (actor) {
-        environmentItem = actor.items.find((item: Item) => {
-          return item.id == environmentItemId;
-        });
-        if (environmentItem) {
-          return environmentItem;
-        }
-      }
-    });
-    // const currentItem = <Item>interactActor.items.find((item:Item) =>{
-    //   return item.id == itemId;
+    // let environmentItem;
+    // getCanvas().tokens?.placeables.find((token: Token) => {
+    //   const actor = <Actor>getGame().actors?.find((actor: Actor) => {
+    //     return token.data.actorId == actor.id;
+    //   });
+    //   if (actor) {
+    //     environmentItem = actor.items.find((item: Item) => {
+    //       return item.id == environmentItemId;
+    //     });
+    //     if (environmentItem) {
+    //       return environmentItem;
+    //     }
+    //   }
     // });
+
+    const total = <number>msgtokenRoll?.total;
+    const environmentItemId = customInfo.environmentActorID;
+    const dc = customInfo.environmentDC;
+    const interactorActorId = customInfo.interactorActorID;
+    const interactorActor = <Actor>getGame().actors?.get(interactorActorId);
+
+    const environmentItem = <Item>interactorActor.items.find((item: Item) => {
+      return item.id == environmentItemId;
+    });
     if (environmentItem) {
       if (dc != null && dc != undefined && !isNaN(dc)) {
         if (total >= dc) {
@@ -169,7 +169,6 @@ export const readyHooks = async () => {
   Hooks.on('renderItemSheet', (app, html, data) => {
     EnvironmentInteractionNote._initEntityHook(app, html, data);
   });
-
 };
 
 export const initHooks = async () => {

@@ -84,8 +84,8 @@ export class EnvironmentInteraction {
   }
 
   // Environment Interaction
-  static async interactWithEnvironment(environmentToken:Token, event) {
-    if(!environmentToken.actor || !environmentToken.actor?.id){
+  static async interactWithEnvironment(environmentToken: Token, event) {
+    if (!environmentToken.actor || !environmentToken.actor?.id) {
       ui.notifications?.warn(moduleName + ' | The environment interaction need the token is been liked to a actor');
       return;
     }
@@ -162,7 +162,7 @@ export class EnvironmentInteraction {
       }),
         html.on('click', `button.ei-flex-container`, async (event) => {
           // TODO integration mutlitoken ????
-          if(<number>getCanvas().tokens?.controlled.length > 1){
+          if (<number>getCanvas().tokens?.controlled.length > 1) {
             ui.notifications?.warn(moduleName + ' | The interaction support only one selected token at the time');
             return;
           }
@@ -173,8 +173,8 @@ export class EnvironmentInteraction {
             return;
           }
 
-          if(interactorToken.id == environmentToken.id){
-            ui.notifications?.warn(moduleName + ' | The interactor token can\'t be same of the enviroment');
+          if (interactorToken.id == environmentToken.id) {
+            ui.notifications?.warn(moduleName + " | The interactor token can't be same of the enviroment");
             return;
           }
           //Get current system config
@@ -187,18 +187,18 @@ export class EnvironmentInteraction {
           // const environmentItem = <Item>environment.items.get(itemID);
           const environmentItem = <Item>environmentToken.actor?.items.get(itemID);
 
-          const customInfo = customInfoEnvironmentInteraction;
+          const customInfo = new customInfoEnvironmentInteraction();
           customInfo.environmentTokenID = <string>environmentToken.id;
           customInfo.environmentActorID = <string>environmentToken.actor?.id;
           customInfo.environmentItemID = <string>environmentItem.id;
 
           let interactorItemTmp;
-          if(environmentItem.getFlag(moduleName,Flags.notesuseitemenvironment)){
+          if (environmentItem.getFlag(moduleName, Flags.notesuseitemenvironment)) {
             interactorItemTmp = environmentItem;
             customInfo.interactorTokenID = <string>environmentToken.id;
             customInfo.interactorActorID = <string>environmentToken.actor?.id;
             customInfo.interactorItemID = <string>environmentItem.id;
-          }else{
+          } else {
             // We need to create a temporary token for applying all the feature of the player
             const [ownedItemTmp] = <Document<any, Actor>[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [environmentItem.toObject()]);
             interactorItemTmp = <Item>ownedItemTmp;
@@ -226,11 +226,11 @@ export class EnvironmentInteraction {
                     interactorItemTmp.executeMacro();
                     return;
                   } else {
-                    ui.notifications?.warn(moduleName + ' | No macro found for the integration with \'item macro\' for launch a macro');
+                    ui.notifications?.warn(moduleName + " | No macro found for the integration with 'item macro' for launch a macro");
                     return;
                   }
                 } else {
-                  ui.notifications?.warn(moduleName + ' | Can\'t use the integration with \'item macro\' system not supported or hte module is not active');
+                  ui.notifications?.warn(moduleName + " | Can't use the integration with 'item macro' system not supported or hte module is not active");
                   return;
                 }
               }
@@ -242,11 +242,9 @@ export class EnvironmentInteraction {
               }
               const myRequestArray = REQUEST_LABEL.split('|') ?? [];
               if (myRequestArray.length == 0) {
-                ui.notifications?.warn(moduleName + ' | The label event setted for the environment interaction is invalid \'' + REQUEST_LABEL + '\'');
+                ui.notifications?.warn(moduleName + " | The label event setted for the environment interaction is invalid '" + REQUEST_LABEL + "'");
                 return;
               }
-
-              customInfo.requestLabel = <string>REQUEST_LABEL;
 
               // <ENVIRONMENT_TYPE>|<MACRO_NAME_OR_TYPE_REQUEST>|<REQUEST_LABEL>|<DC_OR_NUMBER_TO_PASS>
               const environmentTypeReq = <string>myRequestArray[0]?.trim() ?? ENVIRONMENT_TYPE.ITEM;
@@ -261,10 +259,13 @@ export class EnvironmentInteraction {
               const groupsReq = myRequestArray[4]?.trim() ? Array.from(myRequestArray[4]?.trim().split(',')) : [];
 
               // if ([ENVIRONMENT_TYPE.ATTACK].includes(noteDetail)) {
-              log(environmentTypeReq + '|' + macroNameOrTypeReq + '|' + labelOrDcReq + '|' + dcReq);
+              log(environmentTypeReq + '|' + macroNameOrTypeReq + '|' + labelOrDcReq + '|' + dcReq + '|' + groupsReq);
               // Hooks.once('renderDialog', (dialog, html, dialogData) => {
               //   dialog.setPosition({ top: event.clientY - 50 ?? null, left: window.innerWidth - 710 });
               // });
+              customInfo.requestLabel = <string>REQUEST_LABEL;
+              customInfo.environmentDC = dcReq;
+
               switch (environmentTypeReq) {
                 case ENVIRONMENT_TYPE.MACRO: {
                   if (macroNameOrTypeReq) {
@@ -275,8 +276,8 @@ export class EnvironmentInteraction {
                     }
                     macro.execute({ actor: <Actor>interactorToken.actor, token: interactorToken });
                   } else {
-                    ui.notifications?.warn(moduleName + ' | Can\'t interact with item for launch a macro');
-                    throw new Error(moduleName + ' | Can\'t interact with item for launch a macro');
+                    ui.notifications?.warn(moduleName + " | Can't interact with item for launch a macro");
+                    throw new Error(moduleName + " | Can't interact with item for launch a macro");
                   }
                   break;
                 }
@@ -431,7 +432,7 @@ export class EnvironmentInteraction {
                   }
                   break;
                 }
-                default:{
+                default: {
                   if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
                     const options = new MonkTokenBarRollOptions();
                     options.ei = customInfo;
@@ -479,20 +480,20 @@ export class EnvironmentInteraction {
               }
             } finally {
               if (interactorItemTmp && interactorItemTmp?.id) {
-                const found = interactorToken.actor?.items.find((itemCheck:Item) => {
+                const found = interactorToken.actor?.items.find((itemCheck: Item) => {
                   return itemCheck && itemCheck.id == interactorItemTmp?.id;
                 });
-                if(found){
+                if (found) {
                   interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>interactorItemTmp.id]);
                 }
               }
             }
           } finally {
             if (interactorItemTmp && interactorItemTmp?.id) {
-              const found = interactorToken.actor?.items.find((itemCheck:Item) => {
+              const found = interactorToken.actor?.items.find((itemCheck: Item) => {
                 return itemCheck && itemCheck.id == interactorItemTmp?.id;
               });
-              if(found){
+              if (found) {
                 interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>interactorItemTmp.id]);
               }
             }

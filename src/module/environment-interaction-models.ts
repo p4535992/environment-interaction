@@ -69,13 +69,13 @@ export const Flags = {
 /**
  * A model for embed all the info we need to decide a success or a failure
 */
-export const customInfoEnvironmentInteraction = {
-  environmentTokenID: '',
-  environmentActorID:'',
-  environmentItemID:'',
-  // environmentDC:NaN,
-  interactorTokenID: '',
-  interactorActorID:'',
-  interactorItemID:'',
-  requestLabel:''
+export class customInfoEnvironmentInteraction {
+  environmentTokenID = '';
+  environmentActorID = '';
+  environmentItemID = '';
+  environmentDC = NaN;
+  interactorTokenID = '';
+  interactorActorID = '';
+  interactorItemID = '';
+  requestLabel = ''
 }

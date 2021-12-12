@@ -64,3 +64,6 @@ Examples
 | sub label           |            | attack\|utility\|        |                  |  |  | Token Action HUD |
 | sub label           |            | attack\|effect\|         |                  |  |  | Token Action HUD |
 | sub label           |            | attack\|condition\|      |                  |  |  | Token Action HUD |
+
+
+    skill|skill:slt,skill:prc|18
