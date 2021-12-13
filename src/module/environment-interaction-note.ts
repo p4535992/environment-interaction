@@ -12,9 +12,9 @@ export class EnvironmentInteractionNote extends FormApplication {
     return this.object;
   }
 
-  get editor(): any{
+  get editorCondition(): any{
     //@ts-ignore
-    return ace.edit(`macroEditor-${this.entity.id}`);
+    return ace.edit(`macroEditor-${this.entity.id}-condition`);
     //@ts-ignore
     // const editor = ace.edit(`macroEditor-${this.entity.id}`);
   }
@@ -28,7 +28,7 @@ export class EnvironmentInteractionNote extends FormApplication {
     options.template = `modules/${moduleName}/templates/interaction-note.hbs`;
     options.width = '600';
     options.height = '700';
-    options.classes = ['environment-interaction-notes', 'sheet'];
+    options.classes = ['macro-sheet', 'sheet']; // 'macro-sheet''environment-interaction-notes'
     options.title = i18n(`${moduleName}.note.label`);
     options.resizable = true;
     options.editable = true;
@@ -56,15 +56,19 @@ export class EnvironmentInteractionNote extends FormApplication {
     // html.find('.moveToDescription').click(ev => this._moveToDescription());
     // html.find('.ei-info').click((ev) => this._showInfo());
 
+    // ==================================
+    // SET UP EDITOR FOR CONDITION
+    // ===================================
+
     /** @type {JQuery} */
     const configElement = $(html);
     configElement
-      .find("div.form-group.stacked.command")
+      .find("div.form-group.stacked.command.condition")
       .append(
-        `<button type="button" class="ei-macro-editor-expand" title="Expand Editor"><i class="fas fa-expand-alt"></i></button><div class="ei-macro-editor" id="macroEditor-${this.entity.id}"></div>`
+        `<button type="button" class="ei-macro-editor-expand" title="Expand Editor"><i class="fas fa-expand-alt"></i></button><div class="ei-macro-editor" id="macroEditor-${this.entity.id}-condition"></div>`
       );
     //if (game.settings.get("macroeditor", "defaultShow")) {
-      configElement.find('.command textarea[name="command"]').css("display", "none");
+      configElement.find('.command textarea[name="flags.environment-interaction.notes-condition"]').css("display", "none");
 
       // furnace compat
       const furnace = configElement.find("div.furnace-macro-command");
@@ -77,10 +81,11 @@ export class EnvironmentInteractionNote extends FormApplication {
     // }
 
     configElement
-      .find(".sheet-footer")
+      //.find(".sheet-footer")
+      .find("div.form-group.stacked.command.condition")
       .append('<button type="button" class="ei-macro-editor-button" title="Toggle Code Editor" name="editorButton"><i class="fas fa-terminal"></i></button>');
 
-    this.editor.session.on("changeMode", function (e, session) {
+    this.editorCondition.session.on("changeMode", function (e, session) {
       if ("ace/mode/javascript" === session.getMode().$id) {
         if (session.$worker) {
           session.$worker.send("setOptions", [
@@ -94,7 +99,7 @@ export class EnvironmentInteractionNote extends FormApplication {
     });
 
     // Merge ace-lib user-settings with module settings
-    this.editor.setOptions(
+    this.editorCondition.setOptions(
       //@ts-ignore
       mergeObject(ace.userSettings, {
         mode: "ace/mode/javascript",
@@ -105,10 +110,10 @@ export class EnvironmentInteractionNote extends FormApplication {
     configElement.find(".ei-macro-editor-button").on("click", (event) => {
       event.preventDefault();
       if (configElement.find(".ei-macro-editor").css("display") == "none") {
-        configElement.find('.command textarea[name="command"]').css("display", "none");
+        configElement.find('.command textarea[name="flags.environment-interaction.notes-condition"]').css("display", "none");
         configElement.find(".ei-macro-editor").css("display", "");
         configElement.find(".ei-macro-editor-expand").css("display", "");
-        this.editor.setValue(configElement.find('.command textarea[name="command"]').val(), -1);
+        this.editorCondition.setValue(configElement.find('.command textarea[name="flags.environment-interaction.notes-condition"]').val(), -1);
 
         // furnace compat
         const furnace = configElement.find("div.furnace-macro-command");
@@ -116,7 +121,7 @@ export class EnvironmentInteractionNote extends FormApplication {
           furnace.css("display", "none");
         }
       } else {
-        configElement.find('.command textarea[name="command"]').css("display", "");
+        configElement.find('.command textarea[name="flags.environment-interaction.notes-condition"]').css("display", "");
         configElement.find(".ei-macro-editor").css("display", "none");
         configElement.find(".ei-macro-editor-expand").css("display", "none");
 
@@ -146,10 +151,10 @@ export class EnvironmentInteractionNote extends FormApplication {
       }
     });
 
-    this.editor.setValue(configElement.find('textarea[name="command"]').val(), -1);
+    this.editorCondition.setValue(configElement.find('textarea[name="flags.environment-interaction.notes-condition"]').val(), -1);
 
-    this.editor.getSession().on("change", () => {
-      configElement.find('textarea[name="command"]').val(this.editor.getSession().getValue());
+    this.editorCondition.getSession().on("change", () => {
+      configElement.find('textarea[name="flags.environment-interaction.notes-condition"]').val(this.editorCondition.getSession().getValue());
     });
 
     // editor.commands.addCommand({
@@ -166,9 +171,9 @@ export class EnvironmentInteractionNote extends FormApplication {
 
     // watch for resizing of editor
     new ResizeObserver(() => {
-      this.editor.resize();
-      this.editor.renderer.updateFull();
-    }).observe(this.editor.container);
+      this.editorCondition.resize();
+      this.editorCondition.renderer.updateFull();
+    }).observe(this.editorCondition.container);
 
     //createMacroConfigHook(macroConfig.id, editor);
   }
@@ -297,6 +302,6 @@ export class EnvironmentInteractionNote extends FormApplication {
 
   async close(){
     super.close();
-    this.editor.destroy();
+    this.editorCondition.destroy();
   }
 }

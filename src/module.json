@@ -34,8 +34,7 @@
   ],
   "styles": [
     "styles/environment-interaction.css",
-    "styles/environment-interaction-secret.css",
-    "environment-interaction-macro-editor.css"
+    "styles/environment-interaction-macro-editor.css"
   ],
   "minimumCoreVersion": "0.8.1",
   "compatibleCoreVersion": "0.8.9",

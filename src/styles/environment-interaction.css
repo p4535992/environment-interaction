@@ -43,3 +43,8 @@
   display: inline-flex;
   width: 100%;
 }
+
+.open-environment-interaction-note .fa-people-carry {
+  color: orangered;
+  text-shadow: 0 0 8px orangered;
+}

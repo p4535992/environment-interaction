@@ -1,4 +1,4 @@
-<form class="flexcol editable" autocomplete="off">
+<form class="editable flexcol" autocomplete="off">
     {{!-- {{#if isGM}} --}}
         <header class="sheet-header">
             <img src="{{img}}" data-edit="img" title="{{name}}" height="64" width="64"/>
@@ -58,21 +58,21 @@
                 <textarea name="flags.environment-interaction.notes">{{flags.environment-interaction.notes}}</textarea>
             </div>
         </div>
-        <div class="form-group stacked command">
+        <div class="form-group stacked command condition">
             <label>{{localize "environment-interaction.note.event-condition"}}</label>
-            <div class="form-fields">
+            <div class="form-group">
                 <textarea name="flags.environment-interaction.notes-condition">{{flags.environment-interaction.notes-condition}}</textarea>
             </div>
         </div>
-        <div class="form-group stacked command">
+        <div class="form-group stacked command success">
             <label>{{localize "environment-interaction.note.event-success"}}</label>
-            <div class="form-fields">
+            <div class="form-group">
                 <textarea name="flags.environment-interaction.notes-success">{{flags.environment-interaction.notes-success}}</textarea>
             </div>
         </div>
-        <div class="form-group stacked command">
+        <div class="form-group stacked command failure">
             <label>{{localize "environment-interaction.note.event-failure"}}</label>
-            <div class="form-fields">
+            <div class="form-group">
                 <textarea name="flags.environment-interaction.notes-failure">{{flags.environment-interaction.notes-failure}}</textarea>
             </div>
         </div>
