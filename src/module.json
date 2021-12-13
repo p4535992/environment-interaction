@@ -29,8 +29,14 @@
     }
   ],
   "system": [],
-  "esmodules": ["environment-interaction-main.js"],
-  "styles": ["styles/environment-interaction.css", "styles/environment-interaction-secret.css"],
+  "esmodules": [
+    "environment-interaction-main.js"
+  ],
+  "styles": [
+    "styles/environment-interaction.css",
+    "styles/environment-interaction-secret.css",
+    "environment-interaction-macro-editor.css"
+  ],
   "minimumCoreVersion": "0.8.1",
   "compatibleCoreVersion": "0.8.9",
   "url": "https://github.com/p4535992/environment-interaction",
@@ -44,6 +50,10 @@
   "dependencies": [
     {
       "name": "lib-wrapper"
+    },
+    {
+      "name": "acelib",
+      "type": "module"
     }
   ]
 }

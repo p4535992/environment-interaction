@@ -12,6 +12,13 @@ export class EnvironmentInteractionNote extends FormApplication {
     return this.object;
   }
 
+  get editor(): any{
+    //@ts-ignore
+    return ace.edit(`macroEditor-${this.entity.id}`);
+    //@ts-ignore
+    // const editor = ace.edit(`macroEditor-${this.entity.id}`);
+  }
+
   // get showExtraButtons() {
   //     return (getGame().dnd5e && this.entity.constructor.name !== 'RollTable');
   // }
@@ -48,6 +55,122 @@ export class EnvironmentInteractionNote extends FormApplication {
     // html.find('.moveToNote').click(ev => this._moveToNotes());
     // html.find('.moveToDescription').click(ev => this._moveToDescription());
     // html.find('.ei-info').click((ev) => this._showInfo());
+
+    /** @type {JQuery} */
+    const configElement = $(html);
+    configElement
+      .find("div.form-group.stacked.command")
+      .append(
+        `<button type="button" class="ei-macro-editor-expand" title="Expand Editor"><i class="fas fa-expand-alt"></i></button><div class="ei-macro-editor" id="macroEditor-${this.entity.id}"></div>`
+      );
+    //if (game.settings.get("macroeditor", "defaultShow")) {
+      configElement.find('.command textarea[name="command"]').css("display", "none");
+
+      // furnace compat
+      const furnace = configElement.find("div.furnace-macro-command");
+      if (furnace.length !== 0) {
+        furnace.css("display", "none");
+      }
+    // } else {
+    //   configElement.find(".ei-macro-editor").css("display", "none");
+    //   configElement.find(".ei-macro-editor-expand").css("display", "none");
+    // }
+
+    configElement
+      .find(".sheet-footer")
+      .append('<button type="button" class="ei-macro-editor-button" title="Toggle Code Editor" name="editorButton"><i class="fas fa-terminal"></i></button>');
+
+    this.editor.session.on("changeMode", function (e, session) {
+      if ("ace/mode/javascript" === session.getMode().$id) {
+        if (session.$worker) {
+          session.$worker.send("setOptions", [
+            {
+              esversion: 9,
+              esnext: false,
+            },
+          ]);
+        }
+      }
+    });
+
+    // Merge ace-lib user-settings with module settings
+    this.editor.setOptions(
+      //@ts-ignore
+      mergeObject(ace.userSettings, {
+        mode: "ace/mode/javascript",
+        wrap: true, //game.settings.get("macroeditor", "lineWrap"),
+      })
+    );
+
+    configElement.find(".ei-macro-editor-button").on("click", (event) => {
+      event.preventDefault();
+      if (configElement.find(".ei-macro-editor").css("display") == "none") {
+        configElement.find('.command textarea[name="command"]').css("display", "none");
+        configElement.find(".ei-macro-editor").css("display", "");
+        configElement.find(".ei-macro-editor-expand").css("display", "");
+        this.editor.setValue(configElement.find('.command textarea[name="command"]').val(), -1);
+
+        // furnace compat
+        const furnace = configElement.find("div.furnace-macro-command");
+        if (furnace.length !== 0) {
+          furnace.css("display", "none");
+        }
+      } else {
+        configElement.find('.command textarea[name="command"]').css("display", "");
+        configElement.find(".ei-macro-editor").css("display", "none");
+        configElement.find(".ei-macro-editor-expand").css("display", "none");
+
+        // furnace compat
+        const furnace = configElement.find("div.furnace-macro-command");
+        if (furnace.length !== 0) {
+          furnace.css("display", "");
+          furnace.trigger("change");
+        }
+      }
+    });
+
+    configElement.find(".ei-macro-editor-expand").on("click", (event) => {
+      event.preventDefault();
+      if (configElement.find(".ei-macro-editor").hasClass("fullscreen")) {
+        configElement.find(".ei-macro-editor").removeClass("fullscreen");
+        configElement.find(".ei-macro-editor-expand").removeClass("fullscreen");
+        configElement.find(".ei-macro-editor-expand").prop("title", "Expand Editor");
+        configElement.find(".ei-macro-editor-expand i.fas.fa-compress-alt").attr("class", "fas fa-expand-alt");
+        configElement.find(".window-resizable-handle").css("display", "");
+      } else {
+        configElement.find(".ei-macro-editor").addClass("fullscreen");
+        configElement.find(".ei-macro-editor-expand").addClass("fullscreen");
+        configElement.find(".ei-macro-editor-expand").prop("title", "Shrink Editor");
+        configElement.find(".ei-macro-editor-expand i.fas.fa-expand-alt").attr("class", "fas fa-compress-alt");
+        configElement.find(".window-resizable-handle").css("display", "none");
+      }
+    });
+
+    this.editor.setValue(configElement.find('textarea[name="command"]').val(), -1);
+
+    this.editor.getSession().on("change", () => {
+      configElement.find('textarea[name="command"]').val(this.editor.getSession().getValue());
+    });
+
+    // editor.commands.addCommand({
+    //   name: "Save",
+    //   bindKey: { win: "Ctrl-S", mac: "Command-S" },
+    //   exec: () => configElement.find("form.editable").trigger("submit"),
+    // });
+
+    // editor.commands.addCommand({
+    //   name: "Execute",
+    //   bindKey: { win: "Ctrl-E", mac: "Command-E" },
+    //   exec: () => configElement.find("button.execute").trigger("click"),
+    // });
+
+    // watch for resizing of editor
+    new ResizeObserver(() => {
+      this.editor.resize();
+      this.editor.renderer.updateFull();
+    }).observe(this.editor.container);
+
+    //createMacroConfigHook(macroConfig.id, editor);
   }
 
   // _showInfo() {
@@ -104,15 +227,6 @@ export class EnvironmentInteractionNote extends FormApplication {
 
       if (formData[`flags.${moduleName}.${Flags.notes}`]) {
         await this.entity.setFlag(moduleName, Flags.notes, formData[`flags.${moduleName}.${Flags.notes}`]);
-        // CANNOT BE A MACRO THERE IS ITEM MACRO FOR THAT
-        // const macro = new Macro({
-        //   name: this.entity.data.name + '',
-        //   type: 'script',
-        //   scope: 'global',
-        //   command: formData[`flags.${moduleName}.${Flags.notes}`],
-        //   author: getGame().user?.id,
-        // });
-        // await this.entity.setFlag(moduleName, Flags.notesmacro, macro);
       } else {
         await this.entity.setFlag(moduleName, Flags.notes, null);
       }
@@ -123,14 +237,6 @@ export class EnvironmentInteractionNote extends FormApplication {
           macroCondition = 'return ' + macroCondition;
         }
         await this.entity.setFlag(moduleName, Flags.notescondition, macroCondition);
-        // const macroCondition = new Macro({
-        //   name: this.entity.data.name + ' - condition',
-        //   type: 'script',
-        //   scope: 'global',
-        //   command: formData[`flags.${moduleName}.${Flags.notescondition}`],
-        //   author: getGame().user?.id,
-        // });
-        // await this.entity.setFlag(moduleName, Flags.notesconditionmacro, macroCondition);
       } else {
         await this.entity.setFlag(moduleName, Flags.notescondition, null);
         // await this.entity.setFlag(moduleName, Flags.notesconditionmacro, null);
@@ -138,71 +244,20 @@ export class EnvironmentInteractionNote extends FormApplication {
 
       if (formData[`flags.${moduleName}.${Flags.notessuccess}`]) {
         await this.entity.setFlag(moduleName, Flags.notessuccess, formData[`flags.${moduleName}.${Flags.notessuccess}`]);
-        // const macroSuccess = new Macro({
-        //   name: this.entity.data.name + ' - success',
-        //   type: 'script',
-        //   scope: 'global',
-        //   command: formData[`flags.${moduleName}.${Flags.notessuccess}`],
-        //   author: getGame().user?.id,
-        // });
-        // await this.entity.setFlag(moduleName, Flags.notessuccessmacro, macroSuccess);
       } else {
         await this.entity.setFlag(moduleName, Flags.notessuccess, null);
-        // await this.entity.setFlag(moduleName, Flags.notessuccessmacro, null);
       }
 
       if (formData[`flags.${moduleName}.${Flags.notesfailure}`]) {
         await this.entity.setFlag(moduleName, Flags.notesfailure, formData[`flags.${moduleName}.${Flags.notesfailure}`]);
-        // const macroFailure = new Macro({
-        //   name: this.entity.data.name + ' - failure',
-        //   type: 'script',
-        //   scope: 'global',
-        //   command: formData[`flags.${moduleName}.${Flags.notesfailure}`],
-        //   author: getGame().user?.id,
-        // });
-        // await this.entity.setFlag(moduleName, Flags.notesfailuremacro, macroFailure);
       } else {
         await this.entity.setFlag(moduleName, Flags.notesfailure, null);
-        // await this.entity.setFlag(moduleName, Flags.notesfailuremacro, null);
       }
-
-      // await this.updateMacro(
-      //   formData[`flags.${moduleName}.${Flags.notes}`],
-      //   'script',
-      //   ''
-      // );
-      // await this.updateMacro(
-      //   formData[`flags.${moduleName}.${Flags.notescondition}`],
-      //   'script',
-      //   ' - condition'
-      // );
-      // await this.updateMacro(
-      //   formData[`flags.${moduleName}.${Flags.notessuccess}`],
-      //   'script',
-      //   ' - success'
-      // );
-      // await this.updateMacro(
-      //   formData[`flags.${moduleName}.${Flags.notesfailure}`],
-      //   'script',
-      //   ' - failure'
-      // );
       this.render();
     } else {
       ui.notifications?.error('You have to be GM to edit Environment Interaction Notes.');
     }
   }
-
-  // async updateMacro(mycommand, mytype, suffix:string){
-  //   //@ts-ignore
-  //   await this.object.setMacro(new Macro({
-  //     //@ts-ignore
-  //     name : this.object.data.name + suffix,
-  //     type: mytype,
-  //     scope : "global",
-  //     command: mycommand,
-  //     author : getGame().user?.id,
-  //   }));
-  // }
 
   static _initEntityHook(app, html, data) {
     if (getGame().user?.isGM) {
@@ -238,5 +293,10 @@ export class EnvironmentInteractionNote extends FormApplication {
       const titleElement = html.closest('.app').find('.window-title');
       openBtn.insertAfter(titleElement);
     }
+  }
+
+  async close(){
+    super.close();
+    this.editor.destroy();
   }
 }

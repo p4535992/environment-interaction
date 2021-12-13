@@ -1,0 +1,51 @@
+.ei-macro-editor-button {
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  flex-basis: 32px !important;
+  border-radius: 5px;
+}
+
+.ei-macro-editor {
+  width: 100%;
+  height: calc(100% - 2rem);
+}
+
+.ei-macro-editor.fullscreen {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: calc(100% - 10rem);
+  height: calc(100% - 10rem);
+  margin: 5rem;
+}
+
+.ei-macro-sheet .form-group.stacked.command {
+  position: relative;
+}
+
+.ei-macro-editor-expand {
+  position: absolute;
+  filter: opacity(0.4);
+  border-radius: 0.5em;
+  height: 2em;
+  width: 2em;
+  top: 2.3em;
+  right: 0;
+  z-index: 199;
+  background: url(/ui/parchment.jpg);
+  float: right;
+  padding: unset;
+}
+
+.ei-macro-editor-expand.fullscreen {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  margin-left: calc(100% - 7.1rem);
+  margin-top: 5.3rem;
+}
+
+.ei-macro-editor-expand i.fas.fa-expand-alt,
+.ei-macro-editor-expand i.fas.fa-compress-alt {
+  margin: unset;
+}

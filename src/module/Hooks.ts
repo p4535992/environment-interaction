@@ -183,6 +183,10 @@ export const initHooks = async () => {
   // Register Handlebars helpers
   // @ts-ignore
   // getGame().EnvironmentInteraction.registerHandlebarsHelpers();
+
+  // Loading acelib module
+
+  ["ace/mode/json", "ace/ext/language_tools", "ace/ext/error_marker", "ace/theme/twilight", "ace/snippets/json"].forEach((s) => ace.config.loadModule(s));
 };
 
 export const setupHooks = async () => {
