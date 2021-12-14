@@ -61,7 +61,6 @@ export const readyHooks = async () => {
       return item.id == environmentItemId;
     });
 
-
     if (environmentItem) {
       if (dc != null && dc != undefined && !isNaN(dc)) {
         if (total >= dc) {
@@ -184,7 +183,7 @@ export const readyHooks = async () => {
           return item && item.id == itemId;
         });
         if (item?.getFlag(moduleName, Flags.notesuseei)) {
-          li2.css('background-color','orangered');
+          li2.css('background-color', 'orangered');
         }
       }
     }
@@ -192,7 +191,7 @@ export const readyHooks = async () => {
 
   Hooks.on('renderItemSheet', (app, html, data) => {
     // Activate only for item in a actor
-    if(app?.actor?.id){
+    if (app?.actor?.id) {
       EnvironmentInteractionNote._initEntityHook(app, html, data);
     }
   });

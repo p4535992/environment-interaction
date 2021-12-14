@@ -111,7 +111,7 @@ export const getActorByUuid = async function (uuid) {
   return actor;
 };
 
-export const executeEIMacro = function (item: Item, macroFlag: string, ...args:any[]): any {
+export const executeEIMacro = function (item: Item, macroFlag: string, ...args: any[]): any {
   if (!item.getFlag(moduleName, macroFlag)) {
     return false;
   }
@@ -123,10 +123,10 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args:a
   // return _executeEIScript(item, macroFlag, ...args);
   // }
 
-  const myargs:string[] = [];
+  const myargs: string[] = [];
   const flagArgs = `flags.${moduleName}.${macroFlag}-args`;
-  if(item.getFlag(moduleName,flagArgs)){
-    const currentargs:string[] = (<string>item.getFlag(moduleName,flagArgs)).split(',') ?? []
+  if (item.getFlag(moduleName, flagArgs)) {
+    const currentargs: string[] = (<string>item.getFlag(moduleName, flagArgs)).split(',') ?? [];
     myargs.push(...currentargs);
   }
   myargs.push(...args);
@@ -148,7 +148,7 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args:a
     }
   }
 
-  if(macroFlag == Flags.notescondition){
+  if (macroFlag == Flags.notescondition) {
     if (!macroContent?.startsWith('return')) {
       macroContent = 'return ' + macroContent;
     }
@@ -208,7 +208,7 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args:a
   }
 };
 
-export const executeEIMacroContent = function (item: Item, macroContent: string, ...args:any[]): any {
+export const executeEIMacroContent = function (item: Item, macroContent: string, ...args: any[]): any {
   if (!macroContent) {
     return false;
   }
@@ -220,7 +220,7 @@ export const executeEIMacroContent = function (item: Item, macroContent: string,
   // return _executeEIScript(item, macroFlag, ...args);
   // }
 
-  const myargs:string[] = [];
+  const myargs: string[] = [];
   myargs.push(...args);
 
   // if(macroContent){
@@ -249,7 +249,7 @@ export const executeEIMacroContent = function (item: Item, macroContent: string,
   const fn3 = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', 'interactorToken', 'interactorActor', macro.data.command);
   //attempt script execution
   try {
-    return fn3.call(macro, item, speaker, actor, token, character, event, myargs, interactorToken, interactorActor );
+    return fn3.call(macro, item, speaker, actor, token, character, event, myargs, interactorToken, interactorActor);
   } catch (err) {
     ui.notifications?.error(moduleName + ' | ' + i18n(`${moduleName}.macroExecution`));
     error(err);

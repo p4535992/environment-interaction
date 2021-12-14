@@ -72,38 +72,37 @@ export class EnvironmentInteractionNote extends FormApplication {
     // html.find('.ei-info').click((ev) => this._showInfo());
 
     // if (getGame().settings.get(moduleName, 'acelibDefaultShow')) {
-      this.editorCondition = this._addAceLibEditorToElement(
-        html,
-        `div.form-group.stacked.command.${Flags.notescondition}`,
-        this.entity.id,
-        Flags.notescondition, //"flags.environment-interaction.notes-condition",
-      );
+    this.editorCondition = this._addAceLibEditorToElement(
+      html,
+      `div.form-group.stacked.command.${Flags.notescondition}`,
+      this.entity.id,
+      Flags.notescondition, //"flags.environment-interaction.notes-condition",
+    );
 
-      this.editorSuccess = this._addAceLibEditorToElement(
-        html,
-        `div.form-group.stacked.command.${Flags.notessuccess}`,
-        this.entity.id,
-        Flags.notessuccess, //"flags.environment-interaction.notes-success",
-      );
+    this.editorSuccess = this._addAceLibEditorToElement(
+      html,
+      `div.form-group.stacked.command.${Flags.notessuccess}`,
+      this.entity.id,
+      Flags.notessuccess, //"flags.environment-interaction.notes-success",
+    );
 
-      this.editorFailure = this._addAceLibEditorToElement(
-        html,
-        `div.form-group.stacked.command.${Flags.notesfailure}`,
-        this.entity.id,
-        Flags.notesfailure, //"flags.environment-interaction.notes-failure",
-      );
+    this.editorFailure = this._addAceLibEditorToElement(
+      html,
+      `div.form-group.stacked.command.${Flags.notesfailure}`,
+      this.entity.id,
+      Flags.notesfailure, //"flags.environment-interaction.notes-failure",
+    );
     // }
   }
 
-  _addAceLibEditorToElement(html, entityClassName, entityFieldId, flagRef):any {
+  _addAceLibEditorToElement(html, entityClassName, entityFieldId, flagRef): any {
     const entityFieldName = `flags.${moduleName}.${flagRef}`;
     const flagArgs = `flags.${moduleName}.${flagRef}-args`;
     /** @type {JQuery} */
     const configElement = $(html);
     configElement
       //.find("div.form-group.stacked.command.condition")
-      .find(entityClassName)
-      .append(`<button type="button" class="ei-macro-editor-expand ei-macro-editor-expand-${entityFieldId}-${flagRef}" title="Expand Editor"><i class="fas fa-expand-alt"></i></button>
+      .find(entityClassName).append(`<button type="button" class="ei-macro-editor-expand ei-macro-editor-expand-${entityFieldId}-${flagRef}" title="Expand Editor"><i class="fas fa-expand-alt"></i></button>
         <div class="ei-macro-editor ei-macro-editor-${entityFieldId}-${flagRef}" id="macroEditor-${entityFieldId}-${flagRef}"></div>`);
     //if (game.settings.get("macroeditor", "defaultShow")) {
     configElement.find(`.command textarea[name="${entityFieldName}"]`).css('display', 'none');
@@ -125,7 +124,6 @@ export class EnvironmentInteractionNote extends FormApplication {
       //   placeHolder="Additional args e.g.'arg0,arg1,ecc.' on the macro are recovered from args[0],args[1],ecc."></input>`)
       .append(`<button type="button" class="ei-macro-editor-button-${entityFieldId}-${flagRef}" title="Toggle Code Editor" name="editorButton"><i class="fas fa-terminal"></i></button>`)
       .append(`<button type="button" class="ei-macro-execute-button-${entityFieldId}-${flagRef}" title="Execute Macro" name="executeButton"><i class="fas fa-running"></i></button>`);
-      
 
     //@ts-ignore
     const editorElement = ace.edit(`macroEditor-${entityFieldId}-${flagRef}`);
@@ -148,7 +146,7 @@ export class EnvironmentInteractionNote extends FormApplication {
       //@ts-ignore
       mergeObject(ace.userSettings, {
         mode: 'ace/mode/javascript',
-        wrap: true //getGame().settings.get(moduleName, 'acelibLineWrap'),
+        wrap: true, //getGame().settings.get(moduleName, 'acelibLineWrap'),
       }),
     );
 
@@ -188,7 +186,7 @@ export class EnvironmentInteractionNote extends FormApplication {
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef} i.fas.fa-compress-alt`).attr('class', 'fas fa-expand-alt');
         // configElement.find('.window-resizable-handle').css('display', '');
         // configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css("display", "");
-        configElement.find(`.ei-macro-editor-expand`).css("display", "");
+        configElement.find(`.ei-macro-editor-expand`).css('display', '');
       } else {
         configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).addClass('fullscreen');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).addClass('fullscreen');
@@ -196,8 +194,8 @@ export class EnvironmentInteractionNote extends FormApplication {
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef} i.fas.fa-expand-alt`).attr('class', 'fas fa-compress-alt');
         // configElement.find('.window-resizable-handle').css('display', 'none');
         // configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css("display", "none");
-        configElement.find(`.ei-macro-editor-expand`).css("display", "none");
-        configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css("display", "");
+        configElement.find(`.ei-macro-editor-expand`).css('display', 'none');
+        configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css('display', '');
       }
     });
 
@@ -218,17 +216,17 @@ export class EnvironmentInteractionNote extends FormApplication {
     //   bindKey: { win: "Ctrl-E", mac: "Command-E" },
     //   exec: () => configElement.find("button.execute").trigger("click"),
     // });
-    
+
     configElement.find(`.ei-macro-execute-button-${entityFieldId}-${flagRef}`).on('click', (event) => {
       event.preventDefault();
 
       let args: string[] = [];
-      const contentLabel = this._retrieveVal(configElement,flagArgs);
+      const contentLabel = this._retrieveVal(configElement, flagArgs);
       //<string>configElement.find(`input[name="${flagArgs}"]`).val();
       if (contentLabel) {
         args = <string[]>contentLabel.split(',');
       }
-      const macroContent:string = this._retrieveVal(configElement,entityFieldName);
+      const macroContent: string = this._retrieveVal(configElement, entityFieldName);
       //this._updateObjectForExcecuteMacro(event,this.entity,configElement);
       // if(macroContent){
       //   if (macroContent?.startsWith('return')) {
@@ -241,7 +239,7 @@ export class EnvironmentInteractionNote extends FormApplication {
       // }
       executeEIMacroContent(<Item>this.entity, macroContent, args);
     });
-    
+
     // watch for resizing of editor
     new ResizeObserver(() => {
       editorElement.resize();
@@ -360,7 +358,7 @@ export class EnvironmentInteractionNote extends FormApplication {
     }
   }
 
-  _retrieveVal(configElement,flagname){
+  _retrieveVal(configElement, flagname) {
     return configElement.find(`[name="${flagname}"]`).val();
   }
 
@@ -469,10 +467,10 @@ export class EnvironmentInteractionNote extends FormApplication {
 
       // const openBtn = $(`<a class="open-environment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-people-carry${notes ? '-check' : ''}"></i>${labelTxt}</a>`);
       let openBtn;
-      if(notesuseei){
+      if (notesuseei) {
         openBtn = $(`<a class="open-environment-interaction-note" title="${title}" ${labelStyle} >
           <i class="fas fa-people-carry"></i>${labelTxt}</a>`);
-      }else{
+      } else {
         openBtn = $(`<a class="open-environment-interaction-note" title="${title}" ${labelStyle} >
           <i class="fas fa-hands"></i>${labelTxt}</a>`);
       }

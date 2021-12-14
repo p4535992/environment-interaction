@@ -43,8 +43,8 @@ export class EnvironmentInteraction {
     //   return typeDict[type];
     // });
     // // }
-    Handlebars.registerHelper("checkedIf", function (condition) {
-      return (condition) ? "checked" : "";
+    Handlebars.registerHelper('checkedIf', function (condition) {
+      return condition ? 'checked' : '';
     });
   }
 
