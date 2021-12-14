@@ -20,6 +20,14 @@
       "notecolorlabel": {
         "name": "Change Color when Notes are present",
         "hint": "Change Color when Notes are present"
+      },
+      "acelibDefaultShow": {
+        "name": "Show Macro editor by default",
+        "hint": "Shows the code editor by default instead of the default editor"
+      },
+      "acelibLineWrap": {
+        "name": "Wrap lines?",
+        "hint": " "
       }
     },
     "handlebarsHelper": {

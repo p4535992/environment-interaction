@@ -60,6 +60,9 @@ export const Flags = {
   notescondition: 'notes-condition',
   notessuccess: 'notes-success',
   notesfailure: 'notes-failure',
+  notesconditionargs: 'notes-condition-args',
+  notessuccessargs: 'notes-success-args',
+  notesfailureargs: 'notes-failure-args',
   // notesmacro: 'notes-macro',
   // notesconditionmacro: 'notes-condition-macro',
   // notessuccessmacro: 'notes-success-macro',
@@ -68,7 +71,7 @@ export const Flags = {
 
 /**
  * A model for embed all the info we need to decide a success or a failure
-*/
+ */
 export class customInfoEnvironmentInteraction {
   environmentTokenID = '';
   environmentActorID = '';
@@ -77,5 +80,5 @@ export class customInfoEnvironmentInteraction {
   interactorTokenID = '';
   interactorActorID = '';
   interactorItemID = '';
-  requestLabel = ''
+  requestLabel = '';
 }

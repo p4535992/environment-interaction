@@ -110,7 +110,7 @@ export const getActorByUuid = async function (uuid) {
   return actor;
 };
 
-export const executeEIMacro = function (item: Item, macroFlag: string, ...args): any {
+export const executeEIMacro = function (item: Item, macroFlag: string, ...args:any[]): any {
   if (!item.getFlag(moduleName, macroFlag)) {
     return false;
   }
@@ -122,17 +122,28 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args):
   // return _executeEIScript(item, macroFlag, ...args);
   // }
 
+  const myargs:string[] = [];
+  const flagArgs = `flags.${moduleName}.${macroFlag}-args`;
+  if(item.getFlag(moduleName,flagArgs)){
+    const currentargs:string[] = (<string>item.getFlag(moduleName,flagArgs)).split(',') ?? []
+    myargs.push(...currentargs);
+  }
+  myargs.push(...args);
+
   //add variable to the evaluation of the script
   // const item = <Item>this;
   let macroContent = <string>item.getFlag(moduleName, macroFlag);
   const entityMatchRgxTagger = `@(Macro)\\[([^\\]]+)\\]`;
   const rgxTagger = new RegExp(entityMatchRgxTagger, 'ig');
-  const matchAllTags = macroContent.matchAll(rgxTagger) || [];
-  for (const matchTag of matchAllTags) {
-    if (matchTag) {
-      const [textMatched, entity, id, label] = matchTag;
-      // Remove prefix '@Macro[' and suffix ']'
-      macroContent = textMatched.substring(7, textMatched.length - 1);
+  const matchAllTags = macroContent.matchAll(rgxTagger);
+  if (matchAllTags) {
+    for (const matchTag of matchAllTags) {
+      if (matchTag) {
+        const [textMatched, entity, id, label] = matchTag;
+        // Remove prefix '@Macro[' and suffix ']'
+        const macroName = textMatched.substring(7, textMatched.length - 1);
+        macroContent = (<Macro>getGame().macros?.getName(macroName)).data.command;
+      }
     }
   }
   const macro = new Macro({
@@ -175,7 +186,7 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args):
   try {
     // return fn.call(macro, item, speaker, actor, token, character, event, args);
     // return fn2.apply(item, [item, speaker, actor, token, character, event, ...args]);
-    return fn3.call(macro, item, speaker, actor, token, character, event, args);
+    return fn3.call(macro, item, speaker, actor, token, character, event, myargs);
   } catch (err) {
     ui.notifications?.error(moduleName + ' | ' + i18n(`${moduleName}.macroExecution`));
     error(err);

@@ -9,6 +9,7 @@ export const ENVIRONMENT_INTERACTION_ITEM_MACRO_MODULE_NAME = 'itemacro';
 export const ENVIRONMENT_INTERACTION_MONKS_TOKENBAR_MODULE_NAME = 'monks-tokenbar';
 export const ENVIRONMENT_INTERACTION_LMRTFY = 'lmrtfy';
 export const ENVIRONMENT_INTERACTION_TOKEN_ACTION_HUD = 'token-action-hud';
+export const ENVIRONMENT_INTERACTION_ACELIB_MODULE_NAME = 'acelib';
 
 /**
  * Because typescript doesn't know when in the lifecycle of foundry your code runs, we have to assume that the
@@ -164,4 +165,22 @@ export const registerSettings = function () {
     default: false,
     type: Boolean,
   });
+
+  // getGame().settings.register(moduleName, 'acelibDefaultShow', {
+  //   name: i18n(`${moduleName}.settings.acelibDefaultShow.name`),
+  //   hint: i18n(`${moduleName}.settings.acelibDefaultShow.hint`),
+  //   default: true,
+  //   type: Boolean,
+  //   scope: 'world',
+  //   config: false,
+  // });
+
+  // getGame().settings.register(moduleName, 'acelibLineWrap', {
+  //   name: i18n(`${moduleName}.settings.acelibLineWrap.name`),
+  //   hint: i18n(`${moduleName}.settings.acelibLineWrap.hint`),
+  //   default: true,
+  //   type: Boolean,
+  //   scope: 'world',
+  //   config: false,
+  // });
 };

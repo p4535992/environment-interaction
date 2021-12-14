@@ -82,6 +82,10 @@ Hooks.once('ready', () => {
     ui.notifications?.error(`The "${moduleName}" module requires to install and activate the "libWrapper" module.`);
     return;
   }
+  if (!getGame().modules.get('acelib')?.active && getGame().user?.isGM) {
+    ui.notifications?.error(`The "${moduleName}" module requires to install and activate the "acelib" module.`);
+    return;
+  }
   // if (!getGame().modules.get("lib-df-hotkey")?.active && getGame().user.isGM){
   //   ui.notifications.error(`The "${moduleName}" module requires to install and activate the "lib-df-hotkey" module.`);
   //   return;
