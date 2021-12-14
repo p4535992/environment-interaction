@@ -14,20 +14,24 @@ export class EnvironmentInteractionNote extends FormApplication {
     return this.object;
   }
 
-  get editorCondition(): any {
-    //@ts-ignore
-    return ace.edit(`macroEditor-${this.entity.id}-${Flags.notescondition}`);
-  }
+  editorCondition;
+  editorSuccess;
+  editorFailure;
 
-  get editorSuccess(): any {
-    //@ts-ignore
-    return ace.edit(`macroEditor-${this.entity.id}-${Flags.notessuccess}`);
-  }
+  // get editorCondition(): any {
+  //   //@ts-ignore
+  //   return ace.edit(`macroEditor-${this.entity.id}-${Flags.notescondition}`);
+  // }
 
-  get editorFailure(): any {
-    //@ts-ignore
-    return ace.edit(`macroEditor-${this.entity.id}-${Flags.notesfailure}`);
-  }
+  // get editorSuccess(): any {
+  //   //@ts-ignore
+  //   return ace.edit(`macroEditor-${this.entity.id}-${Flags.notessuccess}`);
+  // }
+
+  // get editorFailure(): any {
+  //   //@ts-ignore
+  //   return ace.edit(`macroEditor-${this.entity.id}-${Flags.notesfailure}`);
+  // }
 
   // get showExtraButtons() {
   //     return (getGame().dnd5e && this.entity.constructor.name !== 'RollTable');
@@ -54,6 +58,7 @@ export class EnvironmentInteractionNote extends FormApplication {
     data.isGM = getGame().user?.isGM;
     data.img = this.entity.img;
     data.name = this.entity.name;
+    data.id = this.entity.id;
     // data.showExtraButtons = this.showExtraButtons;
 
     return data;
@@ -66,34 +71,31 @@ export class EnvironmentInteractionNote extends FormApplication {
     // html.find('.moveToDescription').click(ev => this._moveToDescription());
     // html.find('.ei-info').click((ev) => this._showInfo());
 
-    if (getGame().settings.get(moduleName, 'acelibDefaultShow')) {
-      this._addAceLibEditorToElement(
+    // if (getGame().settings.get(moduleName, 'acelibDefaultShow')) {
+      this.editorCondition = this._addAceLibEditorToElement(
         html,
         `div.form-group.stacked.command.${Flags.notescondition}`,
-        `${this.entity.id}-${Flags.notescondition}`,
+        this.entity.id,
         Flags.notescondition, //"flags.environment-interaction.notes-condition",
-        this.editorCondition,
       );
 
-      this._addAceLibEditorToElement(
+      this.editorSuccess = this._addAceLibEditorToElement(
         html,
         `div.form-group.stacked.command.${Flags.notessuccess}`,
-        `${this.entity.id}-${Flags.notessuccess}`,
+        this.entity.id,
         Flags.notessuccess, //"flags.environment-interaction.notes-success",
-        this.editorSuccess,
       );
 
-      this._addAceLibEditorToElement(
+      this.editorFailure = this._addAceLibEditorToElement(
         html,
         `div.form-group.stacked.command.${Flags.notesfailure}`,
-        `${this.entity.id}-${Flags.notesfailure}`,
+        this.entity.id,
         Flags.notesfailure, //"flags.environment-interaction.notes-failure",
-        this.editorFailure,
       );
-    }
+    // }
   }
 
-  _addAceLibEditorToElement(html, entityClassName, entityFieldId, flagRef, editorElement) {
+  _addAceLibEditorToElement(html, entityClassName, entityFieldId, flagRef):any {
     const entityFieldName = `flags.${moduleName}.${flagRef}`;
     const flagArgs = `flags.${moduleName}.${flagRef}-args`;
     /** @type {JQuery} */
@@ -101,7 +103,7 @@ export class EnvironmentInteractionNote extends FormApplication {
     configElement
       //.find("div.form-group.stacked.command.condition")
       .find(entityClassName)
-      .append(`<button type="button" class="ei-macro-editor-expand" title="Expand Editor"><i class="fas fa-expand-alt"></i></button><div class="ei-macro-editor" id="macroEditor-${entityFieldId}"></div>`);
+      .append(`<button type="button" class="ei-macro-editor-expand ei-macro-editor-expand-${entityFieldId}-${flagRef}" title="Expand Editor"><i class="fas fa-expand-alt"></i></button><div class="ei-macro-editor" id="macroEditor-${entityFieldId}-${flagRef}"></div>`);
     //if (game.settings.get("macroeditor", "defaultShow")) {
     configElement.find(`.command textarea[name="${entityFieldName}"]`).css('display', 'none');
 
@@ -112,18 +114,22 @@ export class EnvironmentInteractionNote extends FormApplication {
     }
     // } else {
     //   configElement.find(".ei-macro-editor").css("display", "none");
-    //   configElement.find(".ei-macro-editor-expand").css("display", "none");
+    //   configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css("display", "none");
     // }
 
     configElement
       //.find(".sheet-footer")
-      .find('div.form-group.stacked.command.condition')
-      .append(`<button type="button" class=".ei-macro-editor-button-${entityFieldId}" title="Toggle Code Editor" name="editorButton"><i class="fas fa-terminal"></i></button>`)
-      .append(`<button type="button" class="ei-macro-execute-button-${entityFieldId}" title="Execute Macro" name="executeButton"><i class="fas fa-running"></i></button>`)
-      .append(`<input type="text" class="ei-macro-execute-args-button-${entityFieldId}" title="Additional args for macro" name="flags.${moduleName}.${flagArgs}"
-        placeHolder="Put here the additional args e.g. 'arg0,arg1' are recovered from args[0] and args[1] on the macro code"></input>`);
+      .find(`div.form-group.stacked.command.${flagRef}`)
+      // .append(`<input type="text" class="ei-macro-execute-args-button-${entityFieldId}-${flagRef}" title="Additional args for macro" name="flags.${moduleName}.${flagArgs}"
+      //   placeHolder="Additional args e.g.'arg0,arg1,ecc.' on the macro are recovered from args[0],args[1],ecc."></input>`)
+      .append(`<button type="button" class="ei-macro-editor-button-${entityFieldId}-${flagRef}" title="Toggle Code Editor" name="editorButton"><i class="fas fa-terminal"></i></button>`)
+      .append(`<button type="button" class="ei-macro-execute-button-${entityFieldId}-${flagRef}" title="Execute Macro" name="executeButton"><i class="fas fa-running"></i></button>`);
+      
 
-    // Set vlaue of the args input text
+    //@ts-ignore
+    const editorElement = ace.edit(`macroEditor-${entityFieldId}-${flagRef}`);
+
+    // Set value of the args input text
     const currentValueArgs = this.entity.getFlag(moduleName, `${flagRef}args`);
     if (currentValueArgs) {
       configElement.find(`input[name="ei-macro-execute-args-button-${entityFieldId}"]`).attr('value', currentValueArgs);
@@ -151,12 +157,12 @@ export class EnvironmentInteractionNote extends FormApplication {
       }),
     );
 
-    configElement.find(`.ei-macro-editor-button-${entityFieldId}`).on('click', (event) => {
+    configElement.find(`.ei-macro-editor-button-${entityFieldId}-${flagRef}`).on('click', (event) => {
       event.preventDefault();
       if (configElement.find('.ei-macro-editor').css('display') == 'none') {
         configElement.find(`.command textarea[name="${entityFieldName}"]`).css('display', 'none');
         configElement.find('.ei-macro-editor').css('display', '');
-        configElement.find('.ei-macro-editor-expand').css('display', '');
+        configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css('display', '');
         editorElement.setValue(configElement.find(`.command textarea[name="${entityFieldName}"]`).val(), -1);
 
         // furnace compat
@@ -167,7 +173,7 @@ export class EnvironmentInteractionNote extends FormApplication {
       } else {
         configElement.find(`.command textarea[name="${entityFieldName}"]`).css('display', '');
         configElement.find('.ei-macro-editor').css('display', 'none');
-        configElement.find('.ei-macro-editor-expand').css('display', 'none');
+        configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css('display', 'none');
 
         // furnace compat
         const furnace = configElement.find('div.furnace-macro-command');
@@ -178,19 +184,19 @@ export class EnvironmentInteractionNote extends FormApplication {
       }
     });
 
-    configElement.find('.ei-macro-editor-expand').on('click', (event) => {
+    configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).on('click', (event) => {
       event.preventDefault();
       if (configElement.find('.ei-macro-editor').hasClass('fullscreen')) {
         configElement.find('.ei-macro-editor').removeClass('fullscreen');
-        configElement.find('.ei-macro-editor-expand').removeClass('fullscreen');
-        configElement.find('.ei-macro-editor-expand').prop('title', 'Expand Editor');
-        configElement.find('.ei-macro-editor-expand i.fas.fa-compress-alt').attr('class', 'fas fa-expand-alt');
+        configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).removeClass('fullscreen');
+        configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).prop('title', 'Expand Editor');
+        configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef} i.fas.fa-compress-alt`).attr('class', 'fas fa-expand-alt');
         configElement.find('.window-resizable-handle').css('display', '');
       } else {
         configElement.find('.ei-macro-editor').addClass('fullscreen');
-        configElement.find('.ei-macro-editor-expand').addClass('fullscreen');
-        configElement.find('.ei-macro-editor-expand').prop('title', 'Shrink Editor');
-        configElement.find('.ei-macro-editor-expand i.fas.fa-expand-alt').attr('class', 'fas fa-compress-alt');
+        configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).addClass('fullscreen');
+        configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).prop('title', 'Shrink Editor');
+        configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef} i.fas.fa-expand-alt`).attr('class', 'fas fa-compress-alt');
         configElement.find('.window-resizable-handle').css('display', 'none');
       }
     });
@@ -212,8 +218,8 @@ export class EnvironmentInteractionNote extends FormApplication {
     //   bindKey: { win: "Ctrl-E", mac: "Command-E" },
     //   exec: () => configElement.find("button.execute").trigger("click"),
     // });
-
-    configElement.find(`.ei-macro-execute-button-${entityFieldId}`).on('click', (event) => {
+    /*
+    configElement.find(`.ei-macro-execute-button-${entityFieldId}-${flagRef}`).on('click', (event) => {
       event.preventDefault();
 
       let args: string[] = [];
@@ -223,7 +229,7 @@ export class EnvironmentInteractionNote extends FormApplication {
       }
       executeEIMacro(<Item>this.entity, flagRef, args);
     });
-
+    */
     // watch for resizing of editor
     new ResizeObserver(() => {
       editorElement.resize();
@@ -231,6 +237,8 @@ export class EnvironmentInteractionNote extends FormApplication {
     }).observe(editorElement.container);
 
     //createMacroConfigHook(macroConfig.id, editor);
+    return editorElement;
+    
   }
 
   // _showInfo() {
