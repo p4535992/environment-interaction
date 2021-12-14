@@ -121,7 +121,7 @@ export class EnvironmentInteractionNote extends FormApplication {
     configElement
       //.find(".sheet-footer")
       .find(`div.form-group.stacked.command.${flagRef}`)
-      // .append(`<input type="text" class="ei-macro-execute-args-button-${entityFieldId}-${flagRef}" title="Additional args for macro" name="flags.${moduleName}.${flagArgs}"
+      // .append(`<input type="text" class="ei-macro-execute-args-button-${entityFieldId}-${flagArgs}" title="Additional args for macro" name="flags.${moduleName}.${flagArgs}"
       //   placeHolder="Additional args e.g.'arg0,arg1,ecc.' on the macro are recovered from args[0],args[1],ecc."></input>`)
       .append(`<button type="button" class="ei-macro-editor-button-${entityFieldId}-${flagRef}" title="Toggle Code Editor" name="editorButton"><i class="fas fa-terminal"></i></button>`)
       .append(`<button type="button" class="ei-macro-execute-button-${entityFieldId}-${flagRef}" title="Execute Macro" name="executeButton"><i class="fas fa-running"></i></button>`);
@@ -129,12 +129,6 @@ export class EnvironmentInteractionNote extends FormApplication {
 
     //@ts-ignore
     const editorElement = ace.edit(`macroEditor-${entityFieldId}-${flagRef}`);
-
-    // Set value of the args input text
-    // const currentValueArgs = this.entity.getFlag(moduleName, `${flagRef}args`);
-    // if (currentValueArgs) {
-    //   configElement.find(`input[name="ei-macro-execute-args-button-${entityFieldId}"]`).attr('value', currentValueArgs);
-    // }
 
     editorElement.session.on('changeMode', function (e, session) {
       if ('ace/mode/javascript' === session.getMode().$id) {
@@ -224,18 +218,18 @@ export class EnvironmentInteractionNote extends FormApplication {
     //   bindKey: { win: "Ctrl-E", mac: "Command-E" },
     //   exec: () => configElement.find("button.execute").trigger("click"),
     // });
-    /*
+    
     configElement.find(`.ei-macro-execute-button-${entityFieldId}-${flagRef}`).on('click', (event) => {
       event.preventDefault();
 
       let args: string[] = [];
-      const contentLabel = <string>configElement.find(`input[name="ei-macro-execute-args-button-${entityFieldId}"]`).val();
+      const contentLabel = <string>configElement.find(`input[name="${flagArgs}"]`).val();
       if (contentLabel) {
         args = <string[]>contentLabel.split(',');
       }
       executeEIMacro(<Item>this.entity, flagRef, args);
     });
-    */
+    
     // watch for resizing of editor
     new ResizeObserver(() => {
       editorElement.resize();
