@@ -194,6 +194,7 @@ export class EnvironmentInteractionNote extends FormApplication {
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef} i.fas.fa-compress-alt`).attr('class', 'fas fa-expand-alt');
         // configElement.find('.window-resizable-handle').css('display', '');
         // configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css("display", "");
+        configElement.find(`.ei-macro-editor-expand`).css("display", "");
       } else {
         configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).addClass('fullscreen');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).addClass('fullscreen');
@@ -201,6 +202,8 @@ export class EnvironmentInteractionNote extends FormApplication {
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef} i.fas.fa-expand-alt`).attr('class', 'fas fa-compress-alt');
         // configElement.find('.window-resizable-handle').css('display', 'none');
         // configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css("display", "none");
+        configElement.find(`.ei-macro-editor-expand`).css("display", "none");
+        configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css("display", "");
       }
     });
 
