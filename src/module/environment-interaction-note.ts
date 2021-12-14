@@ -1,4 +1,4 @@
-import { executeEIMacro } from './environment-interaction-utils';
+import { executeEIMacro, executeEIMacroContent } from './environment-interaction-utils';
 import { field } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/fields.mjs';
 import { i18n } from '../environment-interaction-main';
 import { Flags } from './environment-interaction-models';
@@ -223,11 +223,23 @@ export class EnvironmentInteractionNote extends FormApplication {
       event.preventDefault();
 
       let args: string[] = [];
-      const contentLabel = <string>configElement.find(`input[name="${flagArgs}"]`).val();
+      const contentLabel = this._retrieveVal(configElement,flagArgs);
+      //<string>configElement.find(`input[name="${flagArgs}"]`).val();
       if (contentLabel) {
         args = <string[]>contentLabel.split(',');
       }
-      executeEIMacro(<Item>this.entity, flagRef, args);
+      let macroContent:string = this._retrieveVal(configElement,entityFieldName);
+      //this._updateObjectForExcecuteMacro(event,this.entity,configElement);
+      if(macroContent){
+        if (!macroContent?.startsWith('return')) {
+          //macroContent = 'return ' + macroContent;
+          macroContent = macroContent.substring(6,macroContent.length);
+        }
+        if (!macroContent?.startsWith('alert')) {
+          macroContent = 'alert(' + macroContent + ')';
+        }
+      }
+      executeEIMacroContent(<Item>this.entity, macroContent, args);
     });
     
     // watch for resizing of editor
@@ -238,7 +250,6 @@ export class EnvironmentInteractionNote extends FormApplication {
 
     //createMacroConfigHook(macroConfig.id, editor);
     return editorElement;
-    
   }
 
   // _showInfo() {
@@ -348,6 +359,99 @@ export class EnvironmentInteractionNote extends FormApplication {
       ui.notifications?.error('You have to be GM to edit Environment Interaction Notes.');
     }
   }
+
+  _retrieveVal(configElement,flagname){
+    return configElement.find(`[name="${flagname}"]`).val();
+  }
+
+  // async _updateObjectForExcecuteMacro(event, entity, configElement) {
+  //   if (getGame().user?.isGM) {
+  //     // if (this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesuseei}`)) {
+  //     //   await entity.setFlag(moduleName, Flags.notesuseei, this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesuseei}`));
+  //     // } else {
+  //     //   await entity.setFlag(moduleName, Flags.notesuseei, null);
+  //     // }
+
+  //     // if (this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesuseitemmacro}`)) {
+  //     //   await entity.setFlag(moduleName, Flags.notesuseitemmacro, this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesuseitemmacro}`));
+  //     // } else {
+  //     //   await entity.setFlag(moduleName, Flags.notesuseitemmacro, null);
+  //     // }
+
+  //     // if (this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesuseitemenvironment}`)) {
+  //     //   await entity.setFlag(moduleName, Flags.notesuseitemenvironment, this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesuseitemenvironment}`));
+  //     // } else {
+  //     //   await entity.setFlag(moduleName, Flags.notesuseitemenvironment, null);
+  //     // }
+
+  //     // if (this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesdetail}`)) {
+  //     //   await entity.setFlag(moduleName, Flags.notesdetail, this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesdetail}`));
+  //     // } else {
+  //     //   await entity.setFlag(moduleName, Flags.notesdetail, null);
+  //     // }
+
+  //     // if (this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesinfo}`)) {
+  //     //   await entity.setFlag(moduleName, Flags.notesinfo, this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesinfo}`));
+  //     // } else {
+  //     //   await entity.setFlag(moduleName, Flags.notesinfo, null);
+  //     // }
+
+  //     // if (this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notes}`)) {
+  //     //   await entity.setFlag(moduleName, Flags.notes, this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notes}`));
+  //     // } else {
+  //     //   await entity.setFlag(moduleName, Flags.notes, null);
+  //     // }
+
+  //     if (this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notescondition}`)) {
+  //       let macroCondition = this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notescondition}`);
+  //       if (!macroCondition?.startsWith('return')) {
+  //         macroCondition = 'return ' + macroCondition;
+  //       }
+  //       await entity.setFlag(moduleName, Flags.notescondition, macroCondition);
+  //     } else {
+  //       await entity.setFlag(moduleName, Flags.notescondition, null);
+  //     }
+
+  //     if (this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesconditionargs}`)) {
+  //       // let macroCondition = this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesconditionargs}`);
+  //       // if (!macroCondition?.startsWith('return')) {
+  //       //   macroCondition = 'return ' + macroCondition;
+  //       // }
+  //       // await this.entity.setFlag(moduleName, Flags.notesconditionargs, macroCondition);
+  //       await entity.setFlag(moduleName, Flags.notesconditionargs, this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesconditionargs}`));
+  //     } else {
+  //       await entity.setFlag(moduleName, Flags.notesconditionargs, null);
+  //     }
+
+  //     if (this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notessuccess}`)) {
+  //       await entity.setFlag(moduleName, Flags.notessuccess, this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notessuccess}`));
+  //     } else {
+  //       await entity.setFlag(moduleName, Flags.notessuccess, null);
+  //     }
+
+  //     if (this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notessuccessargs}`)) {
+  //       await entity.setFlag(moduleName, Flags.notessuccessargs, this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notessuccess}`));
+  //     } else {
+  //       await entity.setFlag(moduleName, Flags.notessuccessargs, null);
+  //     }
+
+  //     if (this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesfailure}`)) {
+  //       await entity.setFlag(moduleName, Flags.notesfailure, this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesfailure}`));
+  //     } else {
+  //       await entity.setFlag(moduleName, Flags.notesfailure, null);
+  //     }
+
+  //     if (this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesfailureargs}`)) {
+  //       await entity.setFlag(moduleName, Flags.notesfailureargs, this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesfailureargs}`));
+  //     } else {
+  //       await entity.setFlag(moduleName, Flags.notesfailureargs, null);
+  //     }
+
+  //     // this.render();
+  //   } else {
+  //     ui.notifications?.error('You have to be GM to edit Environment Interaction Notes.');
+  //   }
+  // }
 
   static _initEntityHook(app, html, data) {
     if (getGame().user?.isGM) {

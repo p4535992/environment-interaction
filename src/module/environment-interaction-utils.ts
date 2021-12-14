@@ -1,5 +1,6 @@
 import { Document } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/module.mjs';
 import { debug, error, i18n } from '../environment-interaction-main';
+import { Flags } from './environment-interaction-models';
 import { getCanvas, getGame, moduleName } from './settings';
 
 export function getTokenByTokenID(id) {
@@ -146,6 +147,13 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args:a
       }
     }
   }
+
+  if(macroFlag == Flags.notescondition){
+    if (!macroContent?.startsWith('return')) {
+      macroContent = 'return ' + macroContent;
+    }
+  }
+
   const macro = new Macro({
     name: item.data.name,
     type: 'script',
@@ -160,8 +168,8 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args:a
   const character = getGame().user?.character;
   const event = getEvent();
 
-  // const interactorToken = <Token>getCanvas().tokens?.controlled[0];
-  // const interactorActor = <Actor>interactorToken.actor;
+  const interactorToken = <Token>getCanvas().tokens?.controlled[0];
+  const interactorActor = <Actor>interactorToken?.actor;
 
   // debug(macro);
   // debug(speaker);
@@ -181,12 +189,67 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args:a
   // })();`;
   // const fn = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', body);
   // const fn2 = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', macro.data.command);
-  const fn3 = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', macro.data.command);
+  const fn3 = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', 'interactorToken', 'interactorActor', macro.data.command);
   //attempt script execution
   try {
     // return fn.call(macro, item, speaker, actor, token, character, event, args);
     // return fn2.apply(item, [item, speaker, actor, token, character, event, ...args]);
-    return fn3.call(macro, item, speaker, actor, token, character, event, myargs);
+    return fn3.call(macro, item, speaker, actor, token, character, event, myargs, interactorToken, interactorActor);
+  } catch (err) {
+    ui.notifications?.error(moduleName + ' | ' + i18n(`${moduleName}.macroExecution`));
+    error(err);
+  }
+
+  function getEvent() {
+    const a = args[0];
+    if (a instanceof Event) return args[0].shift();
+    if (a?.originalEvent instanceof Event) return args.shift().originalEvent;
+    return undefined;
+  }
+};
+
+export const executeEIMacroContent = function (item: Item, macroContent: string, ...args:any[]): any {
+  if (!macroContent) {
+    return false;
+  }
+  // switch(this.getMacro().data.type){
+  //   case "chat" :
+  //     //left open if chat macros ever become a thing you would want to do inside an item?
+  //     break;
+  // case "script" :
+  // return _executeEIScript(item, macroFlag, ...args);
+  // }
+
+  const myargs:string[] = [];
+  myargs.push(...args);
+
+  // if(macroContent){
+  //   if (!macroContent?.startsWith('return')) {
+  //     macroContent = 'return ' + macroContent;
+  //   }
+  // }
+
+  const macro = new Macro({
+    name: item.data.name,
+    type: 'script',
+    scope: 'global',
+    command: macroContent,
+    author: getGame().user?.id,
+  });
+  const speaker = ChatMessage.getSpeaker({ actor: <Actor>item.actor });
+  const token = item.actor?.token ?? getCanvas().tokens?.get(<string>speaker.token);
+  const actor = item.actor ?? getGame().actors?.get(<string>speaker.actor);
+
+  const character = getGame().user?.character;
+  const event = getEvent();
+
+  const interactorToken = <Token>getCanvas().tokens?.controlled[0];
+  const interactorActor = <Actor>interactorToken?.actor;
+
+  const fn3 = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', 'interactorToken', 'interactorActor', macro.data.command);
+  //attempt script execution
+  try {
+    return fn3.call(macro, item, speaker, actor, token, character, event, myargs, interactorToken, interactorActor );
   } catch (err) {
     ui.notifications?.error(moduleName + ' | ' + i18n(`${moduleName}.macroExecution`));
     error(err);
