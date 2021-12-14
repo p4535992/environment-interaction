@@ -42,14 +42,26 @@ export const readyHooks = async () => {
     // });
 
     const total = <number>msgtokenRoll?.total;
-    const environmentItemId = customInfo.environmentActorID;
+
+    const environmentItemId = customInfo.environmentItemID;
+    const environmentActorId = customInfo.environmentActorID;
+    const environmentActor = <Actor>getGame().actors?.get(environmentActorId);
+    const environmentTokenId = customInfo.environmentTokenID;
+    const environmentToken = <Token>getCanvas().tokens?.get(environmentTokenId);
+
     const dc = customInfo.environmentDC;
+
+    const interactorItemId = customInfo.interactorItemID;
     const interactorActorId = customInfo.interactorActorID;
     const interactorActor = <Actor>getGame().actors?.get(interactorActorId);
+    const interactorTokenId = customInfo.interactorTokenID;
+    const interactorToken = <Token>getCanvas().tokens?.get(interactorTokenId);
 
-    const environmentItem = <Item>interactorActor.items.find((item: Item) => {
+    const environmentItem = <Item>environmentActor.items.find((item: Item) => {
       return item.id == environmentItemId;
     });
+
+
     if (environmentItem) {
       if (dc != null && dc != undefined && !isNaN(dc)) {
         if (total >= dc) {
@@ -157,17 +169,32 @@ export const readyHooks = async () => {
         const item = actorEntity.items?.find((item: Item) => {
           return item && item.id == itemId;
         });
-        if (item?.getFlag(moduleName, Flags.notes)) {
+        if (item?.getFlag(moduleName, Flags.notesuseei)) {
           li2.hide();
         }
       }
     } else {
-      //
+      const actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
+      // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
+      const list = htmlElement.find('li.item');
+      for (const li of list) {
+        const li2 = $(li);
+        const itemId = li2.attr('data-item-id');
+        const item = actorEntity.items?.find((item: Item) => {
+          return item && item.id == itemId;
+        });
+        if (item?.getFlag(moduleName, Flags.notesuseei)) {
+          li2.css('background-color','orangered');
+        }
+      }
     }
   });
 
   Hooks.on('renderItemSheet', (app, html, data) => {
-    EnvironmentInteractionNote._initEntityHook(app, html, data);
+    // Activate only for item in a actor
+    if(app?.actor?.id){
+      EnvironmentInteractionNote._initEntityHook(app, html, data);
+    }
   });
 };
 
@@ -182,10 +209,10 @@ export const initHooks = async () => {
 
   // Register Handlebars helpers
   // @ts-ignore
-  // getGame().EnvironmentInteraction.registerHandlebarsHelpers();
+  getGame().EnvironmentInteraction.registerHandlebarsHelpers();
 
   // Loading acelib module
-
+  //@ts-ignore
   ['ace/mode/json', 'ace/ext/language_tools', 'ace/ext/error_marker', 'ace/theme/twilight', 'ace/snippets/json'].forEach((s) => ace.config.loadModule(s));
 };
 

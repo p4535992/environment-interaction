@@ -148,23 +148,23 @@ export const registerSettings = function () {
   //   type: Boolean,
   // });
 
-  getGame().settings.register(moduleName, 'hideLabel', {
-    name: i18n(`${moduleName}.settings.notehidelabel.name`),
-    hint: i18n(`${moduleName}.settings.notehidelabel.hint`),
-    scope: 'world',
-    config: false,
-    default: true,
-    type: Boolean,
-  });
+  // getGame().settings.register(moduleName, 'hideLabel', {
+  //   name: i18n(`${moduleName}.settings.notehidelabel.name`),
+  //   hint: i18n(`${moduleName}.settings.notehidelabel.hint`),
+  //   scope: 'world',
+  //   config: false,
+  //   default: true,
+  //   type: Boolean,
+  // });
 
-  getGame().settings.register(moduleName, 'colorLabel', {
-    name: i18n(`${moduleName}.settings.notecolorlabel.name`),
-    hint: i18n(`${moduleName}.settings.notecolorlabel.hint`),
-    scope: 'world',
-    config: true,
-    default: false,
-    type: Boolean,
-  });
+  // getGame().settings.register(moduleName, 'colorLabel', {
+  //   name: i18n(`${moduleName}.settings.notecolorlabel.name`),
+  //   hint: i18n(`${moduleName}.settings.notecolorlabel.hint`),
+  //   scope: 'world',
+  //   config: true,
+  //   default: false,
+  //   type: Boolean,
+  // });
 
   // getGame().settings.register(moduleName, 'acelibDefaultShow', {
   //   name: i18n(`${moduleName}.settings.acelibDefaultShow.name`),

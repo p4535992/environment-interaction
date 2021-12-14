@@ -44,7 +44,16 @@
   width: 100%;
 }
 
+.form-group.stacked.notes-info.editor{
+  height: 150px;
+}
+
 .open-environment-interaction-note .fa-people-carry {
   color: orangered;
   text-shadow: 0 0 8px orangered;
+}
+
+.open-environment-interaction-note .fa-hands {
+  color: greenyellow;
+  text-shadow: 0 0 8px greenyellow;
 }

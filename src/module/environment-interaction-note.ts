@@ -228,17 +228,17 @@ export class EnvironmentInteractionNote extends FormApplication {
       if (contentLabel) {
         args = <string[]>contentLabel.split(',');
       }
-      let macroContent:string = this._retrieveVal(configElement,entityFieldName);
+      const macroContent:string = this._retrieveVal(configElement,entityFieldName);
       //this._updateObjectForExcecuteMacro(event,this.entity,configElement);
-      if(macroContent){
-        if (!macroContent?.startsWith('return')) {
-          //macroContent = 'return ' + macroContent;
-          macroContent = macroContent.substring(6,macroContent.length);
-        }
-        if (!macroContent?.startsWith('alert')) {
-          macroContent = 'alert(' + macroContent + ')';
-        }
-      }
+      // if(macroContent){
+      //   if (macroContent?.startsWith('return')) {
+      //     //macroContent = 'return ' + macroContent;
+      //     macroContent = macroContent.substring(6,macroContent.length);
+      //   }
+      //   if (!macroContent?.startsWith('alert')) {
+      //     macroContent = 'alert(' + macroContent + ')';
+      //   }
+      // }
       executeEIMacroContent(<Item>this.entity, macroContent, args);
     });
     
@@ -455,20 +455,27 @@ export class EnvironmentInteractionNote extends FormApplication {
 
   static _initEntityHook(app, html, data) {
     if (getGame().user?.isGM) {
-      let labelTxt = '';
-      let labelStyle = '';
+      const labelTxt = '';
+      const labelStyle = '';
       const title = i18n(`${moduleName}.note.label`);
       const notes = app.entity.getFlag(moduleName, Flags.notes);
-
-      if (getGame().settings.get(moduleName, 'hideLabel') === false) {
-        labelTxt = ' ' + title;
-      }
-      if (getGame().settings.get(moduleName, 'colorLabel') === true && notes) {
-        labelStyle = "style='color:green;'";
-      }
+      const notesuseei = app.entity.getFlag(moduleName, Flags.notesuseei);
+      // if (getGame().settings.get(moduleName, 'hideLabel') === false) {
+      //   labelTxt = ' ' + title;
+      // }
+      // if (getGame().settings.get(moduleName, 'colorLabel') === true && notes) {
+      //   labelStyle = "style='color:green;'";
+      // }
 
       // const openBtn = $(`<a class="open-environment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-people-carry${notes ? '-check' : ''}"></i>${labelTxt}</a>`);
-      const openBtn = $(`<a class="open-environment-interaction-note" title="${title}" ${labelStyle} ><i class="fas fa-people-carry"></i>${labelTxt}</a>`);
+      let openBtn;
+      if(notesuseei){
+        openBtn = $(`<a class="open-environment-interaction-note" title="${title}" ${labelStyle} >
+          <i class="fas fa-people-carry"></i>${labelTxt}</a>`);
+      }else{
+        openBtn = $(`<a class="open-environment-interaction-note" title="${title}" ${labelStyle} >
+          <i class="fas fa-hands"></i>${labelTxt}</a>`);
+      }
       openBtn.click((ev) => {
         let noteApp: any = null;
         for (const key in app.entity.apps) {
