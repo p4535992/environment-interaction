@@ -103,7 +103,8 @@ export class EnvironmentInteractionNote extends FormApplication {
     configElement
       //.find("div.form-group.stacked.command.condition")
       .find(entityClassName)
-      .append(`<button type="button" class="ei-macro-editor-expand ei-macro-editor-expand-${entityFieldId}-${flagRef}" title="Expand Editor"><i class="fas fa-expand-alt"></i></button><div class="ei-macro-editor" id="macroEditor-${entityFieldId}-${flagRef}"></div>`);
+      .append(`<button type="button" class="ei-macro-editor-expand ei-macro-editor-expand-${entityFieldId}-${flagRef}" title="Expand Editor"><i class="fas fa-expand-alt"></i></button>
+        <div class="ei-macro-editor ei-macro-editor-${entityFieldId}-${flagRef}" id="macroEditor-${entityFieldId}-${flagRef}"></div>`);
     //if (game.settings.get("macroeditor", "defaultShow")) {
     configElement.find(`.command textarea[name="${entityFieldName}"]`).css('display', 'none');
 
@@ -130,10 +131,10 @@ export class EnvironmentInteractionNote extends FormApplication {
     const editorElement = ace.edit(`macroEditor-${entityFieldId}-${flagRef}`);
 
     // Set value of the args input text
-    const currentValueArgs = this.entity.getFlag(moduleName, `${flagRef}args`);
-    if (currentValueArgs) {
-      configElement.find(`input[name="ei-macro-execute-args-button-${entityFieldId}"]`).attr('value', currentValueArgs);
-    }
+    // const currentValueArgs = this.entity.getFlag(moduleName, `${flagRef}args`);
+    // if (currentValueArgs) {
+    //   configElement.find(`input[name="ei-macro-execute-args-button-${entityFieldId}"]`).attr('value', currentValueArgs);
+    // }
 
     editorElement.session.on('changeMode', function (e, session) {
       if ('ace/mode/javascript' === session.getMode().$id) {
@@ -159,9 +160,9 @@ export class EnvironmentInteractionNote extends FormApplication {
 
     configElement.find(`.ei-macro-editor-button-${entityFieldId}-${flagRef}`).on('click', (event) => {
       event.preventDefault();
-      if (configElement.find('.ei-macro-editor').css('display') == 'none') {
+      if (configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).css('display') == 'none') {
         configElement.find(`.command textarea[name="${entityFieldName}"]`).css('display', 'none');
-        configElement.find('.ei-macro-editor').css('display', '');
+        configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).css('display', '');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css('display', '');
         editorElement.setValue(configElement.find(`.command textarea[name="${entityFieldName}"]`).val(), -1);
 
@@ -172,7 +173,7 @@ export class EnvironmentInteractionNote extends FormApplication {
         }
       } else {
         configElement.find(`.command textarea[name="${entityFieldName}"]`).css('display', '');
-        configElement.find('.ei-macro-editor').css('display', 'none');
+        configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).css('display', 'none');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css('display', 'none');
 
         // furnace compat
@@ -186,18 +187,20 @@ export class EnvironmentInteractionNote extends FormApplication {
 
     configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).on('click', (event) => {
       event.preventDefault();
-      if (configElement.find('.ei-macro-editor').hasClass('fullscreen')) {
-        configElement.find('.ei-macro-editor').removeClass('fullscreen');
+      if (configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).hasClass('fullscreen')) {
+        configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).removeClass('fullscreen');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).removeClass('fullscreen');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).prop('title', 'Expand Editor');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef} i.fas.fa-compress-alt`).attr('class', 'fas fa-expand-alt');
-        configElement.find('.window-resizable-handle').css('display', '');
+        // configElement.find('.window-resizable-handle').css('display', '');
+        // configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css("display", "");
       } else {
-        configElement.find('.ei-macro-editor').addClass('fullscreen');
+        configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).addClass('fullscreen');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).addClass('fullscreen');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).prop('title', 'Shrink Editor');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef} i.fas.fa-expand-alt`).attr('class', 'fas fa-compress-alt');
-        configElement.find('.window-resizable-handle').css('display', 'none');
+        // configElement.find('.window-resizable-handle').css('display', 'none');
+        // configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css("display", "none");
       }
     });
 
