@@ -71,28 +71,30 @@ export class EnvironmentInteractionNote extends FormApplication {
     // html.find('.moveToDescription').click(ev => this._moveToDescription());
     // html.find('.ei-info').click((ev) => this._showInfo());
 
-    // if (getGame().settings.get(moduleName, 'acelibDefaultShow')) {
-    this.editorCondition = this._addAceLibEditorToElement(
-      html,
-      `div.form-group.stacked.command.${Flags.notescondition}`,
-      this.entity.id,
-      Flags.notescondition, //"flags.environment-interaction.notes-condition",
-    );
+    if (getGame().modules.get('acelib')?.active) {
+      this.editorCondition = this._addAceLibEditorToElement(
+        html,
+        `div.form-group.stacked.command.${Flags.notescondition}`,
+        this.entity.id,
+        Flags.notescondition, //"flags.environment-interaction.notes-condition",
+      );
 
-    this.editorSuccess = this._addAceLibEditorToElement(
-      html,
-      `div.form-group.stacked.command.${Flags.notessuccess}`,
-      this.entity.id,
-      Flags.notessuccess, //"flags.environment-interaction.notes-success",
-    );
+      this.editorSuccess = this._addAceLibEditorToElement(
+        html,
+        `div.form-group.stacked.command.${Flags.notessuccess}`,
+        this.entity.id,
+        Flags.notessuccess, //"flags.environment-interaction.notes-success",
+      );
 
-    this.editorFailure = this._addAceLibEditorToElement(
-      html,
-      `div.form-group.stacked.command.${Flags.notesfailure}`,
-      this.entity.id,
-      Flags.notesfailure, //"flags.environment-interaction.notes-failure",
-    );
-    // }
+      this.editorFailure = this._addAceLibEditorToElement(
+        html,
+        `div.form-group.stacked.command.${Flags.notesfailure}`,
+        this.entity.id,
+        Flags.notesfailure, //"flags.environment-interaction.notes-failure",
+      );
+    }
+
+    html.find('[data-toggle="tooltip"]').tooltip();
   }
 
   _addAceLibEditorToElement(html, entityClassName, entityFieldId, flagRef): any {

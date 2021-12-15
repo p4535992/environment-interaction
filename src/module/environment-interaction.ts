@@ -20,44 +20,44 @@ import { executeEIMacro } from './environment-interaction-utils';
 
 export class EnvironmentInteraction {
   // Handlebars Helpers
-  static registerHandlebarsHelpers() {
-    // generic system
-    // Handlebars.registerHelper('ei-type', (item: Item) => {
-    //   const { type } = item;
-    //   const noteDetail = item.getFlag(moduleName, Flags.notesdetail);
-    //   let consumableLabel = 'Unknown';
-    //   // TODO to make this more... sense ???
-    //   if (noteDetail === ACTION_TYPE.abil || noteDetail === ACTION_TYPE.util) {
-    //     consumableLabel = i18n(`${moduleName}.ActionAbil`);
-    //   } else if (noteDetail === ACTION_TYPE.save) {
-    //     consumableLabel = i18n(`${moduleName}.ActionSave`);
-    //   } else {
-    //     consumableLabel = i18n(`${moduleName}.ActionSkill`);
-    //   }
-    //   const typeDict = {
-    //     weapon: i18n(`${moduleName}.ItemTypeWeapon`),
-    //     consumable: consumableLabel,
-    //     loot: i18n(`${moduleName}.handlebarsHelper.Macro`),
-    //   };
+  // static registerHandlebarsHelpers() {
+  //   // generic system
+  //   // Handlebars.registerHelper('ei-type', (item: Item) => {
+  //   //   const { type } = item;
+  //   //   const noteDetail = item.getFlag(moduleName, Flags.notesdetail);
+  //   //   let consumableLabel = 'Unknown';
+  //   //   // TODO to make this more... sense ???
+  //   //   if (noteDetail === ACTION_TYPE.abil || noteDetail === ACTION_TYPE.util) {
+  //   //     consumableLabel = i18n(`${moduleName}.ActionAbil`);
+  //   //   } else if (noteDetail === ACTION_TYPE.save) {
+  //   //     consumableLabel = i18n(`${moduleName}.ActionSave`);
+  //   //   } else {
+  //   //     consumableLabel = i18n(`${moduleName}.ActionSkill`);
+  //   //   }
+  //   //   const typeDict = {
+  //   //     weapon: i18n(`${moduleName}.ItemTypeWeapon`),
+  //   //     consumable: consumableLabel,
+  //   //     loot: i18n(`${moduleName}.handlebarsHelper.Macro`),
+  //   //   };
 
-    //   return typeDict[type];
-    // });
-    // // }
-    Handlebars.registerHelper('checkedIf', function (condition) {
-      return condition ? 'checked' : '';
-    });
-  }
+  //   //   return typeDict[type];
+  //   // });
+  //   // // }
+  //   Handlebars.registerHelper('checkedIf', function (condition) {
+  //     return condition ? 'checked' : '';
+  //   });
+  // }
 
-  // Wrappers
-  static registerWrappers() {
-    // Alter mouse interaction for tokens flagged as environment
-    //@ts-ignore
-    libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._canView', getGame().EnvironmentInteraction._canView, 'MIXED');
-    //@ts-ignore
-    libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft', getGame().EnvironmentInteraction._onClickLeft, 'MIXED');
-    //@ts-ignore
-    libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft2', getGame().EnvironmentInteraction._onClickLeft2, 'MIXED');
-  }
+  // // Wrappers
+  // static registerWrappers() {
+  //   // Alter mouse interaction for tokens flagged as environment
+  //   //@ts-ignore
+  //   libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._canView', getGame().EnvironmentInteraction._canView, 'MIXED');
+  //   //@ts-ignore
+  //   libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft', getGame().EnvironmentInteraction._onClickLeft, 'MIXED');
+  //   //@ts-ignore
+  //   libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft2', getGame().EnvironmentInteraction._onClickLeft2, 'MIXED');
+  // }
 
   static _canView(wrapped, ...args) {
     const token = <Token>(<unknown>this);

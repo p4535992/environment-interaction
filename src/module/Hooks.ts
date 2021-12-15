@@ -163,13 +163,13 @@ export const readyHooks = async () => {
       // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
       const list = htmlElement.find('li.item');
       for (const li of list) {
-        const li2 = $(li);
-        const itemId = li2.attr('data-item-id');
+        const liOnInventory = $(li);
+        const itemId = liOnInventory.attr('data-item-id');
         const item = actorEntity.items?.find((item: Item) => {
           return item && item.id == itemId;
         });
         if (item?.getFlag(moduleName, Flags.notesuseei)) {
-          li2.hide();
+          liOnInventory.hide();
         }
       }
     } else {
@@ -177,13 +177,13 @@ export const readyHooks = async () => {
       // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
       const list = htmlElement.find('li.item');
       for (const li of list) {
-        const li2 = $(li);
-        const itemId = li2.attr('data-item-id');
+        const liOnInventory = $(li);
+        const itemId = liOnInventory.attr('data-item-id');
         const item = actorEntity.items?.find((item: Item) => {
           return item && item.id == itemId;
         });
         if (item?.getFlag(moduleName, Flags.notesuseei)) {
-          li2.css('background-color', 'orangered');
+          liOnInventory.css('background', 'rgba(233, 103, 28, 0.2)');
         }
       }
     }
@@ -191,9 +191,10 @@ export const readyHooks = async () => {
 
   Hooks.on('renderItemSheet', (app, html, data) => {
     // Activate only for item in a actor
-    if (app?.actor?.id) {
+    // TODO we really need this ???
+    //if (app?.actor?.id) {
       EnvironmentInteractionNote._initEntityHook(app, html, data);
-    }
+    // }
   });
 };
 
@@ -208,18 +209,31 @@ export const initHooks = async () => {
 
   // Register Handlebars helpers
   // @ts-ignore
-  getGame().EnvironmentInteraction.registerHandlebarsHelpers();
+  // getGame().EnvironmentInteraction.registerHandlebarsHelpers();
+  Handlebars.registerHelper('checkedIf', function (condition) {
+    return condition ? 'checked' : '';
+  });
 
-  // Loading acelib module
-  //@ts-ignore
-  ['ace/mode/json', 'ace/ext/language_tools', 'ace/ext/error_marker', 'ace/theme/twilight', 'ace/snippets/json'].forEach((s) => ace.config.loadModule(s));
+  if (getGame().modules.get('acelib')?.active) {
+    // Loading acelib module
+    //@ts-ignore
+    ['ace/mode/json', 'ace/ext/language_tools', 'ace/ext/error_marker', 'ace/theme/twilight', 'ace/snippets/json'].forEach((s) => ace.config.loadModule(s));
+  }
 };
 
 export const setupHooks = async () => {
   // Do anything after initialization but before ready
   // Register wrappers
   // @ts-ignore
-  getGame().EnvironmentInteraction.registerWrappers();
+  // getGame().EnvironmentInteraction.registerWrappers();
+
+  // Alter mouse interaction for tokens flagged as environment
+  //@ts-ignore
+  libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._canView', getGame().EnvironmentInteraction._canView, 'MIXED');
+  //@ts-ignore
+  libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft', getGame().EnvironmentInteraction._onClickLeft, 'MIXED');
+  //@ts-ignore
+  libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft2', getGame().EnvironmentInteraction._onClickLeft2, 'MIXED');
 };
 
 /*

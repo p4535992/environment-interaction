@@ -19,16 +19,11 @@ Environment Interaction allows GM users to create "environment tokens" that char
 - [Drental](https://github.com/Drental) with [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
 - [League-of-Foundry-Developers](https://github.com/League-of-Foundry-Developers) for the module [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy)
 - [Kekilla0](https://github.com/Kekilla0) for the module [Item Macro](https://github.com/Kekilla0/Item-Macro)
+- [ardittristan](https://github.com/ardittristan) for the module [VTT Macro Editor](https://github.com/ardittristan/VTTMacroEditor)
+- [arcanistzed](https://github.com/arcanistzed) for the module [acelib](https://github.com/arcanistzed/acelib)
+- Sorry if i miss someone
 
-**If you want to support more modules of this kind, I invite you to go and support their patreons or kofis account below the links (sorry if i miss someone)**
-
-#### jessev14 Kofi
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/jessev14)
-
-#### ironmonk88 Patreon
-
-[![alt-text](https://img.shields.io/badge/-Patreon-%23ff424d?style=for-the-badge)](https://www.patreon.com/ironmonk)
+**If you want to support more modules of this kind, I invite you to go and support their patreons or kofis account you can found the links oon their github pages**
 
 ## Scope of this fork ???
 
@@ -89,15 +84,17 @@ by default is "Monk's TokenBar" is present and active and support the  current s
 
 naturally in this module the various use cases will have to be foreseen...
 
-~~### IMPORTANT : There is a limitation for make this module the more generic possible the element i use for parsing the string request is `item.data.data.source`~~
-## Hot to use
+## Hot to it's work (basically but is much more complex)
 
-When an interaction is selected, the correponding item on the environment token's actor sheet is created on the character's actor sheet. After rolling the item to chat, the item is deleted from the character's actor sheet. In this way, the character's actor sheet is the same before and after the interaction.
+When an interaction is selected, the corresponding item on the environment token's actor sheet is created on the character's actor sheet. After rolling the item to chat, the item is deleted from the character's actor sheet. In this way, the character's actor sheet is the same before and after the interaction.
 
 A similar method is used to handle attack and damage rolls. When attack/damage buttons are clicked, the weapon is temporarily created on the character's actor sheet and used for the attack/damage roll before being deleted. This allows the character's relevant game stats to be used for the roll.
 
-On the item sheet you can se a button "Environment Interaction note", click wil open a dialog where you can put a text, the text must respect
+Every environment i bind to a specific item configuration where you can set a collection of macro for make everything full customizable and system dependent.
 
+The scope of the module is to give a base for doing smart token usable from players even when gm is absent.
+
+## Standard macro integration
 ## [Item Macro](https://github.com/Kekilla0/Item-Macro) integration
 
 If an item on an environment token has a set Item Macro, after rolling the item to chat, the Item Macro will be executed.
@@ -273,6 +270,10 @@ Any issues, bugs, or feature requests are always welcome to be reported directly
 
 - **[Item Macro](https://github.com/Kekilla0/Item-Macro)** : [MIT](https://raw.githubusercontent.com/Kekilla0/Item-Macro/master/LICENSE)
 
+- **[VTT Macro Editor](https://github.com/ardittristan/VTTMacroEditor)**: [MIT](https://github.com/ardittristan/VTTMacroEditor/blob/master/LICENSE)
+
+- **[acelib](https://github.com/arcanistzed/acelib)**: [MIT](https://github.com/arcanistzed/acelib/blob/main/LICENSE)
+
 This package is under an [GPL-3.0 License](LICENSE) and the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/).
 
 ## Credits
@@ -282,6 +283,8 @@ This package is under an [GPL-3.0 License](LICENSE) and the [Foundry Virtual Tab
 - [Drental](https://github.com/Drental) for the module [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
 - [League-of-Foundry-Developers](https://github.com/League-of-Foundry-Developers) for the module [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy)
 - [Kekilla0](https://github.com/Kekilla0) for the module [Item Macro](https://github.com/Kekilla0/Item-Macro)
+- [ardittristan](https://github.com/ardittristan) for the module [VTT Macro Editor](https://github.com/ardittristan/VTTMacroEditor)
+- [arcanistzed](https://github.com/arcanistzed) for the module [acelib](https://github.com/arcanistzed/acelib)
 ## Acknowledgements
 
 Bootstrapped with League of Extraordinary FoundryVTT Developers  [foundry-vtt-types](https://github.com/League-of-Foundry-Developers/foundry-vtt-types).
