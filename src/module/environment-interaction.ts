@@ -19,75 +19,57 @@ import { MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
 import { executeEIMacro } from './environment-interaction-utils';
 
 export class EnvironmentInteraction {
-  // Handlebars Helpers
-  // static registerHandlebarsHelpers() {
-  //   // generic system
-  //   // Handlebars.registerHelper('ei-type', (item: Item) => {
-  //   //   const { type } = item;
-  //   //   const noteDetail = item.getFlag(moduleName, Flags.notesdetail);
-  //   //   let consumableLabel = 'Unknown';
-  //   //   // TODO to make this more... sense ???
-  //   //   if (noteDetail === ACTION_TYPE.abil || noteDetail === ACTION_TYPE.util) {
-  //   //     consumableLabel = i18n(`${moduleName}.ActionAbil`);
-  //   //   } else if (noteDetail === ACTION_TYPE.save) {
-  //   //     consumableLabel = i18n(`${moduleName}.ActionSave`);
-  //   //   } else {
-  //   //     consumableLabel = i18n(`${moduleName}.ActionSkill`);
-  //   //   }
-  //   //   const typeDict = {
-  //   //     weapon: i18n(`${moduleName}.ItemTypeWeapon`),
-  //   //     consumable: consumableLabel,
-  //   //     loot: i18n(`${moduleName}.handlebarsHelper.Macro`),
-  //   //   };
-
-  //   //   return typeDict[type];
-  //   // });
-  //   // // }
-  //   Handlebars.registerHelper('checkedIf', function (condition) {
-  //     return condition ? 'checked' : '';
-  //   });
-  // }
-
-  // // Wrappers
-  // static registerWrappers() {
-  //   // Alter mouse interaction for tokens flagged as environment
-  //   //@ts-ignore
-  //   libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._canView', getGame().EnvironmentInteraction._canView, 'MIXED');
-  //   //@ts-ignore
-  //   libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft', getGame().EnvironmentInteraction._onClickLeft, 'MIXED');
-  //   //@ts-ignore
-  //   libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft2', getGame().EnvironmentInteraction._onClickLeft2, 'MIXED');
-  // }
-
-  static _canView(wrapped, ...args) {
+  static _canViewToken(wrapped, ...args) {
     const token = <Token>(<unknown>this);
     // If token is an environment token, then any use can "view" (allow _clickLeft2 callback)
-    if (token.document.getFlag(moduleName, Flags.environmentToken)) {
+    if (token.actor && token.actor.getFlag(moduleName, Flags.environmentToken)) {
       return true;
     } else {
       return wrapped(...args);
     }
   }
 
-  static _onClickLeft(wrapped, event) {
+  static _onClickLeftToken(wrapped, event) {
     const token = <Token>(<unknown>this);
+    const actor = <Actor>(token.actor);
     // Prevent deselection of currently controlled token when clicking environment token
-    if (!token.document.getFlag(moduleName, Flags.environmentToken)) {
+    if(actor && !actor.getFlag(moduleName, Flags.environmentToken)) {
       return wrapped(event);
     }
   }
 
-  static _onClickLeft2(wrapped, event) {
+  static _onClickLeft2Token(wrapped, event) {
     const token = <Token>(<unknown>this);
-    if (!token.document.getFlag(moduleName, Flags.environmentToken)) {
+    const actor = <Actor>(token.actor);
+    if (actor && !actor.getFlag(moduleName, Flags.environmentToken)) {
       return wrapped(event);
     } else {
-      EnvironmentInteraction.interactWithEnvironment(token, event);
+      EnvironmentInteraction.interactWithEnvironmentFromToken(token, event);
     }
   }
 
   // Environment Interaction
-  static async interactWithEnvironment(environmentToken: Token, event) {
+  static async interactWithEnvironmentFromActor(environmentActor: Actor, event) {
+    if (!environmentActor?.id) {
+      ui.notifications?.warn(moduleName + ' | The environment interaction need the token is been liked to a actor');
+      return;
+    }
+    EnvironmentInteraction.interactWithEnvironmentFromTokenDocument(<TokenDocument>environmentActor.token, event);
+  }
+
+  static async interactWithEnvironmentFromPlaceableObject(environmentPlaceableObject: PlaceableObject, event) {
+    const actors = EnvironmentInteraction.getEnviroments(environmentPlaceableObject);
+    // TODO MANAGE MORE THAN A ACTOR ?????
+    const actor = actors[0];
+    EnvironmentInteraction.interactWithEnvironmentFromActor(actor, event);
+  }
+
+  static async interactWithEnvironmentFromToken(environmentToken: Token, event) {
+    EnvironmentInteraction.interactWithEnvironmentFromTokenDocument(environmentToken.document, event);
+  }
+
+  // Environment Interaction
+  static async interactWithEnvironmentFromTokenDocument(environmentToken: TokenDocument, event) {
     if (!environmentToken.actor || !environmentToken.actor?.id) {
       ui.notifications?.warn(moduleName + ' | The environment interaction need the token is been liked to a actor');
       return;
@@ -527,6 +509,7 @@ export class EnvironmentInteraction {
   // Hooks
   static registerHooks() {
     // Add checkbox to token config to flag token as environment token
+    /*
     Hooks.on('renderTokenConfig', (app, html, appData) => {
       if (!getGame().user?.isGM) {
         return;
@@ -541,5 +524,215 @@ export class EnvironmentInteraction {
       html.find(`div[data-tab="character"]`).append(snippet);
       html.css('height', 'auto');
     });
+    */
+
+    Hooks.on('renderFormApplication', EnvironmentInteraction._handleRenderFormApplication);
+
+    Hooks.on('preUpdateActor', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    Hooks.on('preUpdateToken', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    Hooks.on('preUpdateTile', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    Hooks.on('preUpdateDrawing', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    Hooks.on('preUpdateWall', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    Hooks.on('preUpdateLight', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    Hooks.on('preUpdateAmbientSound', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    Hooks.on('preUpdateMeasuredTemplate', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    Hooks.on('preUpdateNote', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+  }
+
+  static configHandlers = [
+    { classType: TokenConfig, method: '_handleTokenConfig' },
+    { classType: TileConfig, method: '_handleTileConfig' },
+    { classType: DrawingConfig, method: '_handleDrawingConfig' },
+    { classType: WallConfig, method: '_handleGenericConfig' },
+    { classType: LightConfig, method: '_handleGenericConfig' },
+    { classType: AmbientSoundConfig, method: '_handleGenericConfig' },
+    { classType: MeasuredTemplateConfig, method: '_handleGenericConfig' },
+    { classType: NoteConfig, method: '_handleGenericConfig' },
+  ];
+
+  static _handleRenderFormApplication(app, html) {
+    const found = EnvironmentInteraction.configHandlers.find((config) => app instanceof config.classType);
+    if (!found) return;
+    EnvironmentInteraction[found.method](app, html, true);
+  }
+
+  static _handleTokenConfig(app, html) {
+    const elem = html.find(`div[data-tab="character"]`);
+    EnvironmentInteraction._applyHtml(app, elem);
+  }
+
+  static _handleTileConfig(app, html) {
+    const elem = html.find(`div[data-tab="basic"]`);
+    EnvironmentInteraction._applyHtml(app, elem);
+  }
+
+  static _handleDrawingConfig(app, html) {
+    const elem = html.find(`div[data-tab="position"]`);
+    EnvironmentInteraction._applyHtml(app, elem);
+  }
+
+  static _handleGenericConfig(app, html) {
+    const elem = html.find(`button[name="submit"]`);
+    EnvironmentInteraction._applyHtml(app, elem, true);
+  }
+
+  static _applyHtml(app, html, insertBefore = false) {
+    if (!html){
+      return;
+    }
+    if (!getGame().user?.isGM) {
+      return;
+    }
+    const enviroments =
+      (app?.object instanceof Actor || app?.object instanceof TokenDocument)
+        ? EnvironmentInteraction._validateEnviroments(getProperty(app?.object, `data.token.flags.${moduleName}.${Flags.environmentTokenRef}`) ?? [], '_applyHtml')
+        : EnvironmentInteraction.getEnviroments(app?.object?._object);
+    const checked = app.object.getFlag(moduleName, Flags.environmentToken) ? 'checked' : '';
+    let formConfig = ``;
+    if(app?.object instanceof Actor || app?.object instanceof TokenDocument){
+      formConfig = `
+        <div class="form-group stacked">
+          <div class="form-group">
+            <label>${i18n(`${moduleName}.tokenConfig.label`)}</label>
+            <input type="checkbox" name="flags.${moduleName}.${Flags.environmentToken}" data-dtype="Boolean" ${checked} />
+          </div>
+        </div>
+      `;
+    }else{
+      formConfig = `
+        <div class="form-group stacked">
+          <div class="form-group">
+            <label>${i18n(`${moduleName}.tokenConfig.label`)}</label>
+            <input type="checkbox" name="flags.${moduleName}.${Flags.environmentToken}" data-dtype="Boolean" ${checked} />
+          </div>
+          <div class="form-group">
+            <label>Enviroments Actors (separated by commas ,)</label>
+            <input type="text" name="flags.${moduleName}.${Flags.environmentTokenRef}" value="${enviroments.join(', ')}" />
+          </div>
+        </div>
+      `;
+    }
+
+    // Expand the width
+    /*
+    app.position.width = 540;
+    app.height = 'auto';
+    app.setPosition(app.position);
+
+    const nav = html.find('nav.sheet-tabs.tabs');
+    nav.append(
+      $(`
+      <a class="item" data-tab="enviroments">
+        <i class="fas fa-user-circle"></i>
+        ${i18n('EI')}
+      </a>
+    `),
+    );
+
+    nav
+      .parent()
+      .find('footer')
+      .before(
+        $(`
+        <div class="tab" data-tab="enviroments">
+          ${formConfig}
+        </div>
+      `),
+    );
+    */
+    if (insertBefore) {
+      $(formConfig).insertBefore(html);
+    } else {
+      html.append(formConfig);
+    }
+    app.setPosition({ height: 'auto' });
+  }
+
+  static _applyEnviroments(document, updateData) {
+    const propertyNameOr = `flags.${moduleName}.${Flags.environmentToken}`;
+    const propertyNameRef = `flags.${moduleName}.${Flags.environmentTokenRef}`;
+    let propertyName;
+    if(hasProperty(updateData,propertyNameOr)){
+      propertyName = propertyNameOr;
+    }
+    if(hasProperty(updateData,propertyNameRef)){
+      propertyName = propertyNameRef;
+    }
+    // if (document instanceof Actor || document instanceof TokenDocument){
+    //   propertyName = 'token.' + propertyName;
+    // }
+    if(propertyName){
+      const eis = getProperty(updateData, propertyName);
+      if (eis != null && eis!= undefined){
+        let actor:Actor;
+        if (document instanceof Actor ){
+          actor = document;
+          if(actor){
+            if(propertyName.endsWith(Flags.environmentTokenRef)){
+              // Set placeable object flag
+              setProperty(updateData, propertyName, EnvironmentInteraction._validateEnviroments(eis, '_applyEnviroments'));
+            }else if(propertyName.endsWith(Flags.environmentToken)){
+              // Set placeable object flag
+              setProperty(updateData, propertyName, eis);
+            }
+          }
+        }else if(document instanceof TokenDocument){
+          actor = <Actor>document.actor;
+          if(actor){
+            if(propertyName.endsWith(Flags.environmentTokenRef)){
+              // Set placeable object flag
+              setProperty(updateData, propertyName, EnvironmentInteraction._validateEnviroments(eis, '_applyEnviroments'));
+            }else if(propertyName.endsWith(Flags.environmentToken)){
+              // Set placeable object flag
+              setProperty(updateData, propertyName, eis);
+            }
+          }
+        }else{
+          const actorName = eis;
+          actor = <Actor>getGame().actors?.getName(actorName);
+          if(actor){
+            if(propertyName.endsWith(Flags.environmentTokenRef)){
+              // Set placeable object flag
+              setProperty(updateData, propertyName, EnvironmentInteraction._validateEnviroments(eis, '_applyEnviroments'));
+            }else if(propertyName.endsWith(Flags.environmentToken)){
+              // Set placeable object flag
+              setProperty(updateData, propertyName, eis);
+            }
+          }
+        }
+        if(actor){
+          // Set actor reference
+          setProperty(actor.data, propertyName, eis);
+        }else{
+          ui.notifications?.warn(`${moduleName} | Can't find the actor`)
+        }
+      }
+    }
+  }
+
+  /**
+   * Gets all enviroments from a given PlaceableObject or Document
+   *
+   * @param    {PlaceableObject}  inObject    The PlaceableObject or Document get enviroments from
+   *
+   * @returns  {Array}                        An array of enviroments from the Document
+   */
+  static getEnviroments(inObject) {
+    const relevantDocument = inObject?.document ?? inObject;
+    const enviroments = relevantDocument?.getFlag(moduleName, Flags.environmentTokenRef) ?? [];
+    return EnvironmentInteraction._validateEnviroments(enviroments, 'getEnviroments');
+  }
+
+  static _validateEnviroments(inEnviroments, inFunctionName) {
+    if (!(typeof inEnviroments === 'string' || typeof inEnviroments === 'string' || Array.isArray(inEnviroments))){
+      throw new Error(`${moduleName} | ${inFunctionName} | inEnviroments must be of type string or array`);
+    }
+    const providedEnviroments = typeof inEnviroments === 'string' ? inEnviroments.split(',') : inEnviroments;
+
+    providedEnviroments.forEach((t) => {
+      if (typeof t !== 'string') throw new Error(`${moduleName} | ${inFunctionName} | enviroments in array must be of type string`);
+    });
+
+    return providedEnviroments.map((t) => t.trim());
   }
 }

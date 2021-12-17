@@ -50,6 +50,7 @@ export const ENVIRONMENT_TYPE = {
 // }
 
 export const Flags = {
+  environmentTokenRef: 'environmentTokenRef',
   environmentToken: 'environmentToken',
   notesuseei: 'notes-use-environment-interaction',
   notesuseitemmacro: 'notes-use-item-macro',

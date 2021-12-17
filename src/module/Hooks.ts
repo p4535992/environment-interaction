@@ -160,30 +160,34 @@ export const readyHooks = async () => {
     const isgm = getGame().user?.isGM;
     if (!isgm) {
       const actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
-      // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
-      const list = htmlElement.find('li.item');
-      for (const li of list) {
-        const liOnInventory = $(li);
-        const itemId = liOnInventory.attr('data-item-id');
-        const item = actorEntity.items?.find((item: Item) => {
-          return item && item.id == itemId;
-        });
-        if (item?.getFlag(moduleName, Flags.notesuseei)) {
-          liOnInventory.hide();
+      if (actorEntity) {
+        // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
+        const list = htmlElement.find('li.item');
+        for (const li of list) {
+          const liOnInventory = $(li);
+          const itemId = liOnInventory.attr('data-item-id');
+          const item = actorEntity.items?.find((item: Item) => {
+            return item && item.id == itemId;
+          });
+          if (item?.getFlag(moduleName, Flags.notesuseei)) {
+            liOnInventory.hide();
+          }
         }
       }
     } else {
       const actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
-      // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
-      const list = htmlElement.find('li.item');
-      for (const li of list) {
-        const liOnInventory = $(li);
-        const itemId = liOnInventory.attr('data-item-id');
-        const item = actorEntity.items?.find((item: Item) => {
-          return item && item.id == itemId;
-        });
-        if (item?.getFlag(moduleName, Flags.notesuseei)) {
-          liOnInventory.css('background', 'rgba(233, 103, 28, 0.2)');
+      if (actorEntity) {
+        // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
+        const list = htmlElement.find('li.item');
+        for (const li of list) {
+          const liOnInventory = $(li);
+          const itemId = liOnInventory.attr('data-item-id');
+          const item = actorEntity.items?.find((item: Item) => {
+            return item && item.id == itemId;
+          });
+          if (item?.getFlag(moduleName, Flags.notesuseei)) {
+            liOnInventory.css('background', 'rgba(233, 103, 28, 0.2)');
+          }
         }
       }
     }
@@ -193,7 +197,7 @@ export const readyHooks = async () => {
     // Activate only for item in a actor
     // TODO we really need this ???
     //if (app?.actor?.id) {
-      EnvironmentInteractionNote._initEntityHook(app, html, data);
+    EnvironmentInteractionNote._initEntityHook(app, html, data);
     // }
   });
 };
@@ -228,12 +232,32 @@ export const setupHooks = async () => {
   // getGame().EnvironmentInteraction.registerWrappers();
 
   // Alter mouse interaction for tokens flagged as environment
+
   //@ts-ignore
-  libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._canView', getGame().EnvironmentInteraction._canView, 'MIXED');
+  libWrapper.register(
+    moduleName,
+    'CONFIG.Token.objectClass.prototype._canView',
+    //@ts-ignore
+    getGame().EnvironmentInteraction._canViewToken,
+    'MIXED',
+  );
+
   //@ts-ignore
-  libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft', getGame().EnvironmentInteraction._onClickLeft, 'MIXED');
+  libWrapper.register(
+    moduleName,
+    'CONFIG.Token.objectClass.prototype._onClickLeft',
+    //@ts-ignore
+    getGame().EnvironmentInteraction._onClickLeftToken,
+    'MIXED',
+  );
   //@ts-ignore
-  libWrapper.register(moduleName, 'CONFIG.Token.objectClass.prototype._onClickLeft2', getGame().EnvironmentInteraction._onClickLeft2, 'MIXED');
+  libWrapper.register(
+    moduleName,
+    'CONFIG.Token.objectClass.prototype._onClickLeft2',
+    //@ts-ignore
+    getGame().EnvironmentInteraction._onClickLeft2Token,
+    'MIXED',
+  );
 };
 
 /*
