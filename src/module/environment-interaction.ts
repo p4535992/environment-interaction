@@ -629,8 +629,8 @@ export class EnvironmentInteraction {
       obj = obj.actor.data.token;
     }
 
-    const enviroments = EnvironmentInteraction.getEnviroments(obj, Flags.environmentTokenRef);
-    const checked = EnvironmentInteraction.getEnviroments(obj, Flags.environmentToken) ? 'checked' : '';
+    const enviromentActorId = EnvironmentInteraction.getEnviroments(obj, Flags.environmentTokenRef);
+    const enviromentChecked = EnvironmentInteraction.getEnviroments(obj, Flags.environmentToken) ? 'checked' : '';
 
     // const enviroments =
     //   obj instanceof Actor
@@ -649,23 +649,36 @@ export class EnvironmentInteraction {
         <div class="form-group stacked">
           <div class="form-group">
             <label>${i18n(`${moduleName}.tokenConfig.label`)}</label>
-            <input type="checkbox" name="flags.${moduleName}.${Flags.environmentToken}" data-dtype="Boolean" ${checked} />
+            <input type="checkbox" name="flags.${moduleName}.${Flags.environmentToken}" data-dtype="Boolean" ${enviromentChecked} />
           </div>
         </div>
       `;
     } else {
+      const options:string[] = [];
+      options.push(`<option value="">${i18n("None")}</option>`);
+      getGame().actors?.contents.forEach((a:Actor) => {
+        if(enviromentActorId == a.id){
+          options.push(`<option selected="selected" value="${a.id}">${a.name}</option>`);
+        }else{
+          options.push(`<option value="${a.id}">${a.name}</option>`);
+        }
+      });
+
       formConfig = `
         <div class="form-group stacked">
           <div class="form-group">
             <label>${i18n(`${moduleName}.tokenConfig.label`)}</label>
-            <input type="checkbox" name="flags.${moduleName}.${Flags.environmentToken}" data-dtype="Boolean" ${checked} />
+            <input type="checkbox" name="flags.${moduleName}.${Flags.environmentToken}" data-dtype="Boolean" ${enviromentChecked} />
           </div>
           <div class="form-group">
-            <label>Enviroments Actors (separated by commas ,)</label>
-            <input type="text" name="flags.${moduleName}.${Flags.environmentTokenRef}" value="${enviroments.join(', ')}" />
+            <label>Enviroment Actor</label>
+            <select class="actor-template" name="flags.${moduleName}.${Flags.environmentTokenRef}" value="${enviromentActorId}">
+              ${options.join('')}
+            </select>
           </div>
         </div>
       `;
+      // 
     }
 
     // Expand the width
@@ -740,8 +753,11 @@ export class EnvironmentInteraction {
               setProperty(updateData, propertyNameOr, eis);
             }
           } else {
-            const actorName = eis;
-            actor = <Actor>getGame().actors?.getName(actorName);
+            const actorNameOrId = eis;
+            actor = <Actor>getGame().actors?.getName(actorNameOrId);
+            if(!actor){
+              actor = <Actor>getGame().actors?.get(actorNameOrId);
+            }
             if (actor) {
               // Set placeable object flag
               setProperty(updateData, propertyNameOr, eis);
