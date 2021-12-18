@@ -12,97 +12,93 @@
             </div>
         {{/if}}
         -->
-        <!--
-        <p class="controlls">{{localize "environment-interaction.note.event"}}</p><br></br>
-        {{editor content=flags.environment-interaction.notes target="flags.environment-interaction.notes" button=true owner=owner editable=true}}<br></br>
-        <p class="controlls">{{localize "environment-interaction.note.event-condition"}}</p><br></br>
-        {{editor content=flags.environment-interaction.notes-condition target="flags.environment-interaction.notes-condition" button=true owner=owner editable=true}}<br></br>
-        <p class="controlls">{{localize "environment-interaction.note.event-success"}}</p><br></br>
-        {{editor content=flags.environment-interaction.notes-success target="flags.environment-interaction.notes-success" button=true owner=owner editable=true}}<br></br>
-        <p class="controlls">{{localize "environment-interaction.note.event-failure"}}</p><br></br>
-        {{editor content=flags.environment-interaction.notes-failure target="flags.environment-interaction.notes-failure" button=true owner=owner editable=true}}<br></br>
-        -->
         <div class="form-group stacked">
-            <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction.note.event-use-environment-interaction"}}">
-                <input type="checkbox" name="flags.environment-interaction.notes-use-environment-interaction"
-                    value="{{flags.environment-interaction.notes-use-environment-interaction}}"
-                    {{checkedIf flags.environment-interaction.notes-use-environment-interaction}}/>
-                <label>{{localize "environment-interaction.note.event-use-environment-interaction"}}</label>
+            <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction-multisystem.note.event-use-environment-interaction"}}">
+                <input type="checkbox" name="flags.environment-interaction-multisystem.notes-use-environment-interaction"
+                    value="{{flags.environment-interaction-multisystem.notes-use-environment-interaction}}"
+                    {{checkedIf flags.environment-interaction-multisystem.notes-use-environment-interaction}}/>
+                <label>{{localize "environment-interaction-multisystem.note.event-use-environment-interaction"}}</label>
             </div>
         </div>
         <div class="form-group stacked">
-            <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction.note.event-use-item-macro"}}">
-                <input type="checkbox" name="flags.environment-interaction.notes-use-item-macro"
-                    value="{{flags.environment-interaction.notes-use-item-macro}}"
-                    {{checkedIf flags.environment-interaction.notes-use-item-macro}}/>
-                <label>{{localize "environment-interaction.note.event-use-item-macro"}}</label>
+            <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction-multisystem.note.event-use-item-macro"}}">
+                <input type="checkbox" name="flags.environment-interaction-multisystem.notes-use-item-macro"
+                    value="{{flags.environment-interaction-multisystem.notes-use-item-macro}}"
+                    {{checkedIf flags.environment-interaction-multisystem.notes-use-item-macro}}/>
+                <label>{{localize "environment-interaction-multisystem.note.event-use-item-macro"}}</label>
             </div>
         </div>
         <div class="form-group stacked">
-            <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction.note.event-use-item-environment"}}">
-                <input type="checkbox" name="flags.environment-interaction.notes-use-item-environment"
-                    value="{{flags.environment-interaction.notes-use-item-environment}}"
-                    {{checkedIf flags.environment-interaction.notes-use-item-environment}}/>
-                <label>{{localize "environment-interaction.note.event-use-item-environment"}}</label>
+            <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction-multisystem.note.event-use-item-environment"}}">
+                <input type="checkbox" name="flags.environment-interaction-multisystem.notes-use-item-environment"
+                    value="{{flags.environment-interaction-multisystem.notes-use-item-environment}}"
+                    {{checkedIf flags.environment-interaction-multisystem.notes-use-item-environment}}/>
+                <label>{{localize "environment-interaction-multisystem.note.event-use-item-environment"}}</label>
             </div>
         </div>
         <div class="form-group stacked">
-            <label>{{localize "environment-interaction.note.event-detail"}}</label>
+            <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction-multisystem.note.event-use-as-macro"}}">
+                <input type="checkbox" name="flags.environment-interaction-multisystem.notes-use-as-macro"
+                    value="{{flags.environment-interaction-multisystem.notes-use-as-macro}}"
+                    {{checkedIf flags.environment-interaction-multisystem.notes-use-as-macro}}/>
+                <label>{{localize "environment-interaction-multisystem.note.event-use-as-macro"}}</label>
+            </div>
+        </div>
+        <div class="form-group stacked">
+            <label>{{localize "environment-interaction-multisystem.note.event-detail"}}</label>
             <div class="form-group">
-                <input type="text" name="flags.environment-interaction.notes-detail" placeholder="" value="{{flags.environment-interaction.notes-detail}}" />
+                <input type="text" name="flags.environment-interaction-multisystem.notes-detail" placeholder="" value="{{flags.environment-interaction-multisystem.notes-detail}}" />
             </div>
         </div>
-        <!--
-        <div class="form-group stacked">
-            <label>{{localize "environment-interaction.note.event-info"}}</label>
-            <div class="form-fields">
-                <textarea name="flags.environment-interaction.notes-info">{{flags.environment-interaction.notes-info}}</textarea>
-            </div>
-        </div>
-        -->
         <div class="form-group stacked notes-info">
-            <label>{{localize "environment-interaction.note.event-info"}}</label>
-            {{editor content=flags.environment-interaction.notes-info target="flags.environment-interaction.notes-info" button=true owner=owner editable=true}}
+            <label>{{localize "environment-interaction-multisystem.note.event-info"}}</label>
+            {{editor content=flags.environment-interaction-multisystem.notes-info target="flags.environment-interaction-multisystem.notes-info" button=true owner=owner editable=true}}
+        </div>
+        <div class="form-group stacked">
+            <label>{{localize "environment-interaction-multisystem.note.event-explicit-dc"}}</label>
+            <div class="form-group">
+                <input type="number" name="flags.environment-interaction-multisystem.notes-explicit-dc" placeholder="Explicit DC to insert" value="{{flags.environment-interaction-multisystem.notes-explicit-dc}}" />
+            </div>
         </div>
         <div class="form-group stacked command notes">
-            <label>{{localize "environment-interaction.note.event"}}</label>
+            <label>{{localize "environment-interaction-multisystem.note.event"}}</label>
             <div class="form-group">
-                <textarea name="flags.environment-interaction.notes">{{flags.environment-interaction.notes}}</textarea>
+                <textarea name="flags.environment-interaction-multisystem.notes">{{flags.environment-interaction-multisystem.notes}}</textarea>
             </div>
-            <input type="text" name="flags.environment-interaction.notes-args"
-                class="ei-macro-execute-args-button-{{id}}-{{flags.environment-interaction.notes-args}}"
+            <input type="text" name="flags.environment-interaction-multisystem.notes-args"
+                class="ei-macro-execute-args-button-{{id}}-{{flags.environment-interaction-multisystem.notes-args}}"
                 placeHolder="Additional args e.g.'arg0,arg1,ecc.' on the macro are recovered from args[0],args[1],ecc."
-                value="{{flags.environment-interaction.notes-args}}" />
+                value="{{flags.environment-interaction-multisystem.notes-args}}" />
         </div>
         <div class="form-group stacked command notes-condition">
-            <label>{{localize "environment-interaction.note.event-condition"}}</label>
+            <label>{{localize "environment-interaction-multisystem.note.event-condition"}}</label>
             <div class="form-group">
-                <textarea name="flags.environment-interaction.notes-condition">{{flags.environment-interaction.notes-condition}}</textarea>
+                <textarea name="flags.environment-interaction-multisystem.notes-condition">{{flags.environment-interaction-multisystem.notes-condition}}</textarea>
             </div>
-            <input type="text" name="flags.environment-interaction.notes-condition-args"
-                class="ei-macro-execute-args-button-{{id}}-{{flags.environment-interaction.notes-condition-args}}"
+            <input type="text" name="flags.environment-interaction-multisystem.notes-condition-args"
+                class="ei-macro-execute-args-button-{{id}}-{{flags.environment-interaction-multisystem.notes-condition-args}}"
                 placeHolder="Additional args e.g.'arg0,arg1,ecc.' on the macro are recovered from args[0],args[1],ecc."
-                value="{{flags.environment-interaction.notes-condition-args}}" />
+                value="{{flags.environment-interaction-multisystem.notes-condition-args}}" />
         </div>
         <div class="form-group stacked command notes-success">
-            <label>{{localize "environment-interaction.note.event-success"}}</label>
+            <label>{{localize "environment-interaction-multisystem.note.event-success"}}</label>
             <div class="form-group">
-                <textarea name="flags.environment-interaction.notes-success">{{flags.environment-interaction.notes-success}}</textarea>
+                <textarea name="flags.environment-interaction-multisystem.notes-success">{{flags.environment-interaction-multisystem.notes-success}}</textarea>
             </div>
-            <input type="text" name="flags.environment-interaction.notes-success-args"
-                class="ei-macro-execute-args-button-{{id}}-{{flags.environment-interaction.notes-success-args}}"
+            <input type="text" name="flags.environment-interaction-multisystem.notes-success-args"
+                class="ei-macro-execute-args-button-{{id}}-{{flags.environment-interaction-multisystem.notes-success-args}}"
                 placeHolder="Additional args e.g.'arg0,arg1,ecc.' on the macro are recovered from args[0],args[1],ecc."
-                value="{{flags.environment-interaction.notes-success-args}}" />
+                value="{{flags.environment-interaction-multisystem.notes-success-args}}" />
         </div>
         <div class="form-group stacked command notes-failure">
-            <label>{{localize "environment-interaction.note.event-failure"}}</label>
+            <label>{{localize "environment-interaction-multisystem.note.event-failure"}}</label>
             <div class="form-group">
-                <textarea name="flags.environment-interaction.notes-failure">{{flags.environment-interaction.notes-failure}}</textarea>
+                <textarea name="flags.environment-interaction-multisystem.notes-failure">{{flags.environment-interaction-multisystem.notes-failure}}</textarea>
             </div>
-            <input type="text" name="flags.environment-interaction.notes-failure-args"
-                class="ei-macro-execute-args-button-{{id}}-{{flags.environment-interaction.notes-failure-args}}"
+            <input type="text" name="flags.environment-interaction-multisystem.notes-failure-args"
+                class="ei-macro-execute-args-button-{{id}}-{{flags.environment-interaction-multisystem.notes-failure-args}}"
                 placeHolder="Additional args e.g.'arg0,arg1,ecc.' on the macro are recovered from args[0],args[1],ecc."
-                value="{{flags.environment-interaction.notes-failure-args}}" />
+                value="{{flags.environment-interaction-multisystem.notes-failure-args}}" />
         </div>
 
         <footer class="sheet-footer flexrow">

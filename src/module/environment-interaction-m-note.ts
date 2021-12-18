@@ -73,7 +73,12 @@ export class EnvironmentInteractionNote extends FormApplication {
     // html.find('.ei-info').click((ev) => this._showInfo());
 
     if (getGame().modules.get('acelib')?.active) {
-      this.editor = this._addAceLibEditorToElement(html, `div.form-group.stacked.command.${Flags.notes}`, this.entity.id, Flags.notes);
+      if (this._retrieveVal($(html), Flags.notesuseasmacro)) {
+        this.editor = this._addAceLibEditorToElement(html, `div.form-group.stacked.command.${Flags.notes}`, this.entity.id, Flags.notes);
+      } else {
+        // TODO HIDE notes-args element...
+        //html.find('.ei-info')
+      }
 
       this.editorCondition = this._addAceLibEditorToElement(
         html,
@@ -295,6 +300,12 @@ export class EnvironmentInteractionNote extends FormApplication {
         await this.entity.setFlag(moduleName, Flags.notesuseitemenvironment, null);
       }
 
+      if (formData[`flags.${moduleName}.${Flags.notesuseasmacro}`]) {
+        await this.entity.setFlag(moduleName, Flags.notesuseasmacro, formData[`flags.${moduleName}.${Flags.notesuseasmacro}`]);
+      } else {
+        await this.entity.setFlag(moduleName, Flags.notesuseasmacro, null);
+      }
+
       if (formData[`flags.${moduleName}.${Flags.notesdetail}`]) {
         await this.entity.setFlag(moduleName, Flags.notesdetail, formData[`flags.${moduleName}.${Flags.notesdetail}`]);
       } else {
@@ -307,8 +318,22 @@ export class EnvironmentInteractionNote extends FormApplication {
         await this.entity.setFlag(moduleName, Flags.notesinfo, null);
       }
 
+      if (formData[`flags.${moduleName}.${Flags.notesexplicitdc}`]) {
+        await this.entity.setFlag(moduleName, Flags.notesexplicitdc, formData[`flags.${moduleName}.${Flags.notesexplicitdc}`]);
+      } else {
+        await this.entity.setFlag(moduleName, Flags.notesexplicitdc, null);
+      }
+
       if (formData[`flags.${moduleName}.${Flags.notes}`]) {
-        await this.entity.setFlag(moduleName, Flags.notes, formData[`flags.${moduleName}.${Flags.notes}`]);
+        if (formData[`flags.${moduleName}.${Flags.notesuseasmacro}`]) {
+          let macroUseAsMacro = formData[`flags.${moduleName}.${Flags.notes}`];
+          if (!macroUseAsMacro?.startsWith('return')) {
+            macroUseAsMacro = 'return ' + macroUseAsMacro;
+          }
+          await this.entity.setFlag(moduleName, Flags.notes, macroUseAsMacro);
+        } else {
+          await this.entity.setFlag(moduleName, Flags.notes, formData[`flags.${moduleName}.${Flags.notes}`]);
+        }
       } else {
         await this.entity.setFlag(moduleName, Flags.notes, null);
       }
@@ -330,11 +355,7 @@ export class EnvironmentInteractionNote extends FormApplication {
       }
 
       if (formData[`flags.${moduleName}.${Flags.notesconditionargs}`]) {
-        let macroCondition = formData[`flags.${moduleName}.${Flags.notesconditionargs}`];
-        if (!macroCondition?.startsWith('return')) {
-          macroCondition = 'return ' + macroCondition;
-        }
-        await this.entity.setFlag(moduleName, Flags.notesconditionargs, macroCondition);
+        await this.entity.setFlag(moduleName, Flags.notesconditionargs, formData[`flags.${moduleName}.${Flags.notesconditionargs}`]);
       } else {
         await this.entity.setFlag(moduleName, Flags.notesconditionargs, null);
       }

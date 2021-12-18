@@ -16,7 +16,7 @@ import {
 } from './settings.js';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
-import { executeEIMacro } from './environment-interaction-m-utils';
+import { executeEIMacro, executeEIMacroContent } from './environment-interaction-m-utils';
 import { EnvironmentInteractionPlaceableConfig } from './environment-interaction-m-paceable-config';
 // import { PrototypeTokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
@@ -276,6 +276,25 @@ export class EnvironmentInteraction {
                   ui.notifications?.warn(moduleName + " | Can't use the integration with 'item macro' system not supported or hte module is not active");
                   return;
                 }
+              }
+
+              // Integration with use as macro
+              const useAsMacro = <boolean>environmentItem.getFlag(moduleName, Flags.notesuseasmacro);
+              const explicitDC = <number>environmentItem.getFlag(moduleName, Flags.notesexplicitdc);
+              if (useAsMacro) {
+                const macroContent = <string>environmentItem.getFlag(moduleName, Flags.notes);
+                const macroArgs = environmentItem.getFlag(moduleName, Flags.notesargs);
+                const result = executeEIMacroContent(environmentItem, macroContent, macroArgs);
+                if(result >= explicitDC){
+                  const macroContentSuccess = <string>environmentItem.getFlag(moduleName, Flags.notessuccess);
+                  const macroArgsSuccess = environmentItem.getFlag(moduleName, Flags.notessuccessargs);
+                  executeEIMacroContent(environmentItem, macroContentSuccess, macroArgsSuccess);
+                }else{
+                  const macroContentFailure = <string>environmentItem.getFlag(moduleName, Flags.notesfailure);
+                  const macroArgsFailure = environmentItem.getFlag(moduleName, Flags.notesfailureargs);
+                  executeEIMacroContent(environmentItem, macroContentFailure, macroArgsFailure);
+                }
+                return;
               }
 
               const REQUEST_LABEL = <string>environmentItem.getFlag(moduleName, Flags.notes);
