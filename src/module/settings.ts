@@ -3,7 +3,7 @@ import { RollHandler } from '../lib/tokenActionHUD/RollHandler';
 import { MonksTokenBarAPI } from './../lib/tokenbarapi/MonksTokenBarAPI';
 import { ENVIRONMENT_TYPE } from './environment-interaction-m-models';
 
-export const moduleName = 'environment-interaction';
+export const moduleName = 'environment-interaction-multisystem';
 
 export const ENVIRONMENT_INTERACTION_ITEM_MACRO_MODULE_NAME = 'itemacro';
 export const ENVIRONMENT_INTERACTION_MONKS_TOKENBAR_MODULE_NAME = 'monks-tokenbar';
