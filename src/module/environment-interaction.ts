@@ -17,63 +17,86 @@ import {
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
 import { executeEIMacro } from './environment-interaction-utils';
+// import { PrototypeTokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 export class EnvironmentInteraction {
+  // ====================
+  // TOKEN
+  // ====================
+
   static _canViewToken(wrapped, ...args) {
     const token = <Token>(<unknown>this);
+    const isEi =
+      token.actor && token.actor.data.token
+        ? getProperty(token.actor.data.token, `flags.${moduleName}.${Flags.environmentToken}`)
+        : // ? token.document.getFlag(moduleName,Flags.environmentToken)
+          false;
     // If token is an environment token, then any use can "view" (allow _clickLeft2 callback)
-    if (token.actor && token.actor.getFlag(moduleName, Flags.environmentToken)) {
-      return true;
+    // if (token.document.actor && token.document.actor.getFlag(moduleName, Flags.environmentToken)) {
+    if (!isEi) {
+      return wrapped(...args);
     } else {
+      return true;
+    }
+  }
+
+  static _onClickLeftToken(wrapped, ...args) {
+    const token = <Token>(<unknown>this);
+    const isEi =
+      token.actor && token.actor.data.token
+        ? getProperty(token.actor.data.token, `flags.${moduleName}.${Flags.environmentToken}`)
+        : // ? token.document.getFlag(moduleName,Flags.environmentToken)
+          false;
+    // const actor = <Actor>token.actor;
+    // Prevent deselection of currently controlled token when clicking environment token
+    // if (token.document.actor && !token.document.getFlag(moduleName, Flags.environmentToken)) {
+    if (!isEi) {
       return wrapped(...args);
     }
   }
 
-  static _onClickLeftToken(wrapped, event) {
+  static _onClickLeft2Token(wrapped, ...args) {
     const token = <Token>(<unknown>this);
-    const actor = <Actor>(token.actor);
-    // Prevent deselection of currently controlled token when clicking environment token
-    if(actor && !actor.getFlag(moduleName, Flags.environmentToken)) {
-      return wrapped(event);
-    }
-  }
-
-  static _onClickLeft2Token(wrapped, event) {
-    const token = <Token>(<unknown>this);
-    const actor = <Actor>(token.actor);
-    if (actor && !actor.getFlag(moduleName, Flags.environmentToken)) {
-      return wrapped(event);
+    const isEi =
+      token.actor && token.actor.data.token
+        ? getProperty(token.actor.data.token, `flags.${moduleName}.${Flags.environmentToken}`)
+        : // ? token.document.getFlag(moduleName,Flags.environmentToken)
+          false;
+    // if (token.document.actor && !token.document.getFlag(moduleName, Flags.environmentToken)) {
+    if (!isEi) {
+      return wrapped(...args);
     } else {
-      EnvironmentInteraction.interactWithEnvironmentFromToken(token, event);
+      EnvironmentInteraction.interactWithEnvironmentFromToken(token, ...args);
     }
   }
 
   // Environment Interaction
-  static async interactWithEnvironmentFromActor(environmentActor: Actor, event) {
+  static async interactWithEnvironmentFromActor(environmentActor: Actor, ...args) {
     if (!environmentActor?.id) {
       ui.notifications?.warn(moduleName + ' | The environment interaction need the token is been liked to a actor');
       return;
     }
-    EnvironmentInteraction.interactWithEnvironmentFromTokenDocument(<TokenDocument>environmentActor.token, event);
+    EnvironmentInteraction.interactWithEnvironmentFromTokenDocument(<TokenDocument>environmentActor.token, ...args);
   }
 
-  static async interactWithEnvironmentFromPlaceableObject(environmentPlaceableObject: PlaceableObject, event) {
-    const actors = EnvironmentInteraction.getEnviroments(environmentPlaceableObject);
+  static async interactWithEnvironmentFromPlaceableObject(environmentPlaceableObject: PlaceableObject, ...args) {
+    const actors = EnvironmentInteraction.getEnviroments(environmentPlaceableObject, Flags.environmentTokenRef);
     // TODO MANAGE MORE THAN A ACTOR ?????
     const actor = actors[0];
-    EnvironmentInteraction.interactWithEnvironmentFromActor(actor, event);
+    EnvironmentInteraction.interactWithEnvironmentFromActor(actor, ...args);
   }
 
-  static async interactWithEnvironmentFromToken(environmentToken: Token, event) {
-    EnvironmentInteraction.interactWithEnvironmentFromTokenDocument(environmentToken.document, event);
+  static async interactWithEnvironmentFromToken(environmentToken: Token, ...args) {
+    EnvironmentInteraction.interactWithEnvironmentFromTokenDocument(environmentToken.document, ...args);
   }
 
   // Environment Interaction
-  static async interactWithEnvironmentFromTokenDocument(environmentToken: TokenDocument, event) {
+  static async interactWithEnvironmentFromTokenDocument(environmentToken: TokenDocument, ...args) {
     if (!environmentToken.actor || !environmentToken.actor?.id) {
       ui.notifications?.warn(moduleName + ' | The environment interaction need the token is been liked to a actor');
       return;
     }
+    const event = args[0];
 
     // TODO: dnd5e specific; create a helper function to handle different systems
     // Sort to mimic order of items on character sheet
@@ -537,6 +560,16 @@ export class EnvironmentInteraction {
     Hooks.on('preUpdateAmbientSound', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
     Hooks.on('preUpdateMeasuredTemplate', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
     Hooks.on('preUpdateNote', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+
+    // Hooks.on('postUpdateActor', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    // Hooks.on('postUpdateToken', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    // Hooks.on('postUpdateTile', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    // Hooks.on('postUpdateDrawing', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    // Hooks.on('postUpdateWall', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    // Hooks.on('postUpdateLight', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    // Hooks.on('postUpdateAmbientSound', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    // Hooks.on('postUpdateMeasuredTemplate', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
+    // Hooks.on('postUpdateNote', EnvironmentInteraction._applyEnviroments.bind(EnvironmentInteraction));
   }
 
   static configHandlers = [
@@ -577,19 +610,41 @@ export class EnvironmentInteraction {
   }
 
   static _applyHtml(app, html, insertBefore = false) {
-    if (!html){
+    if (!html) {
       return;
     }
     if (!getGame().user?.isGM) {
       return;
     }
-    const enviroments =
-      (app?.object instanceof Actor || app?.object instanceof TokenDocument)
-        ? EnvironmentInteraction._validateEnviroments(getProperty(app?.object, `data.token.flags.${moduleName}.${Flags.environmentTokenRef}`) ?? [], '_applyHtml')
-        : EnvironmentInteraction.getEnviroments(app?.object?._object);
-    const checked = app.object.getFlag(moduleName, Flags.environmentToken) ? 'checked' : '';
+
+    // TODO MAKE THIS SYNC BETWEEN TOKEN AND PROTOTYPE TOKEN BETTER
+    let obj = app?.object;
+    if (obj instanceof Actor) {
+      obj = obj.data.token;
+    } else if (!(obj instanceof TokenDocument)) {
+      obj = app?.object?._object;
+    }
+
+    if(obj instanceof TokenDocument && obj.actor){
+      obj = obj.actor.data.token;
+    }
+
+    const enviroments = EnvironmentInteraction.getEnviroments(obj, Flags.environmentTokenRef);
+    const checked = EnvironmentInteraction.getEnviroments(obj, Flags.environmentToken) ? 'checked' : '';
+
+    // const enviroments =
+    //   obj instanceof Actor
+    //     ? EnvironmentInteraction._validateEnviroments(getProperty(obj, `data.token.flags.${moduleName}.${Flags.environmentTokenRef}`) ?? [], '_applyHtml')
+    //     : EnvironmentInteraction.getEnviroments(obj._object, Flags.environmentTokenRef);
+    // const checked =
+    //   obj instanceof Actor
+    //   ? (getProperty(app?.object, `data.token.flags.${moduleName}.${Flags.environmentToken}`) ? 'checked' : '')
+    //   : (EnvironmentInteraction.getEnviroments(obj?._object, Flags.environmentToken) ? 'checked' : '');
     let formConfig = ``;
-    if(app?.object instanceof Actor || app?.object instanceof TokenDocument){
+    if (obj instanceof Actor 
+      || obj instanceof TokenDocument 
+      || obj.document  instanceof Actor
+      ) {
       formConfig = `
         <div class="form-group stacked">
           <div class="form-group">
@@ -598,7 +653,7 @@ export class EnvironmentInteraction {
           </div>
         </div>
       `;
-    }else{
+    } else {
       formConfig = `
         <div class="form-group stacked">
           <div class="form-group">
@@ -649,63 +704,72 @@ export class EnvironmentInteraction {
   }
 
   static _applyEnviroments(document, updateData) {
-    const propertyNameOr = `flags.${moduleName}.${Flags.environmentToken}`;
-    const propertyNameRef = `flags.${moduleName}.${Flags.environmentTokenRef}`;
-    let propertyName;
-    if(hasProperty(updateData,propertyNameOr)){
-      propertyName = propertyNameOr;
-    }
-    if(hasProperty(updateData,propertyNameRef)){
-      propertyName = propertyNameRef;
-    }
-    // if (document instanceof Actor || document instanceof TokenDocument){
-    //   propertyName = 'token.' + propertyName;
+    const properties: string[] = [];
+    properties.push(`flags.${moduleName}.${Flags.environmentToken}`);
+    properties.push(`flags.${moduleName}.${Flags.environmentTokenRef}`);
+    // properties.push(`token.flags.${moduleName}.${Flags.environmentToken}`);
+    // properties.push(`token.flags.${moduleName}.${Flags.environmentTokenRef}`);
+    // let propertyName;
+    // if(hasProperty(updateData,propertyNameOr)){
+    //   propertyName = propertyNameOr;
     // }
-    if(propertyName){
-      const eis = getProperty(updateData, propertyName);
-      if (eis != null && eis!= undefined){
-        let actor:Actor;
-        if (document instanceof Actor ){
-          actor = document;
-          if(actor){
-            if(propertyName.endsWith(Flags.environmentTokenRef)){
+    // if(hasProperty(updateData,propertyNameRef)){
+    //   propertyName = propertyNameRef;
+    // }
+    let noPropertyFound = true;
+    for (const propertyName of properties) {
+      let propertyNameOr = propertyName;
+      if (document instanceof Actor){
+        propertyNameOr = 'token.' + propertyNameOr;
+      }
+      if (hasProperty(updateData, propertyNameOr)) {
+        noPropertyFound = false;
+        const eis = getProperty(updateData, propertyNameOr);
+        if (eis != null && eis != undefined) {
+          let actor: Actor;
+          if (document instanceof Actor) {
+            actor = document;
+            if (actor) {
               // Set placeable object flag
-              setProperty(updateData, propertyName, EnvironmentInteraction._validateEnviroments(eis, '_applyEnviroments'));
-            }else if(propertyName.endsWith(Flags.environmentToken)){
+              setProperty(updateData, propertyNameOr, eis);
+            }
+          } else if (document instanceof TokenDocument) {
+            actor = <Actor>document.actor;
+            if (actor) {
               // Set placeable object flag
-              setProperty(updateData, propertyName, eis);
+              setProperty(updateData, propertyNameOr, eis);
+            }
+          } else {
+            const actorName = eis;
+            actor = <Actor>getGame().actors?.getName(actorName);
+            if (actor) {
+              // Set placeable object flag
+              setProperty(updateData, propertyNameOr, eis);
             }
           }
-        }else if(document instanceof TokenDocument){
-          actor = <Actor>document.actor;
-          if(actor){
-            if(propertyName.endsWith(Flags.environmentTokenRef)){
-              // Set placeable object flag
-              setProperty(updateData, propertyName, EnvironmentInteraction._validateEnviroments(eis, '_applyEnviroments'));
-            }else if(propertyName.endsWith(Flags.environmentToken)){
-              // Set placeable object flag
-              setProperty(updateData, propertyName, eis);
-            }
-          }
-        }else{
-          const actorName = eis;
-          actor = <Actor>getGame().actors?.getName(actorName);
-          if(actor){
-            if(propertyName.endsWith(Flags.environmentTokenRef)){
-              // Set placeable object flag
-              setProperty(updateData, propertyName, EnvironmentInteraction._validateEnviroments(eis, '_applyEnviroments'));
-            }else if(propertyName.endsWith(Flags.environmentToken)){
-              // Set placeable object flag
-              setProperty(updateData, propertyName, eis);
-            }
+          if (actor) {
+            // Set actor reference
+            // setProperty(actor.data, propertyNameOr, eis);
+            setProperty(actor.data.token, propertyNameOr, eis);
+            // actor.setFlag(moduleName, Flags.environmentToken, eis);
+          } else {
+            ui.notifications?.warn(`${moduleName} | Can't find the actor`);
           }
         }
-        if(actor){
-          // Set actor reference
-          setProperty(actor.data, propertyName, eis);
-        }else{
-          ui.notifications?.warn(`${moduleName} | Can't find the actor`)
-        }
+      }
+    }
+    // TODO MAKE THIS SYNC BETWEEN TOKEN AND PROTOTYPE TOKEN BETTER
+    if(noPropertyFound && document.data.flags[moduleName]){
+      if(document instanceof TokenDocument){
+        // For each token
+        getCanvas().tokens?.placeables.forEach((t:Token) => {
+          if(document.actor?.id == t.actor?.id){
+            t.document.setFlag(moduleName, Flags.environmentToken,document.getFlag(moduleName,Flags.environmentToken));
+            t.document.setFlag(moduleName, Flags.environmentTokenRef,document.getFlag(moduleName,Flags.environmentTokenRef));
+            setProperty((<Actor>t.actor).data.token, `flags.${moduleName}.${Flags.environmentToken}`, document.getFlag(moduleName,Flags.environmentToken));
+            setProperty((<Actor>t.actor).data.token, `flags.${moduleName}.${Flags.environmentTokenRef}`, document.getFlag(moduleName,Flags.environmentTokenRef));
+          }
+        });
       }
     }
   }
@@ -717,14 +781,35 @@ export class EnvironmentInteraction {
    *
    * @returns  {Array}                        An array of enviroments from the Document
    */
-  static getEnviroments(inObject) {
+  static getEnviroments(inObject, flag) {
     const relevantDocument = inObject?.document ?? inObject;
-    const enviroments = relevantDocument?.getFlag(moduleName, Flags.environmentTokenRef) ?? [];
-    return EnvironmentInteraction._validateEnviroments(enviroments, 'getEnviroments');
+    if(inObject.flags){
+      if (flag == Flags.environmentTokenRef) {
+        const enviroments = getProperty(inObject,`flags.${moduleName}.${flag}`) ?? [];
+        return EnvironmentInteraction._validateEnviroments(enviroments, 'getEnviroments');
+      } else if (flag == Flags.environmentToken) {
+        const enviroment = getProperty(inObject,`flags.${moduleName}.${flag}`) ?? false;
+        return enviroment;
+      } else {
+        return null;
+      }
+    }else if(inObject.data){
+      if (flag == Flags.environmentTokenRef) {
+        const enviroments = relevantDocument?.getFlag(moduleName, flag) ?? [];
+        return EnvironmentInteraction._validateEnviroments(enviroments, 'getEnviroments');
+      } else if (flag == Flags.environmentToken) {
+        const enviroment = relevantDocument?.getFlag(moduleName, flag) ?? false;
+        return enviroment;
+      } else {
+        return null;
+      }
+    }else{
+      return null;
+    }
   }
 
   static _validateEnviroments(inEnviroments, inFunctionName) {
-    if (!(typeof inEnviroments === 'string' || typeof inEnviroments === 'string' || Array.isArray(inEnviroments))){
+    if (!(typeof inEnviroments === 'string' || typeof inEnviroments === 'string' || Array.isArray(inEnviroments))) {
       throw new Error(`${moduleName} | ${inFunctionName} | inEnviroments must be of type string or array`);
     }
     const providedEnviroments = typeof inEnviroments === 'string' ? inEnviroments.split(',') : inEnviroments;
