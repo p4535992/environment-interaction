@@ -1,16 +1,16 @@
-import { debug, error, i18n } from '../environment-interaction-main';
+import { debug, error, i18n } from '../environment-interaction-m-main';
 import { ContestedRoll } from '../lib/tokenbarapi/ContestedRoll';
-import { EnvironmentInteractionNote } from './environment-interaction-note';
-import { EnvironmentInteraction } from './environment-interaction';
-import { customInfoEnvironmentInteraction, Flags } from './environment-interaction-models';
+import { EnvironmentInteractionNote } from './environment-interaction-m-note';
+import { EnvironmentInteraction } from './environment-interaction-m';
+import { customInfoEnvironmentInteraction, Flags } from './environment-interaction-m-models';
 import { getCanvas, getGame, moduleName } from './settings';
 import { MonkTokenBarMessageOptions, MonkTokenBarMessageRequestoption } from '../lib/tokenbarapi/MonksTokenBarAPI';
-import { executeEIMacro } from './environment-interaction-utils';
-
+import { executeEIMacro } from './environment-interaction-m-utils';
+import { EnvironmentInteractionPlaceableConfig } from './environment-interaction-m-paceable-config';
 export const readyHooks = async () => {
   // Register hook callbacks
   // @ts-ignore
-  getGame().EnvironmentInteraction.registerHooks();
+  getGame().EnvironmentInteraction.EnvironmentInteractionPlaceableConfig.registerHooks();
 
   Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll | Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
     // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
@@ -206,6 +206,8 @@ export const initHooks = async () => {
   // Open module API
   // @ts-ignore
   getGame().EnvironmentInteraction = EnvironmentInteraction;
+  // @ts-ignore
+  getGame().EnvironmentInteraction.EnvironmentInteractionPlaceableConfig = EnvironmentInteractionPlaceableConfig;
 
   // Register settings
   // @ts-ignore

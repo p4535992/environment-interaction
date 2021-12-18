@@ -1,7 +1,7 @@
-import { executeEIMacro, executeEIMacroContent } from './environment-interaction-utils';
+import { executeEIMacro, executeEIMacroContent } from './environment-interaction-m-utils';
 import { field } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/fields.mjs';
-import { i18n } from '../environment-interaction-main';
-import { Flags } from './environment-interaction-models';
+import { i18n } from '../environment-interaction-m-main';
+import { Flags } from './environment-interaction-m-models';
 import { getGame, moduleName } from './settings';
 export class EnvironmentInteractionNote extends FormApplication {
   constructor(object, options) {

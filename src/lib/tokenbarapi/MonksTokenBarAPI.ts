@@ -1,4 +1,4 @@
-import { customInfoEnvironmentInteraction } from './../../module/environment-interaction-models';
+import { customInfoEnvironmentInteraction } from '../../module/environment-interaction-m-models';
 import { AppTokenBar } from './AppTokenBar';
 
 /**
