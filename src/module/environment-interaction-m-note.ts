@@ -73,12 +73,7 @@ export class EnvironmentInteractionNote extends FormApplication {
     // html.find('.ei-info').click((ev) => this._showInfo());
 
     if (getGame().modules.get('acelib')?.active) {
-      this.editor = this._addAceLibEditorToElement(
-        html,
-        `div.form-group.stacked.command.${Flags.notes}`,
-        this.entity.id,
-        Flags.notes,
-      );
+      this.editor = this._addAceLibEditorToElement(html, `div.form-group.stacked.command.${Flags.notes}`, this.entity.id, Flags.notes);
 
       this.editorCondition = this._addAceLibEditorToElement(
         html,

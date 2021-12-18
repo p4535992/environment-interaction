@@ -1,8 +1,9 @@
 {
   "private": true,
-  "name": "variant-encumbrance-dnd5e",
-  "version": "0.6.4",
-  "description": "VariantEncumbrance+Midi",
+  "name": "environment-interaction-multisystem",
+  "title": "Environment Interaction Multisystem",
+  "description": "",
+  "version": "1.1.0",
   "scripts": {
     "package": "gulp package",
     "build": "gulp build && gulp link",
@@ -17,7 +18,7 @@
   "license": "",
   "devDependencies": {
     "@league-of-foundry-developers/foundry-vtt-types": "^0.8.9-9",
-    "@types/jquery": "^3.5.9",
+    "@types/jquery": "^3.5.10",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",
     "@typhonjs-fvtt/eslint-config-foundry.js": "^0.8.0",
@@ -42,7 +43,7 @@
     "gulp-typescript": "^6.0.0-alpha.1",
     "json-stringify-pretty-compact": "^2.0.0",
     "prettier": "^2.5.1",
-    "sass": "^1.44.0",
+    "sass": "^1.45.0",
     "yargs": "^15.4.1"
   },
   "lint-staged": {
@@ -50,6 +51,6 @@
     "*.(json|scss)": "prettier --write"
   },
   "dependencies": {
-    "typescript": "^4.5.2"
+    "typescript": "^4.5.4"
   }
 }

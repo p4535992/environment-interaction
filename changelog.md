@@ -1,4 +1,4 @@
-### Update 1.1.0
+### Update 1.1.0 [BETA]
 
 - Convert to typescript because i like to much the tslint
 - Integration with ironmonk tokenbar api for the contested roll and standard roll (partially support multissystem)
