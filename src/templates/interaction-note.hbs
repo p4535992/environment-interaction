@@ -23,32 +23,32 @@
         {{editor content=flags.environment-interaction.notes-failure target="flags.environment-interaction.notes-failure" button=true owner=owner editable=true}}<br></br>
         -->
         <div class="form-group stacked">
-            <!--<label>{{localize "environment-interaction.note.event-use-environment-interaction"}}</label>-->
-            <div class="form-fields" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction.note.event-use-environment-interaction"}}" class='checkbox'>
+            <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction.note.event-use-environment-interaction"}}">
                 <input type="checkbox" name="flags.environment-interaction.notes-use-environment-interaction"
                     value="{{flags.environment-interaction.notes-use-environment-interaction}}"
                     {{checkedIf flags.environment-interaction.notes-use-environment-interaction}}/>
+                <label>{{localize "environment-interaction.note.event-use-environment-interaction"}}</label>
             </div>
         </div>
         <div class="form-group stacked">
-            <!--<label>{{localize "environment-interaction.note.event-use-item-macro"}}</label>-->
-            <div class="form-fields" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction.note.event-use-item-macro"}}" class='checkbox'>
+            <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction.note.event-use-item-macro"}}">
                 <input type="checkbox" name="flags.environment-interaction.notes-use-item-macro"
                     value="{{flags.environment-interaction.notes-use-item-macro}}"
                     {{checkedIf flags.environment-interaction.notes-use-item-macro}}/>
+                <label>{{localize "environment-interaction.note.event-use-item-macro"}}</label>
             </div>
         </div>
         <div class="form-group stacked">
-            <!--<label>{{localize "environment-interaction.note.event-use-item-environment"}}</label>-->
-            <div class="form-fields" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction.note.event-use-item-environment"}}" class='checkbox'>
+            <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction.note.event-use-item-environment"}}">
                 <input type="checkbox" name="flags.environment-interaction.notes-use-item-environment"
                     value="{{flags.environment-interaction.notes-use-item-environment}}"
                     {{checkedIf flags.environment-interaction.notes-use-item-environment}}/>
+                <label>{{localize "environment-interaction.note.event-use-item-environment"}}</label>
             </div>
         </div>
         <div class="form-group stacked">
             <label>{{localize "environment-interaction.note.event-detail"}}</label>
-            <div class="form-fields">
+            <div class="form-group">
                 <input type="text" name="flags.environment-interaction.notes-detail" placeholder="" value="{{flags.environment-interaction.notes-detail}}" />
             </div>
         </div>
@@ -64,11 +64,15 @@
             <label>{{localize "environment-interaction.note.event-info"}}</label>
             {{editor content=flags.environment-interaction.notes-info target="flags.environment-interaction.notes-info" button=true owner=owner editable=true}}
         </div>
-        <div class="form-group stacked">
+        <div class="form-group stacked command notes">
             <label>{{localize "environment-interaction.note.event"}}</label>
-            <div class="form-fields">
+            <div class="form-group">
                 <textarea name="flags.environment-interaction.notes">{{flags.environment-interaction.notes}}</textarea>
             </div>
+            <input type="text" name="flags.environment-interaction.notes-args"
+                class="ei-macro-execute-args-button-{{id}}-{{flags.environment-interaction.notes-args}}"
+                placeHolder="Additional args e.g.'arg0,arg1,ecc.' on the macro are recovered from args[0],args[1],ecc."
+                value="{{flags.environment-interaction.notes-args}}" />
         </div>
         <div class="form-group stacked command notes-condition">
             <label>{{localize "environment-interaction.note.event-condition"}}</label>

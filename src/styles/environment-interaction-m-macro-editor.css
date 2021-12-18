@@ -54,3 +54,9 @@
 .ei-macro-editor-expand i.fas.fa-compress-alt {
   margin: unset;
 }
+
+/*4535992*/
+.notes-info .editor {
+  width: 100%;
+  height: 100px; 
+}

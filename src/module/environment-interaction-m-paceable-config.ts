@@ -94,6 +94,10 @@ export class EnvironmentInteractionPlaceableConfig {
     }
     */
     const obj = app?.object;
+    // We not show this configuration on prototype token
+    if (obj instanceof Actor) {
+      return;
+    }
 
     const enviromentActorId = EnvironmentInteractionPlaceableConfig.getEnviroments(obj, Flags.environmentTokenRef);
     const enviromentChecked = EnvironmentInteractionPlaceableConfig.getEnviroments(obj, Flags.environmentToken) ? 'checked' : '';
@@ -112,11 +116,11 @@ export class EnvironmentInteractionPlaceableConfig {
     formConfig = `
         <div class="form-group stacked">
           <div class="form-group">
-            <label>${i18n(`${moduleName}.tokenConfig.label`)}</label>
+            <label>${i18n(`${moduleName}.tokenConfig.labelPlaceableObject`)}</label>
             <input type="checkbox" name="flags.${moduleName}.${Flags.environmentToken}" data-dtype="Boolean" ${enviromentChecked} />
           </div>
           <div class="form-group">
-            <label>Enviroment Actor</label>
+            <label>${i18n(`${moduleName}.tokenConfig.labelActor`)}</label>
             <select class="actor-template" name="flags.${moduleName}.${Flags.environmentTokenRef}" value="${enviromentActorId}">
               ${options.join('')}
             </select>

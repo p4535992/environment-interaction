@@ -61,6 +61,7 @@ export const Flags = {
   notescondition: 'notes-condition',
   notessuccess: 'notes-success',
   notesfailure: 'notes-failure',
+  notesargs: 'notes-args',
   notesconditionargs: 'notes-condition-args',
   notessuccessargs: 'notes-success-args',
   notesfailureargs: 'notes-failure-args',
@@ -74,12 +75,24 @@ export const Flags = {
  * A model for embed all the info we need to decide a success or a failure
  */
 export class customInfoEnvironmentInteraction {
-  environmentTokenID = '';
-  environmentActorID = '';
-  environmentItemID = '';
-  environmentDC = NaN;
-  interactorTokenID = '';
-  interactorActorID = '';
-  interactorItemID = '';
-  requestLabel = '';
+  environmentPlaceableObjectID: string;
+  environmentPlaceableObjectTYPE: string;
+  environmentTokenID: string;
+  environmentActorID: string;
+  environmentItemID: string;
+  environmentDC: number;
+  interactorTokenID: string;
+  interactorActorID: string;
+  interactorItemID: string;
+  requestLabel: string;
 }
+
+// export enum PlaceableObjectType {
+//   token = 'token',
+//   light = 'light',
+//   sound = 'sound',
+//   template = 'template',
+//   tile = 'tile',
+//   wall = 'wall',
+//   drawing = 'drawing',
+// }

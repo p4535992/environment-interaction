@@ -14,6 +14,7 @@ export class EnvironmentInteractionNote extends FormApplication {
     return this.object;
   }
 
+  editor;
   editorCondition;
   editorSuccess;
   editorFailure;
@@ -72,6 +73,13 @@ export class EnvironmentInteractionNote extends FormApplication {
     // html.find('.ei-info').click((ev) => this._showInfo());
 
     if (getGame().modules.get('acelib')?.active) {
+      this.editor = this._addAceLibEditorToElement(
+        html,
+        `div.form-group.stacked.command.${Flags.notes}`,
+        this.entity.id,
+        Flags.notes,
+      );
+
       this.editorCondition = this._addAceLibEditorToElement(
         html,
         `div.form-group.stacked.command.${Flags.notescondition}`,
@@ -94,7 +102,7 @@ export class EnvironmentInteractionNote extends FormApplication {
       );
     }
 
-    html.find('[data-toggle="tooltip"]').tooltip();
+    //html.find('[data-toggle="tooltip"]').tooltip();
   }
 
   _addAceLibEditorToElement(html, entityClassName, entityFieldId, flagRef): any {
@@ -310,6 +318,12 @@ export class EnvironmentInteractionNote extends FormApplication {
         await this.entity.setFlag(moduleName, Flags.notes, null);
       }
 
+      if (formData[`flags.${moduleName}.${Flags.notesargs}`]) {
+        await this.entity.setFlag(moduleName, Flags.notesargs, formData[`flags.${moduleName}.${Flags.notesargs}`]);
+      } else {
+        await this.entity.setFlag(moduleName, Flags.notesargs, null);
+      }
+
       if (formData[`flags.${moduleName}.${Flags.notescondition}`]) {
         let macroCondition = formData[`flags.${moduleName}.${Flags.notescondition}`];
         if (!macroCondition?.startsWith('return')) {
@@ -498,6 +512,9 @@ export class EnvironmentInteractionNote extends FormApplication {
 
   async close() {
     super.close();
+    if (this.editor) {
+      this.editor.destroy();
+    }
     if (this.editorCondition) {
       this.editorCondition.destroy();
     }

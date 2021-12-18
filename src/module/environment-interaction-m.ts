@@ -27,11 +27,12 @@ export class EnvironmentInteraction {
 
   static _canViewToken(wrapped, ...args) {
     const token = <Token>(<unknown>this);
-    const isEi =
-      token.actor && token.actor.data.token
-        ? getProperty(token.actor.data.token, `flags.${moduleName}.${Flags.environmentToken}`)
-        : // ? token.document.getFlag(moduleName,Flags.environmentToken)
-          false;
+    // const isEi =
+    //   token.actor && token.actor.data.token
+    //     ? getProperty(token.actor.data.token, `flags.${moduleName}.${Flags.environmentToken}`)
+    //     : // ? token.document.getFlag(moduleName,Flags.environmentToken)
+    //       false;
+    const isEi = token.document.getFlag(moduleName, Flags.environmentToken) ?? false;
     // If token is an environment token, then any use can "view" (allow _clickLeft2 callback)
     // if (token.document.actor && token.document.actor.getFlag(moduleName, Flags.environmentToken)) {
     if (!isEi) {
@@ -43,11 +44,12 @@ export class EnvironmentInteraction {
 
   static _onClickLeftToken(wrapped, ...args) {
     const token = <Token>(<unknown>this);
-    const isEi =
-      token.actor && token.actor.data.token
-        ? getProperty(token.actor.data.token, `flags.${moduleName}.${Flags.environmentToken}`)
-        : // ? token.document.getFlag(moduleName,Flags.environmentToken)
-          false;
+    // const isEi =
+    //   token.actor && token.actor.data.token
+    //     ? getProperty(token.actor.data.token, `flags.${moduleName}.${Flags.environmentToken}`)
+    //     : // ? token.document.getFlag(moduleName,Flags.environmentToken)
+    //       false;
+    const isEi = token.document.getFlag(moduleName, Flags.environmentToken) ?? false;
     // const actor = <Actor>token.actor;
     // Prevent deselection of currently controlled token when clicking environment token
     // if (token.document.actor && !token.document.getFlag(moduleName, Flags.environmentToken)) {
@@ -58,53 +60,62 @@ export class EnvironmentInteraction {
 
   static _onClickLeft2Token(wrapped, ...args) {
     const token = <Token>(<unknown>this);
-    const isEi =
-      token.actor && token.actor.data.token
-        ? getProperty(token.actor.data.token, `flags.${moduleName}.${Flags.environmentToken}`)
-        : // ? token.document.getFlag(moduleName,Flags.environmentToken)
-          false;
+    // const isEi =
+    //   token.actor && token.actor.data.token
+    //     ? getProperty(token.actor.data.token, `flags.${moduleName}.${Flags.environmentToken}`)
+    //     : // ? token.document.getFlag(moduleName,Flags.environmentToken)
+    //       false;
+    const isEi = token.document.getFlag(moduleName, Flags.environmentToken) ?? false;
     // if (token.document.actor && !token.document.getFlag(moduleName, Flags.environmentToken)) {
     if (!isEi) {
       return wrapped(...args);
     } else {
-      EnvironmentInteraction.interactWithEnvironmentFromToken(token, ...args);
+      EnvironmentInteraction.interactWithEnvironmentFromPlaceableObject(token, ...args);
     }
   }
 
   // Environment Interaction
-  static async interactWithEnvironmentFromActor(environmentActor: Actor, ...args) {
-    if (!environmentActor?.id) {
-      ui.notifications?.warn(moduleName + ' | The environment interaction need the token is been liked to a actor');
-      return;
-    }
-    EnvironmentInteraction.interactWithEnvironmentFromTokenDocument(<TokenDocument>environmentActor.token, ...args);
-  }
+  // static async interactWithEnvironmentFromActor(environmentActor: Actor, ...args) {
+  //   if (!environmentActor?.id) {
+  //     ui.notifications?.warn(moduleName + ' | The environment interaction need the token is been liked to a actor');
+  //     return;
+  //   }
+  //   EnvironmentInteraction.interactWithEnvironmentFromTokenDocument(<TokenDocument>environmentActor.token, ...args);
+  // }
 
+  // static async interactWithEnvironmentFromPlaceableObject(environmentPlaceableObject: PlaceableObject, ...args) {
+  //   const actors = EnvironmentInteractionPlaceableConfig.getEnviroments(environmentPlaceableObject, Flags.environmentTokenRef);
+  //   // TODO MANAGE MORE THAN A ACTOR ?????
+  //   const actor = actors[0];
+  //   EnvironmentInteraction.interactWithEnvironmentFromActor(actor, ...args);
+  // }
+
+  // static async interactWithEnvironmentFromToken(environmentToken: Token, ...args) {
+  //   EnvironmentInteraction.interactWithEnvironmentFromTokenDocument(environmentToken.document, ...args);
+  // }
+
+  // Environment Interaction
   static async interactWithEnvironmentFromPlaceableObject(environmentPlaceableObject: PlaceableObject, ...args) {
-    const actors = EnvironmentInteractionPlaceableConfig.getEnviroments(environmentPlaceableObject, Flags.environmentTokenRef);
-    // TODO MANAGE MORE THAN A ACTOR ?????
-    const actor = actors[0];
-    EnvironmentInteraction.interactWithEnvironmentFromActor(actor, ...args);
-  }
+    const event = args[0];
 
-  static async interactWithEnvironmentFromToken(environmentToken: Token, ...args) {
-    EnvironmentInteraction.interactWithEnvironmentFromTokenDocument(environmentToken.document, ...args);
-  }
-
-  // Environment Interaction
-  static async interactWithEnvironmentFromTokenDocument(environmentToken: TokenDocument, ...args) {
-    if (!environmentToken.actor || !environmentToken.actor?.id) {
-      ui.notifications?.warn(moduleName + ' | The environment interaction need the token is been liked to a actor');
+    const flagRefActorId = environmentPlaceableObject.document.getFlag(moduleName, Flags.environmentTokenRef);
+    if (!flagRefActorId) {
+      ui.notifications?.warn(moduleName + ' | The environment interaction need a valid actor to reference the actions');
       return;
     }
-    const event = args[0];
+
+    const environmentActorExternal = <Actor>getGame().actors?.get(flagRefActorId);
+    if (!environmentActorExternal?.id) {
+      ui.notifications?.warn(moduleName + ' | The environment interaction need a existing actor to reference the actions');
+      return;
+    }
 
     // TODO: dnd5e specific; create a helper function to handle different systems
     // Sort to mimic order of items on character sheet
     const items: Item[] = [];
     // const actionsType: string[] = [ITEM_TYPE.TOOL, ITEM_TYPE.WEAPON, ACTION_TYPE.abil, ACTION_TYPE.save, ITEM_TYPE.LOOT, ITEM_TYPE.CONSUMABLE];
     // for (const type of actionsType) {
-    environmentToken.actor?.items
+    environmentActorExternal?.items
       .filter((environmentItemToCheck) => {
         if (environmentItemToCheck.getFlag(moduleName, Flags.notesuseei)) {
           if (environmentItemToCheck.getFlag(moduleName, Flags.notescondition)) {
@@ -136,7 +147,21 @@ export class EnvironmentInteraction {
     if (getGame().user?.isGM) {
       buttons.openSheet = {
         label: i18n(`${moduleName}.interactWithEnvironment.openCharacterSheet`),
-        callback: () => environmentToken.actor?.sheet?.render(true),
+        callback: () => {
+          environmentActorExternal?.sheet?.render(true);
+        },
+      };
+    }
+    if (getGame().user?.isGM) {
+      buttons.openPlaceableObject = {
+        label: i18n(`${moduleName}.interactWithEnvironment.openPlaceableObject`),
+        callback: () => {
+          if (environmentPlaceableObject instanceof Token) {
+            environmentPlaceableObject.actor?.sheet?.render(true);
+          } else {
+            environmentPlaceableObject.sheet?.render(true);
+          }
+        },
       };
     }
     const dialogOptions = {
@@ -150,14 +175,14 @@ export class EnvironmentInteraction {
         const itemID = <string>event.currentTarget.id;
         //const environment = <Actor>getCanvas().tokens?.get(environmentToken.id)?.actor;
         //const environmentItem = <Item>environment.items.get(itemID);
-        const environmentItem = <Item>environmentToken.actor?.items.get(itemID);
-        let content = <string>environmentItem.getFlag(moduleName, Flags.notesinfo);
-        if (!content) {
-          content = 'No info provided';
+        const environmentItem = <Item>environmentActorExternal?.items.get(itemID);
+        let contentInfo = <string>environmentItem.getFlag(moduleName, Flags.notesinfo);
+        if (!contentInfo) {
+          contentInfo = 'No info provided';
         }
         const d = new Dialog({
           title: environmentItem.data.name,
-          content: content,
+          content: contentInfo,
           buttons: {},
           default: '',
           render: (html) => {
@@ -182,8 +207,8 @@ export class EnvironmentInteraction {
             return;
           }
 
-          if (interactorToken.id == environmentToken.id) {
-            ui.notifications?.warn(moduleName + " | The interactor token can't be same of the enviroment");
+          if (interactorToken.id == environmentPlaceableObject.id) {
+            ui.notifications?.warn(moduleName + " | The interactor can't be the environment");
             return;
           }
           //Get current system config
@@ -194,11 +219,20 @@ export class EnvironmentInteraction {
           // const environment = <Actor>getCanvas().tokens?.get(environmentToken.id)?.actor;
           // const interactor = <Actor>getCanvas().tokens?.get(interactorToken.id)?.actor;
           // const environmentItem = <Item>environment.items.get(itemID);
-          const environmentItem = <Item>environmentToken.actor?.items.get(itemID);
+          const environmentItem = <Item>environmentActorExternal?.items.get(itemID);
+          let environmentToken: TokenDocument = <TokenDocument>environmentActorExternal.token;
+          if (environmentPlaceableObject instanceof Token) {
+            environmentToken = environmentPlaceableObject.document;
+          }
 
           const customInfo = new customInfoEnvironmentInteraction();
+
+          customInfo.environmentPlaceableObjectID = <string>environmentPlaceableObject.id;
+          customInfo.environmentPlaceableObjectTYPE = <string>environmentPlaceableObject.document.documentName;
+
           customInfo.environmentTokenID = <string>environmentToken.id;
-          customInfo.environmentActorID = <string>environmentToken.actor?.id;
+          //customInfo.environmentActorID = <string>environmentToken.actor?.id;
+          customInfo.environmentActorID = <string>environmentActorExternal.id;
           customInfo.environmentItemID = <string>environmentItem.id;
 
           let interactorItemTmp;
