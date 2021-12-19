@@ -386,7 +386,7 @@ export class EnvironmentInteraction {
                     const actionId = interactorItemTmp.id;
                     payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
                   } else {
-                    const [refActionId, refId] = macroNameOrTypeReq.split(',');
+                    const [refActionId, refId] = macroNameOrTypeReq.split(':');
                     const tokenId = interactorToken.id;
                     payload = refActionId + '|' + tokenId + '|' + refId;
                   }
@@ -437,7 +437,7 @@ export class EnvironmentInteraction {
                     const actionId = interactorItemTmp.id;
                     payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
                   } else {
-                    const [refActionId, refId] = macroNameOrTypeReq.split(',');
+                    const [refActionId, refId] = macroNameOrTypeReq.split(':');
                     const tokenId = interactorToken.id;
                     payload = refActionId + '|' + tokenId + '|' + refId;
                   }
@@ -516,7 +516,7 @@ export class EnvironmentInteraction {
                     const actionId = interactorItemTmp.id;
                     payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
                   } else {
-                    const [refActionId, refId] = macroNameOrTypeReq.split(',');
+                    const [refActionId, refId] = macroNameOrTypeReq.split(':');
                     const tokenId = interactorToken.id;
                     payload = refActionId + '|' + tokenId + '|' + refId;
                   }
@@ -563,7 +563,7 @@ export class EnvironmentInteraction {
                     const actionId = interactorItemTmp.id;
                     payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
                   } else {
-                    const [refActionId, refId] = macroNameOrTypeReq.split(',');
+                    const [refActionId, refId] = macroNameOrTypeReq.split(':');
                     const tokenId = interactorToken.id;
                     payload = refActionId + '|' + tokenId + '|' + refId;
                   }

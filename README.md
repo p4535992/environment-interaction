@@ -53,6 +53,14 @@ To install this module manually:
 
 This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) library for wrapping core methods. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
 
+## Known Issue
+
+Still actively developing the better integratino with these modules:
+
+- [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar) need to study the monk code better
+- [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud) is simple need more example for the community
+- [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy) not in developing
+
 ## [How to use](./wiki/how_to_use.md) 
 
 ## [How to configure the integration with others module](./wiki/how_to_configurate.md)
@@ -107,16 +115,6 @@ By default is "Monk's TokenBar" is present and active and support the  current s
 
 naturally in this module the various use cases will have to be foreseen...
 
-## Hot to it's work (basically but is much more complex)
-
-When an interaction is selected, the corresponding item on the environment token's actor sheet is created on the character's actor sheet. After rolling the item to chat, the item is deleted from the character's actor sheet. In this way, the character's actor sheet is the same before and after the interaction.
-
-A similar method is used to handle attack and damage rolls. When attack/damage buttons are clicked, the weapon is temporarily created on the character's actor sheet and used for the attack/damage roll before being deleted. This allows the character's relevant game stats to be used for the roll.
-
-Every environment i bind to a specific item configuration where you can set a collection of macro for make everything full customizable and system dependent.
-
-The scope of the module is to give a base for doing smart token usable from players even when gm is absent.
-
 ## [Item Macro](https://github.com/Kekilla0/Item-Macro) integration
 
 If an item on an environment token has a set Item Macro, after rolling the item to chat, the Item Macro will be executed.
@@ -124,13 +122,13 @@ If a item is set with a item macro will be fired before check for any ironmonk t
 
 ## [Ironmonk Token bar](https://github.com/ironmonk88/monks-tokenbar) integration
 
-### System Dnd5e examples
+### Some example with System Dnd5e examples
 
-| Request Label | Description | Condition |
+| Request Label (Field 'EVENT') | Description | Condition |
 |:------------------:|:------------------------:|:-----------------------------------:|
-| misc:init          | Roll Initiative          | Need to select a token              |
-| save:dex\|save:dex | Contested Save Dexterity | Need to select a token              |
-| ability:str        | Ability Strength         | Need to select a token              |
+| misc|misc:init            | Roll Initiative          | Need to select a token              |
+| save\|save:dex,save:dex\| | Contested Save Dexterity | Need to select a token              |
+| ability|ability:str       | Ability Strength         | Need to select a token              |
 
 ### Other example todo when i have time...
 
@@ -184,7 +182,7 @@ game.MonksTokenBar.requestRoll([interactorToken],options);
 **NOTE: tokenId = "multi" make start the action for all the selected tokens.**
 ### System Dnd5e examples
 
-| Macro Type |
+| Macro Type of Token Action HUD |
 |:----------:|
 | ability |
 | skill |
@@ -196,6 +194,12 @@ game.MonksTokenBar.requestRoll([interactorToken],options);
 | utility |
 | effect |
 | condition |
+
+| Request Label (Field 'EVENT') | Description | Condition |
+|:------------------:|:------------------------:|:-----------------------------------:|
+| ability\|ability:str | Ability Strength / Save Throw Strength | Need to select a token |
+
+**IMPORTANT: Token Action HUD for now doen't have a hook for callback the macro 'SUCCES' or 'FAILURE'**
 
 ## [Let me roll that for you](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy) integration (not ready yet)
 
