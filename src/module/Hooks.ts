@@ -1,12 +1,12 @@
-import { debug, error, i18n } from '../environment-interaction-m-main';
+import { debug, error, i18n } from '../eim-main';
 import { ContestedRoll } from '../lib/tokenbarapi/ContestedRoll';
-import { EnvironmentInteractionNote } from './environment-interaction-m-note';
-import { EnvironmentInteraction } from './environment-interaction-m';
-import { customInfoEnvironmentInteraction, Flags } from './environment-interaction-m-models';
+import { EnvironmentInteractionNote } from './eim-note';
+import { EnvironmentInteraction } from './eim';
+import { customInfoEnvironmentInteraction, Flags } from './eim-models';
 import { getCanvas, getGame, moduleName } from './settings';
 import { MonkTokenBarMessageOptions, MonkTokenBarMessageRequestoption } from '../lib/tokenbarapi/MonksTokenBarAPI';
-import { executeEIMacro } from './environment-interaction-m-utils';
-import { EnvironmentInteractionPlaceableConfig } from './environment-interaction-m-paceable-config';
+import { executeEIMacro } from './eim-utils';
+import { EnvironmentInteractionPlaceableConfig } from './eim-paceable-config';
 export const readyHooks = async () => {
   // Register hook callbacks
   // @ts-ignore

@@ -1,7 +1,7 @@
-import { i18n } from '../environment-interaction-m-main';
+import { i18n } from '../eim-main';
 import { RollHandler } from '../lib/tokenActionHUD/RollHandler';
 import { MonksTokenBarAPI } from './../lib/tokenbarapi/MonksTokenBarAPI';
-import { ENVIRONMENT_TYPE } from './environment-interaction-m-models';
+import { ENVIRONMENT_TYPE } from './eim-models';
 
 export const moduleName = 'environment-interaction-multisystem';
 

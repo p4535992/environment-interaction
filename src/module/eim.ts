@@ -1,5 +1,5 @@
-import { customInfoEnvironmentInteraction, ENVIRONMENT_TYPE, Flags } from './environment-interaction-m-models';
-import { i18n, log } from '../environment-interaction-m-main.js';
+import { customInfoEnvironmentInteraction, ENVIRONMENT_TYPE, Flags } from './eim-models';
+import { i18n, log } from '../eim-main.js';
 // import { libWrapper } from '../lib/shim.js';
 import {
   getCanvas,
@@ -16,8 +16,8 @@ import {
 } from './settings.js';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
-import { executeEIMacro, executeEIMacroContent } from './environment-interaction-m-utils';
-import { EnvironmentInteractionPlaceableConfig } from './environment-interaction-m-paceable-config';
+import { executeEIMacro, executeEIMacroContent } from './eim-utils';
+import { EnvironmentInteractionPlaceableConfig } from './eim-paceable-config';
 // import { PrototypeTokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 
 export class EnvironmentInteraction {
@@ -285,11 +285,11 @@ export class EnvironmentInteraction {
                 const macroContent = <string>environmentItem.getFlag(moduleName, Flags.notes);
                 const macroArgs = environmentItem.getFlag(moduleName, Flags.notesargs);
                 const result = executeEIMacroContent(environmentItem, macroContent, macroArgs);
-                if(result >= explicitDC){
+                if (result >= explicitDC) {
                   const macroContentSuccess = <string>environmentItem.getFlag(moduleName, Flags.notessuccess);
                   const macroArgsSuccess = environmentItem.getFlag(moduleName, Flags.notessuccessargs);
                   executeEIMacroContent(environmentItem, macroContentSuccess, macroArgsSuccess);
-                }else{
+                } else {
                   const macroContentFailure = <string>environmentItem.getFlag(moduleName, Flags.notesfailure);
                   const macroArgsFailure = environmentItem.getFlag(moduleName, Flags.notesfailureargs);
                   executeEIMacroContent(environmentItem, macroContentFailure, macroArgsFailure);

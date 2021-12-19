@@ -1,6 +1,6 @@
 import { Document } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/module.mjs';
-import { debug, error, i18n } from '../environment-interaction-m-main';
-import { Flags } from './environment-interaction-m-models';
+import { debug, error, i18n } from '../eim-main';
+import { Flags } from './eim-models';
 import { getCanvas, getGame, moduleName } from './settings';
 
 export function getTokenByTokenID(id) {

@@ -1,5 +1,5 @@
-import { i18n } from '../environment-interaction-m-main';
-import { Flags } from './environment-interaction-m-models';
+import { i18n } from '../eim-main';
+import { Flags } from './eim-models';
 import { getCanvas, getGame, moduleName } from './settings';
 
 export class EnvironmentInteractionPlaceableConfig {

@@ -29,8 +29,8 @@
     }
   ],
   "system": [],
-  "esmodules": ["environment-interaction-m-main.js"],
-  "styles": ["styles/environment-interaction-m.css", "styles/environment-interaction-m-macro-editor.css"],
+  "esmodules": ["eim-main.js"],
+  "styles": ["styles/eim.css", "styles/eim-macro-editor.css"],
   "minimumCoreVersion": "0.8.1",
   "compatibleCoreVersion": "0.8.9",
   "url": "https://github.com/p4535992/environment-interaction-multisystem",
