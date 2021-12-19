@@ -34,7 +34,6 @@ export class EnvironmentInteraction {
     //       false;
     const isEi = token.document.getFlag(moduleName, Flags.environmentToken) ?? false;
     // If token is an environment token, then any use can "view" (allow _clickLeft2 callback)
-    // if (token.document.actor && token.document.actor.getFlag(moduleName, Flags.environmentToken)) {
     if (!isEi) {
       return wrapped(...args);
     } else {
@@ -50,9 +49,7 @@ export class EnvironmentInteraction {
     //     : // ? token.document.getFlag(moduleName,Flags.environmentToken)
     //       false;
     const isEi = token.document.getFlag(moduleName, Flags.environmentToken) ?? false;
-    // const actor = <Actor>token.actor;
     // Prevent deselection of currently controlled token when clicking environment token
-    // if (token.document.actor && !token.document.getFlag(moduleName, Flags.environmentToken)) {
     if (!isEi) {
       return wrapped(...args);
     }
@@ -66,11 +63,28 @@ export class EnvironmentInteraction {
     //     : // ? token.document.getFlag(moduleName,Flags.environmentToken)
     //       false;
     const isEi = token.document.getFlag(moduleName, Flags.environmentToken) ?? false;
-    // if (token.document.actor && !token.document.getFlag(moduleName, Flags.environmentToken)) {
     if (!isEi) {
       return wrapped(...args);
     } else {
       EnvironmentInteraction.interactWithEnvironmentFromPlaceableObject(token, ...args);
+    }
+  }
+
+  // =======================
+  // WALL/DORR
+  // =======================
+
+  static _DoorControlPrototypeOnMouseDownHandler(wrapped, ...args) {
+    const doorControl = <DoorControl>(<unknown>this);
+    // const isDoor = wall.data.door > 0;
+    const wall = <Wall>getCanvas().walls?.placeables.find((x) => {
+      return x.id == doorControl.wall.id;
+    });
+    const isEi = wall.document.getFlag(moduleName, Flags.environmentToken) ?? false;
+    if (!isEi) {
+      return wrapped(...args);
+    } else {
+      EnvironmentInteraction.interactWithEnvironmentFromPlaceableObject(wall, ...args);
     }
   }
 
@@ -223,6 +237,8 @@ export class EnvironmentInteraction {
           let environmentToken: TokenDocument = <TokenDocument>environmentActorExternal.token;
           if (environmentPlaceableObject instanceof Token) {
             environmentToken = environmentPlaceableObject.document;
+          }else{
+            environmentToken = interactorToken.document;
           }
 
           const customInfo = new customInfoEnvironmentInteraction();

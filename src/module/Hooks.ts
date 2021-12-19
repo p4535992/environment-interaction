@@ -64,18 +64,16 @@ export const readyHooks = async () => {
 
     const isInteractor = interactorTokenTokenBar.id == interactorTokenId;
     // This work because the interactor is the last one called ??
-    if(isInteractor){
+    if (isInteractor) {
       const environmentItem = <Item>environmentActor.items.find((item: Item) => {
         return item.id == environmentItemId;
       });
 
       if (environmentItem) {
         // if (dc == null || dc == undefined || isNaN(dc)) {
-          if (currentContestedRollTokenBar != null 
-            && currentContestedRollTokenBar != undefined 
-            && !isNaN(currentContestedRollTokenBar)) {
-              dc = currentContestedRollTokenBar;
-          }
+        if (currentContestedRollTokenBar != null && currentContestedRollTokenBar != undefined && !isNaN(currentContestedRollTokenBar)) {
+          dc = currentContestedRollTokenBar;
+        }
         // }
         if (dc != null && dc != undefined && !isNaN(dc)) {
           if (total >= dc) {
@@ -95,7 +93,7 @@ export const readyHooks = async () => {
         throw new Error(moduleName + " | Can't retrieve original item");
       }
       currentContestedRollTokenBar = NaN;
-    }else{
+    } else {
       currentContestedRollTokenBar = total;
     }
   });
@@ -279,6 +277,33 @@ export const setupHooks = async () => {
     getGame().EnvironmentInteraction._onClickLeft2Token,
     'MIXED',
   );
+
+  //@ts-ignore
+  libWrapper.register(
+    moduleName,
+    'DoorControl.prototype._onMouseDown',
+    //@ts-ignore
+    getGame().EnvironmentInteraction._DoorControlPrototypeOnMouseDownHandler,
+    'MIXED',
+  );
+
+  // //@ts-ignore
+  // libWrapper.register(
+  //   moduleName,
+  //   'CONFIG.Wall.objectClass.prototype._onClickLeft',
+  //   //@ts-ignore
+  //   getGame().EnvironmentInteraction._onClickLeftWall,
+  //   'MIXED',
+  // );
+
+  // //@ts-ignore
+  // libWrapper.register(
+  //   moduleName,
+  //   'CONFIG.Wall.objectClass.prototype._onClickLeft2',
+  //   //@ts-ignore
+  //   getGame().EnvironmentInteraction._onClickLeft2Wall,
+  //   'MIXED',
+  // );
 };
 
 /*
