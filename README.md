@@ -12,8 +12,15 @@
 
 ![GitHub all releases](https://img.shields.io/github/downloads/p4535992/environment-interaction-multisystem/total?style=for-the-badge)
 
-
 Environment Interaction allows GM users to create "environment tokens" that characters can interact with. These interactions can include weapon attacks, skill checks and saves, and even executing macros.
+
+When an interaction is selected, the corresponding item on the environment token's actor sheet is created on the character's actor sheet. After rolling the item to chat, the item is deleted from the character's actor sheet. In this way, the character's actor sheet is the same before and after the interaction.
+
+A similar method is used to handle attack and damage rolls. When attack/damage buttons are clicked, the weapon is temporarily created on the character's actor sheet and used for the attack/damage roll before being deleted. This allows the character's relevant game stats to be used for the roll.
+
+Every environment i bind to a specific item configuration where you can set a collection of macro for make everything full customizable and system dependent.
+
+The scope of the module is to give a base for doing smart token usable from players even when gm is absent.
 
 **Note: This is module is inspired from the  wonderful work done by these developers:**
 
@@ -54,18 +61,24 @@ To install this module manually:
 
 This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) library for wrapping core methods. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
 
-## [How to use](./wiki/) 
+## [How to use](./wiki/how_to_use.md) 
+
+## [How to configure the integration with others module](./wiki/how_to_configurate.md)
+
+## [More details on the macro field structure](./wiki/macro_request_structure.md)
 
 ## Supported systems
 
-The multi system is limited to the one supported from these modules: 
+The multi system can work with only custom macro, but if you want the integration with these modules:
 
 - [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)
 - [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
 - [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy)
 - [Item Macro](https://github.com/Kekilla0/Item-Macro)
 
-by default is "Monk's TokenBar" is present and active and support the  current system is used first else we try with "Token Action HUD", the module "Let Me Roll That For You!" is a special case where you want to display the dialog to the user instead make everything on background.
+remember the funcionality is limited to the systems supported from these modules. 
+
+By default is "Monk's TokenBar" is present and active and support the  current system is used first else we try with "Token Action HUD", the module "Let Me Roll That For You!" is a special case where you want to display the dialog to the user instead make everything on background.
 
 | System Id (lowercase) | Token Action HUD | Monk's TokenBar | Let me roll that for you | Item Macro |
 |:---------:|:---------------:|:----------------:|:----------------:|:----------------:|
@@ -112,7 +125,6 @@ Every environment i bind to a specific item configuration where you can set a co
 
 The scope of the module is to give a base for doing smart token usable from players even when gm is absent.
 
-## Standard macro integration
 ## [Item Macro](https://github.com/Kekilla0/Item-Macro) integration
 
 If an item on an environment token has a set Item Macro, after rolling the item to chat, the Item Macro will be executed.

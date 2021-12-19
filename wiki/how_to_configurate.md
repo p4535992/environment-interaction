@@ -13,16 +13,6 @@ The syntax of the request label is:
 
 ### Environment Type
 
-  MISC: 'misc',
-  SAVE: 'save',
-  ABILITY: 'ability',
-  SKILL: 'skill',
-  DICE: 'dice',
-  // DAMAGE: 'damage',
-  ATTACK: 'attack',
-  MACRO: 'macro',
-  ITEM: 'item',
-
 | Environment Type | Description                | Module Involved       |
 |:----------------:|:--------------------------:|:---------------------:|
 | misc             |                            | Token Action HUD        |
