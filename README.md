@@ -36,7 +36,7 @@ Environment Interaction allows GM users to create "environment tokens" that char
 - Make a PR to the official master project [Environment Interaction](https://github.com/jessev14/environment-interaction)
 - Some friend request
 
-<img src="./img/environment-interaction-demo.gif" height="450"/>
+<img src="./wiki/img/environment-interaction-demo.gif" height="450"/>
 
 ## Installation
 

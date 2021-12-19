@@ -148,11 +148,11 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args: 
     }
   }
 
-  if (macroFlag == Flags.notescondition) {
-    if (!macroContent?.startsWith('return')) {
-      macroContent = 'return ' + macroContent;
-    }
-  }
+  // if (macroFlag == Flags.notescondition) {
+  //   if (macroContent && !macroContent?.startsWith('return')) {
+  //     macroContent = 'return ' + macroContent;
+  //   }
+  // }
 
   const macro = new Macro({
     name: item.data.name,
@@ -262,3 +262,16 @@ export const executeEIMacroContent = function (item: Item, macroContent: string,
     return undefined;
   }
 };
+
+export async function rollSimple(item, extraContents) {
+  const img = item.img || item.data.img || 'icons/svg/d20-highlight.svg';
+  const content = `<div class="${getGame().system.id} chat-card item-card">
+            <header class="card-header flexrow">
+            <img src="${img}" width="36" height="36" alt="${item.name || img}"/>
+            <h3 class="item-name">${item.name}</h3>
+            </header>
+        </div>
+        ${extraContents || ''}
+        `;
+  return await ChatMessage.create({ content });
+}

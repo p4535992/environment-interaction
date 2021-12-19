@@ -55,7 +55,7 @@ export const Flags = {
   notesuseei: 'notes-use-environment-interaction',
   notesuseitemmacro: 'notes-use-item-macro',
   notesuseitemenvironment: 'notes-use-item-environment',
-  notesuseasmacro: 'use-as-macro',
+  notesuseasmacro: 'notes-use-as-macro',
   notesdetail: 'notes-detail',
   notesinfo: 'notes-info',
   notesexplicitdc: 'notes-explicit-dc',

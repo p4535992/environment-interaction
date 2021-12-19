@@ -1,69 +1,61 @@
 
 # Steps to follow
 
-## Step 1: Activate a token like a 'Environment Token'
+An environment object is created like any other token. Once placed on the obejct on canvas, the object can be set as an "environment interaction" using the token configuration window.
 
-An environment token is created like any other token. Once placed on the canvas, the token can be set as an "environment token" using the token configuration window.
+![img1](./images/config_ei.png)
 
-Double clicking an environment token will open its Select Action dialog window. GM users will also have a button to open the character sheet.
+This configuration is present in Drawing, Token, Wall, ecc.
 
-![img](../img/steps/step1.png)
+After checked ther checkbox to true, you must link the placeable object to the actor enviroment container with the option 'Link to enviroment actor'.
 
-After setting the token we add or create some objects.
+After that when you double clicking on the environment object will open its Select Action dialog window. GM users will also have a button to open the character sheet enviroment and the placeable dialog configuration.
 
-## The syntax of the code
+![img2](./images/list_item_dialog_empty.png)
 
-The syntax of the request label is
+Now let's go the the actor sheet by clickin the '[GM] Open Actor Enviroment' button:
 
-<ENVIRONMENT_TYPE>|<MACRO_NAME_OR_TYPE_REQUEST>|<REQUEST_LABEL>|<DC_OR_NUMBER_TO_PASS>
+![img3](./images/actor_sheet_example.png)
 
-### Environment Type
+a generic actor with generic items... now let's go the the Smith's Tool sheet item, you will notice a green hands icon click on that...
 
-| Environment Type | Description                | Module Involved       |
-|:----------------:|:--------------------------:|:---------------------:|
-| save             |                            | Monk Token Bar/Token Action HUD        |
-| ability          |                            | Monk Token Bar/Token Action HUD        |
-| dice             |                            | Monk Token Bar/Token Action HUD        |
-| attack           |                            | Token Action HUD      |
-| item             |                            | Token Action HUD                       |
-| macro            |                            |                       |
-| <EMPTY LABEL>    |                            | Monk Token Bar/Token Action HUD        |
+![img4](./images/item_sheet_1.png)
 
-### Macro or type request
+Now a big form will appear:
 
-only two value are presente here
+![img6](:/../images/form_ei_part1_color.png)
 
-- **macro name** : name of the macro to run, WORK ONLY WITH ENVIROMENT TYPE 'macro'
-- **<MODULE LABEL TYPE>** : name key used for check the type of request for example Monk Token Bar with system dnd5e accept these labels _dice,misc,ability,save,skill_   
+![img7](:/../images/form_ei_part2_color.png)
 
-**NOTE : If you set the 'macro' label on the 'Macro or type request' you mus set empty 'Request Label' here o anyway the code not read this label**
+![img8](:/../images/form_ei_part3_color.png)
 
-| Request Label | Description                | Module Involved       |
+The form has a total of 11 element to set for all the use case it's possible to encounter here the details
 
+1. ENABLE: Enable this item for the environment interaction, will become invisible for all non GM player and will show up on the interaction  item list, it will apply with css a background color to these items in the inventory
+2. ITEM MACRO: Enable the item macro integration, if this enable will launch the macro setted with the module 'item macro' (if present or it will do nothing), and will ignore the 'EVENT','SUCESS' and 'FAILURE' settings
+3. ITEM ENVIRONMENT: Enable the use of the environment token instead the standard use, where the action is launched like the item was in the inventory of the iteractor token (the player usually). ATTENTION : If is a contested roll is a contested roll with himself
+4. EVENT AS MACRO: This checkbox set up the 'EVENT' like a input macro. The macro MUST return a numeric value to compare with the DC for anknoledge a 'SUCCESS' or a 'FAILURE'",
+5. DETAIL: the sub-label with some additional info on the voice
+6. INFO: dialog showed up when click on the information icon if you want to show some information before click
+7. DC o NUMBER FLAG: This is the number to check with the result of the 'EVENT'. If the result of 'EVENT' is >= of this value is a success else a failure",
+8. EVENT: the label for manage the interaction, or a macro with a return number for compare with the DC
+9. CONDITION: Macro/Code for decide if the interactor token can see the voice
+10. SUCCESS: Macro/Code to run when the interaction is consider a success
+11. FAILURE: Macro/Code to run when the interaction is consider a failure
 
+After the set up close the form and all your data are saved on the item.
+IF THE 'ENABLE' CHECK BOX IS CHECKED you have abiitate this item for the enviroment interaction. You can confirm this from two feature:
 
-The 'success' and 'failure' can indicate a external macro by is name or id with syntax `@macro[macro name or macro id]`
+1) The orange carry symbol on the item header sheet has replace the green hands icon
 
-Examples
+![img9](./images/item_orange_carry_icon.png)
 
-| Detail | Info | Event | Macro Condition (Optional) | Macro Success (Optional) | Macro Failure (Optional) | Module Involved (only info) |
-|:-------------------:|:----------:|:----------------------:|:----------------:|:----:|:----:|:--------:|
-| This is a sub label | some info  | save\|save:dex,save:dex | return item.name |  |  | Monk Token Bar   |
-| sub label 1         |            | save\|save:dex\|17       |                  |  |  | Monk Token Bar   |
-| sub label 2         |            | ability\|ability:dex\|17 |                  |  |  | Monk Token Bar   |
-| sleight of hand     | stole pouch| ability\|ability:dex\|17 |                  |  |  | Monk Token Bar   |
-| sub label 3         |            | dice\|dice:dex\|17       |                  |  |  | Monk Token Bar   |
-| sub label           |            | attack\|item\|           |                  |  |  | Token Action HUD |
-| sub label           |            | attack\|ability\|        |                  |  |  | Token Action HUD |
-| sub label           |            | attack\|skill\|          |                  |  |  | Token Action HUD |
-| sub label           |            | attack\|abilitySave,dex\||                  |  |  | Token Action HUD |
-| sub label           |            | attack\|abilityCheck\|   |                  |  |  | Token Action HUD |
-| sub label           |            | attack\|item\|           |                  |  |  | Token Action HUD |
-| sub label           |            | attack\|spell\|          |                  |  |  | Token Action HUD |
-| sub label           |            | attack\|feat\|           |                  |  |  | Token Action HUD |
-| sub label           |            | attack\|utility\|        |                  |  |  | Token Action HUD |
-| sub label           |            | attack\|effect\|         |                  |  |  | Token Action HUD |
-| sub label           |            | attack\|condition\|      |                  |  |  | Token Action HUD |
+2) On the actor inventory a bckground color remind you that
 
+![img10](./images/actor_inventory.png)
 
-    skill|skill:slt,skill:prc|18
+After that when you double clicking on the environment object will open its Select Action dialog window BUT NOW you will see hte new item abilitate:
+
+![img11](./images/list_item_dialog_one.png)
+
+now you click on the item and the module will run the 'EVENT' configuration and the 'SUCCESS' or the 'FAILURE' macro.

@@ -335,7 +335,7 @@ export class EnvironmentInteractionNote extends FormApplication {
       if (notes != null && notes != undefined) {
         if (useasmacro) {
           let macroUseAsMacro = notes;
-          if (!macroUseAsMacro?.startsWith('return')) {
+          if (macroUseAsMacro && !macroUseAsMacro?.startsWith('return')) {
             macroUseAsMacro = 'return ' + macroUseAsMacro;
           }
           await this.entity.setFlag(moduleName, Flags.notes, macroUseAsMacro);
@@ -356,7 +356,7 @@ export class EnvironmentInteractionNote extends FormApplication {
       const notescondition = formData[`flags.${moduleName}.${Flags.notescondition}`];
       if (notescondition != null && notescondition != undefined) {
         let macroCondition = notescondition;
-        if (!macroCondition?.startsWith('return')) {
+        if (macroCondition && !macroCondition?.startsWith('return')) {
           macroCondition = 'return ' + macroCondition;
         }
         await this.entity.setFlag(moduleName, Flags.notescondition, macroCondition);
