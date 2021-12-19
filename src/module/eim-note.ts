@@ -73,12 +73,12 @@ export class EnvironmentInteractionNote extends FormApplication {
     // html.find('.ei-info').click((ev) => this._showInfo());
 
     if (getGame().modules.get('acelib')?.active) {
-      if (this._retrieveVal($(html), Flags.notesuseasmacro)) {
-        this.editor = this._addAceLibEditorToElement(html, `div.form-group.stacked.command.${Flags.notes}`, this.entity.id, Flags.notes);
-      } else {
-        // TODO HIDE notes-args element...
-        //html.find('.ei-info')
-      }
+      // if (this._retrieveVal($(html), Flags.notesuseasmacro)) {
+      this.editor = this._addAceLibEditorToElement(html, `div.form-group.stacked.command.${Flags.notes}`, this.entity.id, Flags.notes);
+      // } else {
+      // TODO HIDE notes-args element...
+      //html.find('.ei-info')
+      // }
 
       this.editorCondition = this._addAceLibEditorToElement(
         html,
@@ -282,70 +282,80 @@ export class EnvironmentInteractionNote extends FormApplication {
 
   async _updateObject(event, formData) {
     if (getGame().user?.isGM) {
-      if (formData[`flags.${moduleName}.${Flags.notesuseei}`]) {
-        await this.entity.setFlag(moduleName, Flags.notesuseei, formData[`flags.${moduleName}.${Flags.notesuseei}`]);
+      const useei = formData[`flags.${moduleName}.${Flags.notesuseei}`];
+      if (useei != null && useei != undefined) {
+        await this.entity.setFlag(moduleName, Flags.notesuseei, useei);
       } else {
         await this.entity.setFlag(moduleName, Flags.notesuseei, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notesuseitemmacro}`]) {
-        await this.entity.setFlag(moduleName, Flags.notesuseitemmacro, formData[`flags.${moduleName}.${Flags.notesuseitemmacro}`]);
+      const useitemmacro = formData[`flags.${moduleName}.${Flags.notesuseitemmacro}`];
+      if (useitemmacro != null && useitemmacro != undefined) {
+        await this.entity.setFlag(moduleName, Flags.notesuseitemmacro, useitemmacro);
       } else {
         await this.entity.setFlag(moduleName, Flags.notesuseitemmacro, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notesuseitemenvironment}`]) {
-        await this.entity.setFlag(moduleName, Flags.notesuseitemenvironment, formData[`flags.${moduleName}.${Flags.notesuseitemenvironment}`]);
+      const useitemenvironment = formData[`flags.${moduleName}.${Flags.notesuseitemenvironment}`];
+      if (useitemenvironment != null && useitemenvironment != undefined) {
+        await this.entity.setFlag(moduleName, Flags.notesuseitemenvironment, useitemenvironment);
       } else {
         await this.entity.setFlag(moduleName, Flags.notesuseitemenvironment, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notesuseasmacro}`]) {
-        await this.entity.setFlag(moduleName, Flags.notesuseasmacro, formData[`flags.${moduleName}.${Flags.notesuseasmacro}`]);
+      const useasmacro = formData[`flags.${moduleName}.${Flags.notesuseasmacro}`];
+      if (useasmacro != null && useasmacro != undefined) {
+        await this.entity.setFlag(moduleName, Flags.notesuseasmacro, useasmacro);
       } else {
         await this.entity.setFlag(moduleName, Flags.notesuseasmacro, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notesdetail}`]) {
-        await this.entity.setFlag(moduleName, Flags.notesdetail, formData[`flags.${moduleName}.${Flags.notesdetail}`]);
+      const detail = formData[`flags.${moduleName}.${Flags.notesdetail}`];
+      if (detail != null && detail != undefined) {
+        await this.entity.setFlag(moduleName, Flags.notesdetail, detail);
       } else {
         await this.entity.setFlag(moduleName, Flags.notesdetail, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notesinfo}`]) {
-        await this.entity.setFlag(moduleName, Flags.notesinfo, formData[`flags.${moduleName}.${Flags.notesinfo}`]);
+      const info = formData[`flags.${moduleName}.${Flags.notesinfo}`];
+      if (info != null && info != undefined) {
+        await this.entity.setFlag(moduleName, Flags.notesinfo, info);
       } else {
-        await this.entity.setFlag(moduleName, Flags.notesinfo, null);
+        // await this.entity.setFlag(moduleName, Flags.notesinfo, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notesexplicitdc}`]) {
-        await this.entity.setFlag(moduleName, Flags.notesexplicitdc, formData[`flags.${moduleName}.${Flags.notesexplicitdc}`]);
+      const explicitdc = formData[`flags.${moduleName}.${Flags.notesexplicitdc}`];
+      if (explicitdc != null && explicitdc != undefined) {
+        await this.entity.setFlag(moduleName, Flags.notesexplicitdc, explicitdc);
       } else {
         await this.entity.setFlag(moduleName, Flags.notesexplicitdc, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notes}`]) {
-        if (formData[`flags.${moduleName}.${Flags.notesuseasmacro}`]) {
-          let macroUseAsMacro = formData[`flags.${moduleName}.${Flags.notes}`];
+      const notes = formData[`flags.${moduleName}.${Flags.notes}`];
+      if (notes != null && notes != undefined) {
+        if (useasmacro) {
+          let macroUseAsMacro = notes;
           if (!macroUseAsMacro?.startsWith('return')) {
             macroUseAsMacro = 'return ' + macroUseAsMacro;
           }
           await this.entity.setFlag(moduleName, Flags.notes, macroUseAsMacro);
         } else {
-          await this.entity.setFlag(moduleName, Flags.notes, formData[`flags.${moduleName}.${Flags.notes}`]);
+          await this.entity.setFlag(moduleName, Flags.notes, notes);
         }
       } else {
         await this.entity.setFlag(moduleName, Flags.notes, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notesargs}`]) {
-        await this.entity.setFlag(moduleName, Flags.notesargs, formData[`flags.${moduleName}.${Flags.notesargs}`]);
+      const notesargs = formData[`flags.${moduleName}.${Flags.notesargs}`];
+      if (notesargs != null && notesargs != undefined) {
+        await this.entity.setFlag(moduleName, Flags.notesargs, notesargs);
       } else {
         await this.entity.setFlag(moduleName, Flags.notesargs, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notescondition}`]) {
-        let macroCondition = formData[`flags.${moduleName}.${Flags.notescondition}`];
+      const notescondition = formData[`flags.${moduleName}.${Flags.notescondition}`];
+      if (notescondition != null && notescondition != undefined) {
+        let macroCondition = notescondition;
         if (!macroCondition?.startsWith('return')) {
           macroCondition = 'return ' + macroCondition;
         }
@@ -354,32 +364,37 @@ export class EnvironmentInteractionNote extends FormApplication {
         await this.entity.setFlag(moduleName, Flags.notescondition, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notesconditionargs}`]) {
-        await this.entity.setFlag(moduleName, Flags.notesconditionargs, formData[`flags.${moduleName}.${Flags.notesconditionargs}`]);
+      const notesconditionargs = formData[`flags.${moduleName}.${Flags.notesconditionargs}`];
+      if (notesconditionargs != null && notesconditionargs != undefined) {
+        await this.entity.setFlag(moduleName, Flags.notesconditionargs, notesconditionargs);
       } else {
         await this.entity.setFlag(moduleName, Flags.notesconditionargs, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notessuccess}`]) {
-        await this.entity.setFlag(moduleName, Flags.notessuccess, formData[`flags.${moduleName}.${Flags.notessuccess}`]);
+      const notessuccess = formData[`flags.${moduleName}.${Flags.notessuccess}`];
+      if (notessuccess != null && notessuccess != undefined) {
+        await this.entity.setFlag(moduleName, Flags.notessuccess, notessuccess);
       } else {
         await this.entity.setFlag(moduleName, Flags.notessuccess, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notessuccessargs}`]) {
-        await this.entity.setFlag(moduleName, Flags.notessuccessargs, formData[`flags.${moduleName}.${Flags.notessuccess}`]);
+      const notessuccessargs = formData[`flags.${moduleName}.${Flags.notessuccessargs}`];
+      if (notessuccessargs != null && notessuccessargs != undefined) {
+        await this.entity.setFlag(moduleName, Flags.notessuccessargs, notessuccessargs);
       } else {
         await this.entity.setFlag(moduleName, Flags.notessuccessargs, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notesfailure}`]) {
-        await this.entity.setFlag(moduleName, Flags.notesfailure, formData[`flags.${moduleName}.${Flags.notesfailure}`]);
+      const notesfailure = formData[`flags.${moduleName}.${Flags.notesfailure}`];
+      if (notesfailure != null && notesfailure != undefined) {
+        await this.entity.setFlag(moduleName, Flags.notesfailure, notesfailure);
       } else {
         await this.entity.setFlag(moduleName, Flags.notesfailure, null);
       }
 
-      if (formData[`flags.${moduleName}.${Flags.notesfailureargs}`]) {
-        await this.entity.setFlag(moduleName, Flags.notesfailureargs, formData[`flags.${moduleName}.${Flags.notesfailureargs}`]);
+      const notesfailureargs = formData[`flags.${moduleName}.${Flags.notesfailureargs}`];
+      if (notesfailureargs != null && notesfailureargs != undefined) {
+        await this.entity.setFlag(moduleName, Flags.notesfailureargs, notesfailureargs);
       } else {
         await this.entity.setFlag(moduleName, Flags.notesfailureargs, null);
       }

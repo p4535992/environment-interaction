@@ -52,7 +52,9 @@
         </div>
         <div class="form-group stacked notes-info">
             <label>{{localize "environment-interaction-multisystem.note.event-info"}}</label>
-            {{editor content=flags.environment-interaction-multisystem.notes-info target="flags.environment-interaction-multisystem.notes-info" button=true owner=owner editable=true}}
+            <fieldset style="margin: 3px 0;">
+                {{editor content=flags.environment-interaction-multisystem.notes-info target="flags.environment-interaction-multisystem.notes-info" button=true owner=owner editable=true}}
+            </fieldset>
         </div>
         <div class="form-group stacked">
             <label>{{localize "environment-interaction-multisystem.note.event-explicit-dc"}}</label>
