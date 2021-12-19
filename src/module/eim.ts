@@ -318,8 +318,8 @@ export class EnvironmentInteraction {
 
             // const groupsReq = myRequestArray[2]?.trim() ? Array.from(myRequestArray[2]?.trim().split(',')) : [];
 
-            const dcReq = <number>environmentItem.getFlag(moduleName, Flags.notesexplicitdc) ?? 0;
-            //myRequestArray[4]?.trim() ? <number>Number.parseInt(myRequestArray[4]?.trim()) : 0;
+            const dcReq = <number>environmentItem.getFlag(moduleName, Flags.notesexplicitdc);
+            //myRequestArray[4]?.trim() ? <number>Number.parseInt(myRequestArray[4]?.trim()) : null;
 
             // if ([ENVIRONMENT_TYPE.ATTACK].includes(noteDetail)) {
             log(environmentTypeReq + '|' + macroNameOrTypeReq + '|' + labelOrDcReq + '|' + dcReq);

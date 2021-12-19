@@ -20,9 +20,11 @@ A similar method is used to handle attack and damage rolls. When attack/damage b
 
 Every environment i bind to a specific item configuration where you can set a collection of macro for make everything full customizable and system dependent.
 
-The scope of the module is to give a base for doing smart token usable from players even when gm is absent.
+The scope of the module is to give a base for doing smart token usable from players even when gm is absent and you want to leave something to do to the players.
 
-**Note: This is module is inspired from the  wonderful work done by these developers:**
+<img src="./wiki/img/environment-interaction-demo.gif" height="450"/>
+
+## Note: This is module is inspired from the  wonderful work done by these developers:**
 
 - [jessev14](https://github.com/jessev14) with its [Environment Interaction](https://github.com/jessev14/environment-interaction) module 
 - [ironmonk88](https://github.com/ironmonk88) with [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)  module 
@@ -34,16 +36,6 @@ The scope of the module is to give a base for doing smart token usable from play
 - Sorry if i miss someone
 
 **If you want to support more modules of this kind, I invite you to go and support their patreons or kofis account you can found the links oon their github pages**
-
-## Scope of this fork ???
-
-- Learn new things on foundry
-- Manage the multisystem 
-- Integration with a automatic rolls from other "ready to use" modules
-- Make a PR to the official master project [Environment Interaction](https://github.com/jessev14/environment-interaction)
-- Some friend request
-
-<img src="./wiki/img/environment-interaction-demo.gif" height="450"/>
 
 ## Installation
 

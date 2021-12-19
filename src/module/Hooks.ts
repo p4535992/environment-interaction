@@ -7,6 +7,9 @@ import { getCanvas, getGame, moduleName } from './settings';
 import { MonkTokenBarMessageOptions, MonkTokenBarMessageRequestoption } from '../lib/tokenbarapi/MonksTokenBarAPI';
 import { executeEIMacro } from './eim-utils';
 import { EnvironmentInteractionPlaceableConfig } from './eim-paceable-config';
+
+let currentContestedRollTokenBar = NaN;
+
 export const readyHooks = async () => {
   // Register hook callbacks
   // @ts-ignore
@@ -41,6 +44,8 @@ export const readyHooks = async () => {
     //   }
     // });
 
+    const interactorTokenTokenBar = <Token>getCanvas().tokens?.get(updateId);
+
     const total = <number>msgtokenRoll?.total;
 
     const environmentItemId = customInfo.environmentItemID;
@@ -49,7 +54,7 @@ export const readyHooks = async () => {
     const environmentTokenId = customInfo.environmentTokenID;
     const environmentToken = <Token>getCanvas().tokens?.get(environmentTokenId);
 
-    const dc = customInfo.environmentDC;
+    let dc = customInfo.environmentDC;
 
     const interactorItemId = customInfo.interactorItemID;
     const interactorActorId = customInfo.interactorActorID;
@@ -57,27 +62,41 @@ export const readyHooks = async () => {
     const interactorTokenId = customInfo.interactorTokenID;
     const interactorToken = <Token>getCanvas().tokens?.get(interactorTokenId);
 
-    const environmentItem = <Item>environmentActor.items.find((item: Item) => {
-      return item.id == environmentItemId;
-    });
+    const isInteractor = interactorTokenTokenBar.id == interactorTokenId;
+    // This work because the interactor is the last one called ??
+    if(isInteractor){
+      const environmentItem = <Item>environmentActor.items.find((item: Item) => {
+        return item.id == environmentItemId;
+      });
 
-    if (environmentItem) {
-      if (dc != null && dc != undefined && !isNaN(dc)) {
-        if (total >= dc) {
-          executeEIMacro(environmentItem, Flags.notessuccess);
+      if (environmentItem) {
+        // if (dc == null || dc == undefined || isNaN(dc)) {
+          if (currentContestedRollTokenBar != null 
+            && currentContestedRollTokenBar != undefined 
+            && !isNaN(currentContestedRollTokenBar)) {
+              dc = currentContestedRollTokenBar;
+          }
+        // }
+        if (dc != null && dc != undefined && !isNaN(dc)) {
+          if (total >= dc) {
+            executeEIMacro(environmentItem, Flags.notessuccess);
+          } else {
+            executeEIMacro(environmentItem, Flags.notesfailure);
+          }
         } else {
-          executeEIMacro(environmentItem, Flags.notesfailure);
+          const macroSuccess = environmentItem?.getFlag(moduleName, Flags.notessuccess);
+          // const macroFailure = environmentItem?.getFlag(moduleName, Flags.notesfailure);
+          if (macroSuccess) {
+            executeEIMacro(environmentItem, Flags.notessuccess);
+          }
         }
       } else {
-        const macroSuccess = environmentItem?.getFlag(moduleName, Flags.notessuccess);
-        const macroFailure = environmentItem?.getFlag(moduleName, Flags.notesfailure);
-        if (macroFailure) {
-          executeEIMacro(environmentItem, Flags.notesfailure);
-        }
+        ui.notifications?.error(moduleName + " | Can't retrieve original item");
+        throw new Error(moduleName + " | Can't retrieve original item");
       }
-    } else {
-      ui.notifications?.error(moduleName + " | Can't retrieve original item");
-      throw new Error(moduleName + " | Can't retrieve original item");
+      currentContestedRollTokenBar = NaN;
+    }else{
+      currentContestedRollTokenBar = total;
     }
   });
 

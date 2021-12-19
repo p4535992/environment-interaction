@@ -34,10 +34,10 @@ The form has a total of 11 element to set for all the use case it's possible to 
 1. ENABLE: Enable this item for the environment interaction, will become invisible for all non GM player and will show up on the interaction  item list, it will apply with css a background color to these items in the inventory
 2. ITEM MACRO: Enable the item macro integration, if this enable will launch the macro setted with the module 'item macro' (if present or it will do nothing), and will ignore the 'EVENT','SUCESS' and 'FAILURE' settings
 3. ITEM ENVIRONMENT: Enable the use of the environment token instead the standard use, where the action is launched like the item was in the inventory of the iteractor token (the player usually). ATTENTION : If is a contested roll is a contested roll with himself
-4. EVENT AS MACRO: This checkbox set up the 'EVENT' like a input macro. The macro MUST return a numeric value to compare with the DC for anknoledge a 'SUCCESS' or a 'FAILURE'",
+4. EVENT AS MACRO: This checkbox set up the 'EVENT' like a input macro. The macro MUST return a numeric value to compare with the DC for anknoledge a 'SUCCESS' or a 'FAILURE'"
 5. DETAIL: the sub-label with some additional info on the voice
 6. INFO: dialog showed up when click on the information icon if you want to show some information before click
-7. DC o NUMBER FLAG: This is the number to check with the result of the 'EVENT'. If the result of 'EVENT' is >= of this value is a success else a failure",
+7. DC o NUMBER FLAG: This is the number to check with the result of the 'EVENT'. If the result of 'EVENT' is >= of this value is a success else a failure", usually if you use a _contested roll of the token bar module_ this value is better to left empty. Important if no DC is setted by default the macro launched on the end is the 'SUCCESS'. 
 8. EVENT: the label for manage the interaction, or a macro with a return number for compare with the DC
 9. CONDITION: Macro/Code for decide if the interactor token can see the voice
 10. SUCCESS: Macro/Code to run when the interaction is consider a success
