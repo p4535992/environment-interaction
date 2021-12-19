@@ -55,11 +55,10 @@ This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) li
 
 ## Known Issue
 
-Still actively developing the better integratino with these modules:
+- Still actively developing the better integration with these modules: [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar), [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud), [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy).
+- When delete the item on the actor interactor a exception is launched should be solved on foundryvvt 9 for now ignore the exception
 
-- [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar) need to study the monk code better
-- [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud) is simple need more example for the community
-- [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy) not in developing
+
 
 ## [How to use](./wiki/how_to_use.md) 
 
