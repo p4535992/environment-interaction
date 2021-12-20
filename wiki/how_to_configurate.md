@@ -34,11 +34,11 @@ only two value are presente here
 
 **NOTE : If you set the 'macro' label on the 'Macro or type request' you mus set empty 'Request Label' here o anyway the code not read this label**
 
-| Request Label | Description                | Module Involved       |
+### Label or other parameters (need more developing...)
 
 The 'SUCCESS' and 'FAILURE' can indicate a external macro by is name or id with syntax `@macro[macro name or macro id]`
 
-Examples
+## Examples
 
 | Detail | Info | Event | Macro Condition (Optional) | Macro Success (Optional) | Macro Failure (Optional) | Module Involved (only info) |
 |:-------------------:|:----------:|:----------------------:|:----------------:|:----:|:----:|:--------:|
@@ -58,6 +58,7 @@ Examples
 | sub label           |            | attack\|utility\|        |                  |  |  | Token Action HUD |
 | sub label           |            | attack\|effect\|         |                  |  |  | Token Action HUD |
 | sub label           |            | attack\|condition\|      |                  |  |  | Token Action HUD |
+| sub label           |            | dice\|d20 + d15\|      |                  |  |  | |
 
 Other examples
 
