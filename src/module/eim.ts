@@ -166,15 +166,15 @@ export class EnvironmentInteraction {
         },
       };
     }
-    if (getGame().user?.isGM) {
+    if (getGame().user?.isGM && (environmentPlaceableObject instanceof Token)) {
       buttons.openPlaceableObject = {
         label: i18n(`${moduleName}.interactWithEnvironment.openPlaceableObject`),
         callback: () => {
-          if (environmentPlaceableObject instanceof Token) {
+          // if (environmentPlaceableObject instanceof Token) {
             environmentPlaceableObject.actor?.sheet?.render(true);
-          } else {
-            environmentPlaceableObject.sheet?.render(true);
-          }
+          // } else {
+          //   environmentPlaceableObject.sheet?.render(true);
+          // }
         },
       };
     }

@@ -1,4 +1,4 @@
-# Environment Interaction (multisystem)
+# EIM (Environment Interaction multisystem)
 
 ![Latest Release Download Count](https://img.shields.io/github/downloads/p4535992/environment-interaction-multisystem/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) 
 
@@ -26,7 +26,7 @@ The scope of the module is to give a base for doing smart token usable from play
 
 ## Note: This is module is inspired from the  wonderful work done by these developers:**
 
-- [jessev14](https://github.com/jessev14) with its [Environment Interaction](https://github.com/jessev14/environment-interaction) module 
+- [jessev14](https://github.com/jessev14) with its [Environment Interaction](https://github.com/jessev14/environment-interaction) module and the initial inspiration
 - [ironmonk88](https://github.com/ironmonk88) with [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)  module 
 - [Drental](https://github.com/Drental) with [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
 - [League-of-Foundry-Developers](https://github.com/League-of-Foundry-Developers) for the module [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy)
@@ -57,8 +57,7 @@ This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) li
 
 - Still actively developing the better integration with these modules: [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar), [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud), [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy).
 - When delete the item on the actor interactor a exception is launched should be solved on foundryvvt 9 for now ignore the exception
-
-
+- Documentation can be a lot better...
 
 ## [How to use](./wiki/how_to_use.md) 
 
@@ -310,8 +309,7 @@ This package is under an [GPL-3.0 License](LICENSE) and the [Foundry Virtual Tab
 - [Kekilla0](https://github.com/Kekilla0) for the module [Item Macro](https://github.com/Kekilla0/Item-Macro)
 - [ardittristan](https://github.com/ardittristan) for the module [VTT Macro Editor](https://github.com/ardittristan/VTTMacroEditor)
 - [arcanistzed](https://github.com/arcanistzed) for the module [acelib](https://github.com/arcanistzed/acelib)
+
 ## Acknowledgements
 
 Bootstrapped with League of Extraordinary FoundryVTT Developers  [foundry-vtt-types](https://github.com/League-of-Foundry-Developers/foundry-vtt-types).
-
-Mad props to the 'League of Extraordinary FoundryVTT Developers' community which helped me figure out a lot.

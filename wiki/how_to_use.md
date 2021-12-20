@@ -23,11 +23,11 @@ a generic actor with generic items... now let's go the the Smith's Tool sheet it
 
 Now a big form will appear:
 
-![img6](:/../images/form_ei_part1_color.png)
+![img6](./images/form_ei_part1_color.png)
 
-![img7](:/../images/form_ei_part2_color.png)
+![img7](./images/form_ei_part2_color.png)
 
-![img8](:/../images/form_ei_part3_color.png)
+![img8](./images/form_ei_part3_color.png)
 
 The form has a total of 11 element to set for all the use case it's possible to encounter here the details
 
