@@ -19,9 +19,9 @@ The syntax of the request label is:
 | save             |                            | Monk Token Bar/Token Action HUD        |
 | ability          |                            | Monk Token Bar/Token Action HUD        |
 | skill            |                            | Monk Token Bar/Token Action HUD        |
-| dice             |                            |         |
+| dice             | Simple dice roll           |         |
 | attack           |                            | Token Action HUD      |
-| macro            |                            |                       |
+| macro            | Simple macro to roll       |                       |
 | item             |                            | Token Action HUD                       |
 | <EMPTY LABEL>    |                            | Monk Token Bar/Token Action HUD        |
 
@@ -63,5 +63,3 @@ The 'SUCCESS' and 'FAILURE' can indicate a external macro by is name or id with 
 Other examples
 
 Launch skill Sleight of hand on System Dnd5e : `skill|skill:slt,skill:prc|`
-
-### Label for other parameters (in developing ?????)

@@ -24,7 +24,7 @@ The scope of the module is to give a base for doing smart token usable from play
 
 <img src="./wiki/img/environment-interaction-demo.gif" height="450"/>
 
-## Note: This is module is inspired from the  wonderful work done by these developers:**
+## Note: This is module is inspired from the  wonderful work done by these developers:
 
 - [jessev14](https://github.com/jessev14) with its [Environment Interaction](https://github.com/jessev14/environment-interaction) module and the initial inspiration
 - [ironmonk88](https://github.com/ironmonk88) with [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)  module 
@@ -35,7 +35,7 @@ The scope of the module is to give a base for doing smart token usable from play
 - [arcanistzed](https://github.com/arcanistzed) for the module [acelib](https://github.com/arcanistzed/acelib)
 - Sorry if i miss someone
 
-**If you want to support more modules of this kind, I invite you to go and support their patreons or kofis account you can found the links oon their github pages**
+**If you want to support more modules of this kind, I invite you to go and support their patreons or kofis account you can found the links on their github pages**
 
 ## Installation
 
@@ -58,6 +58,7 @@ This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) li
 - Still actively developing the better integration with these modules: [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar), [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud), [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy).
 - When delete the item on the actor interactor a exception is launched should be solved on foundryvvt 9 for now ignore the exception
 - Documentation can be a lot better...
+- For know works only on Door and Token
 
 ## [How to use](./wiki/how_to_use.md) 
 

@@ -3,7 +3,7 @@
   "name": "environment-interaction-multisystem",
   "title": "Environment Interaction Multisystem",
   "description": "",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "scripts": {
     "package": "gulp package",
     "build": "gulp build && gulp link",

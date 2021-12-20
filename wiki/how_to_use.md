@@ -7,6 +7,8 @@ An environment object is created like any other token. Once placed on the obejct
 
 This configuration is present in Drawing, Token, Wall, ecc.
 
+**IMPORTANT: For now only Door and Token are supported**
+
 After checked ther checkbox to true, you must link the placeable object to the actor enviroment container with the option 'Link to enviroment actor'.
 
 After that when you double clicking on the environment object will open its Select Action dialog window. GM users will also have a button to open the character sheet enviroment and the placeable dialog configuration.
