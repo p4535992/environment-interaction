@@ -7,6 +7,7 @@ import { getCanvas, getGame, moduleName } from './settings';
 import { MonkTokenBarMessageOptions, MonkTokenBarMessageRequestoption } from '../lib/tokenbarapi/MonksTokenBarAPI';
 import { executeEIMacro } from './eim-utils';
 import { EnvironmentInteractionPlaceableConfig } from './eim-paceable-config';
+import { TriggerHappyEim } from './eim-trigger-happy';
 
 let currentContestedRollTokenBar = NaN;
 
@@ -217,6 +218,20 @@ export const readyHooks = async () => {
     EnvironmentInteractionNote._initEntityHook(app, html, data);
     // }
   });
+
+  // =============================
+  // TRIGGER HAPPY INTEGRATION
+  // =============================
+
+  const triggerHappy = getGame().modules.get("trigger-happy");
+  TriggerHappyEim.setTriggerHappyActive(triggerHappy != undefined && triggerHappy.active == true)
+
+  Hooks.on('controlToken',(token,controlled) =>  {
+    TriggerHappyEim.triggerHappy_ControlToken(token,controlled);
+  });
+  Hooks.on('preUpdateToken',(scene, embedded, update) =>  {
+    TriggerHappyEim.triggerHappy_onPreUpdateToken(scene, embedded, update, undefined, <string>getGame().userId)
+  });
 };
 
 export const initHooks = async () => {
@@ -252,6 +267,10 @@ export const setupHooks = async () => {
 
   // Alter mouse interaction for tokens flagged as environment
 
+  // ====================
+  // TOKEN
+  // ====================
+
   //@ts-ignore
   libWrapper.register(
     moduleName,
@@ -277,6 +296,10 @@ export const setupHooks = async () => {
     getGame().EnvironmentInteraction._onClickLeft2Token,
     'MIXED',
   );
+
+  // =======================
+  // WALL/DOOR
+  // =======================
 
   //@ts-ignore
   libWrapper.register(
@@ -304,6 +327,27 @@ export const setupHooks = async () => {
   //   getGame().EnvironmentInteraction._onClickLeft2Wall,
   //   'MIXED',
   // );
+
+  // ========================
+  // NOTE/JOURNAL
+  // ========================
+
+  //@ts-ignore
+  libWrapper.register(
+    moduleName,
+    'Note.prototype._onClickLeft',
+    //@ts-ignore
+    getGame().EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
+    'MIXED');
+
+  //@ts-ignore
+  libWrapper.register(
+    moduleName,
+    'Note.prototype._onClickLeft2',
+    //@ts-ignore
+    getGame().EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
+    'MIXED',
+  );
 };
 
 /*

@@ -71,7 +71,7 @@ export class EnvironmentInteraction {
   }
 
   // =======================
-  // WALL/DORR
+  // WALL/DOOR
   // =======================
 
   static _DoorControlPrototypeOnMouseDownHandler(wrapped, ...args) {
@@ -87,6 +87,20 @@ export class EnvironmentInteraction {
       EnvironmentInteraction.interactWithEnvironmentFromPlaceableObject(wall, ...args);
     }
   }
+
+  // ========================
+  // NOTE/JOURNAL
+  // ========================
+
+  static _NotePrototypeOnClickLeftHandler = async function (wrapped, ...args) {
+    const note = this as Note;
+    const isEi = note.document.getFlag(moduleName, Flags.environmentToken) ?? false;
+    if (!isEi) {
+      return wrapped(...args);
+    } else {
+      EnvironmentInteraction.interactWithEnvironmentFromPlaceableObject(note, ...args);
+    }
+  };
 
   // Environment Interaction
   // static async interactWithEnvironmentFromActor(environmentActor: Actor, ...args) {
