@@ -1,3 +1,11 @@
+### Update 1.1.2 [BETA]
+
+- Add integration for note
+
+### Update 1.1.1 [BETA]
+
+- Add integration for door
+
 ### Update 1.1.0 [BETA]
 
 - Convert to typescript because i like to much the tslint
