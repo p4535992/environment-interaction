@@ -1,3 +1,7 @@
+### Update 1.1.3 [BETA]
+
+- Some clean up
+
 ### Update 1.1.2 [BETA]
 
 - Add integration for note
