@@ -168,7 +168,7 @@ export class EnvironmentInteractionNote extends FormApplication {
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css('display', '');
         editorElement.setValue(configElement.find(`.command textarea[name="${entityFieldName}"]`).val(), -1);
 
-        // furnace compat
+        // furnace compat / advanced macros
         const furnace = configElement.find('div.furnace-macro-command');
         if (furnace.length !== 0) {
           furnace.css('display', 'none');
@@ -178,8 +178,8 @@ export class EnvironmentInteractionNote extends FormApplication {
         configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).css('display', 'none');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css('display', 'none');
 
-        // furnace compat
-        const furnace = configElement.find('div.furnace-macro-command');
+        // furnace compat / advanced macros
+        const furnace = configElement.find("div.furnace-macro-command");
         if (furnace.length !== 0) {
           furnace.css('display', '');
           furnace.trigger('change');
@@ -541,8 +541,8 @@ export class EnvironmentInteractionNote extends FormApplication {
     }
   }
 
-  async close() {
-    super.close();
+  async close(...args) {
+    super.close(...args);
     if (this.editor) {
       this.editor.destroy();
     }
