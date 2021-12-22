@@ -53,12 +53,14 @@ To install this module manually:
 
 This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) library for wrapping core methods. It is a hard dependency and it is recommended for the best experience and compatibility with other modules.
 
-## Known Issue
+## Known Issue/Feature to develop
 
 - Still actively developing the better integration with these modules: [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar), [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud), [Let Me Roll That For You!](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy).
 - When delete the item on the actor interactor a exception is launched should be solved on foundryvvt 9 for now ignore the exception
 - Documentation can be a lot better...
-- For know works only on Door and Token
+- For know works only on Door, Note and Token
+- Trigger happy integration coming soon
+- Make css of the list images customizable
 
 ## [How to use](./wiki/how_to_use.md) 
 
