@@ -416,7 +416,20 @@ export class EnvironmentInteraction {
                     const actionId = interactorItemTmp.id;
                     payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
                   } else {
-                    const [refActionId, refId] = macroNameOrTypeReq.split(':');
+                    let refActionId, refId;
+                    if (macroNameOrTypeReq.includes(':')) {
+                      if (macroNameOrTypeReq.includes(',')) {
+                        const [req0, req1] = macroNameOrTypeReq.split(',');
+                        const req0p = req0.split(':');
+                        refActionId = req0p[0];
+                        refId = req0p[1];
+                      }
+                    }else{
+                      const [req0, req1] = macroNameOrTypeReq.split(':');
+                      const req0p = req0.split(':');
+                      refActionId = req0p[0];
+                      refId = req0p[1];
+                    }
                     const tokenId = interactorToken.id;
                     payload = refActionId + '|' + tokenId + '|' + refId;
                   }
@@ -467,7 +480,20 @@ export class EnvironmentInteraction {
                     const actionId = interactorItemTmp.id;
                     payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
                   } else {
-                    const [refActionId, refId] = macroNameOrTypeReq.split(':');
+                    let refActionId, refId;
+                    if (macroNameOrTypeReq.includes(':')) {
+                      if (macroNameOrTypeReq.includes(',')) {
+                        const [req0, req1] = macroNameOrTypeReq.split(',');
+                        const req0p = req0.split(':');
+                        refActionId = req0p[0];
+                        refId = req0p[1];
+                      }
+                    }else{
+                      const [req0, req1] = macroNameOrTypeReq.split(':');
+                      const req0p = req0.split(':');
+                      refActionId = req0p[0];
+                      refId = req0p[1];
+                    }
                     const tokenId = interactorToken.id;
                     payload = refActionId + '|' + tokenId + '|' + refId;
                   }
@@ -546,7 +572,20 @@ export class EnvironmentInteraction {
                     const actionId = interactorItemTmp.id;
                     payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
                   } else {
-                    const [refActionId, refId] = macroNameOrTypeReq.split(':');
+                    let refActionId, refId;
+                    if (macroNameOrTypeReq.includes(':')) {
+                      if (macroNameOrTypeReq.includes(',')) {
+                        const [req0, req1] = macroNameOrTypeReq.split(',');
+                        const req0p = req0.split(':');
+                        refActionId = req0p[0];
+                        refId = req0p[1];
+                      }
+                    }else{
+                      const [req0, req1] = macroNameOrTypeReq.split(':');
+                      const req0p = req0.split(':');
+                      refActionId = req0p[0];
+                      refId = req0p[1];
+                    }
                     const tokenId = interactorToken.id;
                     payload = refActionId + '|' + tokenId + '|' + refId;
                   }
@@ -593,7 +632,20 @@ export class EnvironmentInteraction {
                     const actionId = interactorItemTmp.id;
                     payload = macroNameOrTypeReq + '|' + tokenId + '|' + actionId;
                   } else {
-                    const [refActionId, refId] = macroNameOrTypeReq.split(':');
+                    let refActionId, refId;
+                    if (macroNameOrTypeReq.includes(':')) {
+                      if (macroNameOrTypeReq.includes(',')) {
+                        const [req0, req1] = macroNameOrTypeReq.split(',');
+                        const req0p = req0.split(':');
+                        refActionId = req0p[0];
+                        refId = req0p[1];
+                      }
+                    }else{
+                      const [req0, req1] = macroNameOrTypeReq.split(':');
+                      const req0p = req0.split(':');
+                      refActionId = req0p[0];
+                      refId = req0p[1];
+                    }
                     const tokenId = interactorToken.id;
                     payload = refActionId + '|' + tokenId + '|' + refId;
                   }
