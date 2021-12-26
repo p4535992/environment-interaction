@@ -38,7 +38,9 @@ The scope of the module is to give a base for doing smart interactive placable o
 
 <img src="./wiki/images/list_item_dialog_note_one.png" height="250" width="450"/>
 
+#### The Idea
 
+![img](./wiki/draw/idea1.png)
 
 ### Note: This is module is inspired from the  wonderful work done by these developers:
 
