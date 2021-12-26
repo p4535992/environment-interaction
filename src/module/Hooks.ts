@@ -7,7 +7,6 @@ import { getCanvas, getGame, moduleName } from './settings';
 import { MonkTokenBarMessageOptions, MonkTokenBarMessageRequestoption } from '../lib/tokenbarapi/MonksTokenBarAPI';
 import { executeEIMacro } from './eim-utils';
 import { EnvironmentInteractionPlaceableConfig } from './eim-paceable-config';
-import { TriggerHappyEim } from './eim-trigger-happy';
 
 let currentContestedRollTokenBar = NaN;
 
@@ -20,30 +19,6 @@ export const readyHooks = async () => {
     // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
 
     const customInfo = <customInfoEnvironmentInteraction>(<any>message.data.flags['monks-tokenbar'])?.options?.ei;
-
-    // const monkTokenBarDetail = <MonkTokenBarMessageOptions>(<any>message.data.flags['monks-tokenbar'])?.options;
-    // const environmentActorId = <string>getCanvas().tokens?.controlled[0].data.actorId;
-    // const environmentActor = <Actor>getGame().actors?.get(environmentActorId);
-    // const interactorToken = <Token>getCanvas().tokens?.get(updateId);
-    // const interactorActor = <Actor>getGame().actors?.get(<string>interactorToken.data.actorId);
-    // const dc = <number>monkTokenBarDetail.dc;
-    // const total = <number>msgtokenRoll?.total;
-    // const environmentItemId = monkTokenBarDetail.ei.environmentItemID;//monkTokenBarDetail.flavor;
-    // TODO find a better method this is ugly
-    // let environmentItem;
-    // getCanvas().tokens?.placeables.find((token: Token) => {
-    //   const actor = <Actor>getGame().actors?.find((actor: Actor) => {
-    //     return token.data.actorId == actor.id;
-    //   });
-    //   if (actor) {
-    //     environmentItem = actor.items.find((item: Item) => {
-    //       return item.id == environmentItemId;
-    //     });
-    //     if (environmentItem) {
-    //       return environmentItem;
-    //     }
-    //   }
-    // });
 
     const interactorTokenTokenBar = <Token>getCanvas().tokens?.get(updateId);
 
@@ -223,15 +198,15 @@ export const readyHooks = async () => {
   // TRIGGER HAPPY INTEGRATION
   // =============================
 
-  const triggerHappy = getGame().modules.get("trigger-happy");
-  TriggerHappyEim.setTriggerHappyActive(triggerHappy != undefined && triggerHappy.active == true)
+  // const triggerHappy = getGame().modules.get("trigger-happy");
+  // TriggerHappyEim.setTriggerHappyActive(triggerHappy != undefined && triggerHappy.active == true)
 
-  Hooks.on('controlToken',(token,controlled) =>  {
-    TriggerHappyEim.triggerHappy_ControlToken(token,controlled);
-  });
-  Hooks.on('preUpdateToken',(scene, embedded, update) =>  {
-    TriggerHappyEim.triggerHappy_onPreUpdateToken(scene, embedded, update, undefined, <string>getGame().userId)
-  });
+  // Hooks.on('controlToken',(token,controlled) =>  {
+  //   TriggerHappyEim.triggerHappy_ControlToken(token,controlled);
+  // });
+  // Hooks.on('preUpdateToken',(scene, embedded, update) =>  {
+  //   TriggerHappyEim.triggerHappy_onPreUpdateToken(scene, embedded, update, undefined, <string>getGame().userId)
+  // });
 };
 
 export const initHooks = async () => {
