@@ -12,6 +12,8 @@
 
 ![GitHub all releases](https://img.shields.io/github/downloads/p4535992/environment-interaction-multisystem/total?style=for-the-badge)
 
+## THIS MODULE IS CURRENTLY IN BETA AND NEED A MAJOR FEEDBACK FROM THE COMMUNITY
+
 Environment Interaction allows GM users to create "environment tokens" that characters can interact with. These interactions can include weapon attacks, skill checks and saves, and even executing macros.
 
 When an interaction is selected, the corresponding item on the environment token's actor sheet is created on the character's actor sheet. After rolling the item to chat, the item is deleted from the character's actor sheet. In this way, the character's actor sheet is the same before and after the interaction.
@@ -20,11 +22,25 @@ A similar method is used to handle attack and damage rolls. When attack/damage b
 
 Every environment i bind to a specific item configuration where you can set a collection of macro for make everything full customizable and system dependent.
 
-The scope of the module is to give a base for doing smart token usable from players even when gm is absent and you want to leave something to do to the players.
+The scope of the module is to give a base for doing smart interactive placable obejct usable from players even when gm is absent and you want to leave something to do to the players.
 
 <img src="./wiki/img/environment-interaction-demo.gif" height="450"/>
 
-## Note: This is module is inspired from the  wonderful work done by these developers:
+#### Token Interaction
+
+<img src="./wiki/images/list_item_dialog_one.png" height="250" width="450"/>
+
+#### Door Interaction
+
+<img src="./wiki/images/list_item_dialog_door_one.png" height="250" width="450"/>
+
+#### Note Interaction
+
+<img src="./wiki/images/list_item_dialog_note_one.png" height="250" width="450"/>
+
+
+
+### Note: This is module is inspired from the  wonderful work done by these developers:
 
 - [jessev14](https://github.com/jessev14) with its [Environment Interaction](https://github.com/jessev14/environment-interaction) module and the initial inspiration
 - [ironmonk88](https://github.com/ironmonk88) with [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)  module 
@@ -68,9 +84,11 @@ This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) li
 
 ## [More details on the macro field structure](./wiki/macro_request_structure.md)
 
+## [Community Compendium](./wiki/community_compendium.md)
+
 ## Supported systems
 
-The multi system can work with only custom macro, but if you want the integration with these modules:
+The multi system can work with only custom macro, but if you want the 'SUCCESS/FAILURE' integration for now i'm trying to work with these modules:
 
 - [Monk's TokenBar](https://github.com/ironmonk88/monks-tokenbar)
 - [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud)
@@ -79,7 +97,7 @@ The multi system can work with only custom macro, but if you want the integratio
 
 remember the funcionality is limited to the systems supported from these modules. 
 
-By default is "Monk's TokenBar" is present and active and support the  current system is used first else we try with "Token Action HUD", the module "Let Me Roll That For You!" is a special case where you want to display the dialog to the user instead make everything on background.
+By default is "Monk's TokenBar" is present and active and support the  current system is used first else we try with "Token Action HUD", the module "Let Me Roll That For You!" is a special case where you want to display the dialog to the user instead make everything on background, but is still in developing.
 
 | System Id (lowercase) | Token Action HUD | Monk's TokenBar | Let me roll that for you | Item Macro |
 |:---------:|:---------------:|:----------------:|:----------------:|:----------------:|
@@ -123,15 +141,15 @@ If a item is set with a item macro will be fired before check for any ironmonk t
 
 ## [Ironmonk Token bar](https://github.com/ironmonk88/monks-tokenbar) integration
 
-### Some example with System Dnd5e examples
+#### Some example with System Dnd5e examples
 
 | Request Label (Field 'EVENT') | Description | Condition |
 |:------------------:|:------------------------:|:-----------------------------------:|
-| misc|misc:init            | Roll Initiative          | Need to select a token              |
+| misc\|misc:init\|       | Roll Initiative          | Need to select a token              |
 | save\|save:dex,save:dex\| | Contested Save Dexterity | Need to select a token              |
-| ability|ability:str       | Ability Strength         | Need to select a token              |
+| ability\|ability:str\|      | Ability Strength         | Need to select a token              |
 
-### Other example todo when i have time...
+#### Other example todo when i have time...
 
 #### Little Reminder of the options of 'Monk Tokenbar module'
 
@@ -180,10 +198,13 @@ game.MonksTokenBar.requestRoll([interactorToken],options);
 
 ## [Token Action HUD](https://github.com/Drental/fvtt-tokenactionhud) integration
 
-**NOTE: tokenId = "multi" make start the action for all the selected tokens.**
-### System Dnd5e examples
+#### Little Reminder of the options of 'Token Action HUD'
 
-| Macro Type of Token Action HUD |
+**NOTE: tokenId = "multi" make start the action for all the selected tokens.**
+
+##### System Dnd5e examples
+
+| Macro Type of Token Action HUD for Dnd5e |
 |:----------:|
 | ability |
 | skill |
@@ -200,9 +221,11 @@ game.MonksTokenBar.requestRoll([interactorToken],options);
 |:------------------:|:------------------------:|:-----------------------------------:|
 | ability\|ability:str | Ability Strength / Save Throw Strength | Need to select a token |
 
-**IMPORTANT: Token Action HUD for now doen't have a hook for callback the macro 'SUCCES' or 'FAILURE'**
+**IMPORTANT: Token Action HUD at the moment doen't have a hook for callback the macro 'SUCCES' or 'FAILURE' a feature request is been opened about it [[Feature request] Add a hook for retrieve the result detail of the roll launched with Token Action Hud](https://github.com/Drental/fvtt-tokenactionhud/issues/123)**
 
-## [Let me roll that for you](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy) integration (not ready yet)
+#### Other example todo when i have time...
+
+## [Let me roll that for you](https://github.com/League-of-Foundry-Developers/fvtt-module-lmrtfy) integration (need help with this)
 
 # Build
 

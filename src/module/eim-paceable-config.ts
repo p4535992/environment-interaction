@@ -102,10 +102,15 @@ export class EnvironmentInteractionPlaceableConfig {
     const enviromentActorId = EnvironmentInteractionPlaceableConfig.getEnviroments(obj, Flags.environmentTokenRef);
     const enviromentChecked = EnvironmentInteractionPlaceableConfig.getEnviroments(obj, Flags.environmentToken) ? 'checked' : '';
 
+    const actorsOrderByName = <Actor[]>getGame().actors?.contents
+      .sort((a, b) => a.data.name.localeCompare(b.data.name));
+      // TODO ADD SOME FILTER ???
+      //.filter((actor) => actor.displayed)
+      //.map((actor) => `<option value="${actor.id}">${actor.name}</option>`).join("\n");
     let formConfig = ``;
     const options: string[] = [];
     options.push(`<option value="">${i18n('None')}</option>`);
-    getGame().actors?.contents.forEach((a: Actor) => {
+    actorsOrderByName.forEach((a: Actor) => {
       if (enviromentActorId == a.id) {
         options.push(`<option selected="selected" value="${a.id}">${a.name}</option>`);
       } else {
