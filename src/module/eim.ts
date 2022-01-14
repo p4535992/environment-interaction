@@ -1,9 +1,6 @@
 import { customInfoEnvironmentInteraction, ENVIRONMENT_TYPE, Flags } from './eim-models';
-import { i18n, log } from '../eim-main.js';
-// import { libWrapper } from '../lib/shim.js';
+import { i18n, log } from '../eim-main';
 import {
-  getCanvas,
-  getGame,
   getMonkTokenBarAPI,
   getTokenActionHUDRollHandler,
   isItemMacroModuleActive,
@@ -13,12 +10,12 @@ import {
   isSystemTokenActionHUDSupported,
   isTokenActionHudActive,
   moduleName,
-} from './settings.js';
+} from './settings';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
 import { executeEIMacro, executeEIMacroContent } from './eim-utils';
 import { EnvironmentInteractionPlaceableConfig } from './eim-paceable-config';
-// import { PrototypeTokenData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import { canvas, game } from './settings';
 
 export class EnvironmentInteraction {
   // ====================
@@ -77,7 +74,7 @@ export class EnvironmentInteraction {
   static _DoorControlPrototypeOnMouseDownHandler(wrapped, ...args) {
     const doorControl = <DoorControl>(<unknown>this);
     // const isDoor = wall.data.door > 0;
-    const wall = <Wall>getCanvas().walls?.placeables.find((x) => {
+    const wall = <Wall>canvas.walls?.placeables.find((x) => {
       return x.id == doorControl.wall.id;
     });
     const isEi = wall.document.getFlag(moduleName, Flags.environmentToken) ?? false;
@@ -132,7 +129,7 @@ export class EnvironmentInteraction {
       return;
     }
 
-    const environmentActorExternal = <Actor>getGame().actors?.get(flagRefActorId);
+    const environmentActorExternal = <Actor>game.actors?.get(flagRefActorId);
     if (!environmentActorExternal?.id) {
       ui.notifications?.warn(moduleName + ' | The environment interaction need a existing actor to reference the actions');
       return;
@@ -172,7 +169,7 @@ export class EnvironmentInteraction {
 
     const content = await renderTemplate(`/modules/${moduleName}/templates/interaction-dialog.hbs`, { items });
     const buttons = <any>{};
-    if (getGame().user?.isGM) {
+    if (game.user?.isGM) {
       buttons.openSheet = {
         label: i18n(`${moduleName}.interactWithEnvironment.openCharacterSheet`),
         callback: () => {
@@ -180,12 +177,12 @@ export class EnvironmentInteraction {
         },
       };
     }
-    if (getGame().user?.isGM && (environmentPlaceableObject instanceof Token)) {
+    if (game.user?.isGM && environmentPlaceableObject instanceof Token) {
       buttons.openPlaceableObject = {
         label: i18n(`${moduleName}.interactWithEnvironment.openPlaceableObject`),
         callback: () => {
           // if (environmentPlaceableObject instanceof Token) {
-            environmentPlaceableObject.actor?.sheet?.render(true);
+          environmentPlaceableObject.actor?.sheet?.render(true);
           // } else {
           //   environmentPlaceableObject.sheet?.render(true);
           // }
@@ -201,7 +198,7 @@ export class EnvironmentInteraction {
     const render = (html) => {
       html.on('click', `button.ei-info`, async (event) => {
         const itemID = <string>event.currentTarget.id;
-        //const environment = <Actor>getCanvas().tokens?.get(environmentToken.id)?.actor;
+        //const environment = <Actor>canvas.tokens?.get(environmentToken.id)?.actor;
         //const environmentItem = <Item>environment.items.get(itemID);
         const environmentItem = <Item>environmentActorExternal?.items.get(itemID);
         let contentInfo = <string>environmentItem.getFlag(moduleName, Flags.notesinfo);
@@ -224,12 +221,12 @@ export class EnvironmentInteraction {
       }),
         html.on('click', `button.ei-flex-container`, async (event) => {
           // TODO integration mutlitoken ????
-          if (<number>getCanvas().tokens?.controlled.length > 1) {
+          if (<number>canvas.tokens?.controlled.length > 1) {
             ui.notifications?.warn(moduleName + ' | The interaction support only one selected token at the time');
             return;
           }
 
-          const interactorToken = <Token>getCanvas().tokens?.controlled[0];
+          const interactorToken = <Token>canvas.tokens?.controlled[0];
           if (!interactorToken) {
             ui.notifications?.warn(moduleName + ' | ' + i18n(`${moduleName}.interactWithEnvironment.selectTokenWarn`));
             return;
@@ -241,17 +238,17 @@ export class EnvironmentInteraction {
           }
           //Get current system config
           //@ts-ignore
-          // const config = (getGame().system.id == "tormenta20" ? CONFIG.T20 : CONFIG[getGame().system.id.toUpperCase()]);
+          // const config = (game.system.id == "tormenta20" ? CONFIG.T20 : CONFIG[game.system.id.toUpperCase()]);
 
           const itemID = event.currentTarget.id;
-          // const environment = <Actor>getCanvas().tokens?.get(environmentToken.id)?.actor;
-          // const interactor = <Actor>getCanvas().tokens?.get(interactorToken.id)?.actor;
+          // const environment = <Actor>canvas.tokens?.get(environmentToken.id)?.actor;
+          // const interactor = <Actor>canvas.tokens?.get(interactorToken.id)?.actor;
           // const environmentItem = <Item>environment.items.get(itemID);
           const environmentItem = <Item>environmentActorExternal?.items.get(itemID);
           let environmentToken: TokenDocument = <TokenDocument>environmentActorExternal.token;
           if (environmentPlaceableObject instanceof Token) {
             environmentToken = environmentPlaceableObject.document;
-          }else{
+          } else {
             environmentToken = interactorToken.document;
           }
 
@@ -393,7 +390,7 @@ export class EnvironmentInteraction {
               case ENVIRONMENT_TYPE.MACRO: {
                 if (macroNameOrTypeReq) {
                   const macroName = macroNameOrTypeReq;
-                  const macro = <Macro>(getGame().macros?.getName(macroName) || getGame().macros?.get(macroName));
+                  const macro = <Macro>(game.macros?.getName(macroName) || game.macros?.get(macroName));
                   if (!macro) {
                     ui.notifications?.warn(moduleName + ' | No macro found with name/id : ' + macroName);
                   }
@@ -424,7 +421,7 @@ export class EnvironmentInteraction {
                         refActionId = req0p[0];
                         refId = req0p[1];
                       }
-                    }else{
+                    } else {
                       const [req0, req1] = macroNameOrTypeReq.split(':');
                       const req0p = req0.split(':');
                       refActionId = req0p[0];
@@ -439,8 +436,8 @@ export class EnvironmentInteraction {
                   //   const checkout = args;
                   // });
                 } else {
-                  ui.notifications?.warn(moduleName + ' | System not supported : ' + getGame().system?.id);
-                  throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                  ui.notifications?.warn(moduleName + ' | System not supported : ' + game.system?.id);
+                  throw new Error(moduleName + ' | System not supported : ' + game.system?.id);
                 }
                 break;
               }
@@ -488,7 +485,7 @@ export class EnvironmentInteraction {
                         refActionId = req0p[0];
                         refId = req0p[1];
                       }
-                    }else{
+                    } else {
                       const [req0, req1] = macroNameOrTypeReq.split(':');
                       const req0p = req0.split(':');
                       refActionId = req0p[0];
@@ -503,8 +500,8 @@ export class EnvironmentInteraction {
                   //   const checkout = args;
                   // });
                 } else {
-                  ui.notifications?.warn(moduleName + ' | System not supported : ' + getGame().system?.id);
-                  throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                  ui.notifications?.warn(moduleName + ' | System not supported : ' + game.system?.id);
+                  throw new Error(moduleName + ' | System not supported : ' + game.system?.id);
                 }
                 break;
               }
@@ -580,7 +577,7 @@ export class EnvironmentInteraction {
                         refActionId = req0p[0];
                         refId = req0p[1];
                       }
-                    }else{
+                    } else {
                       const [req0, req1] = macroNameOrTypeReq.split(':');
                       const req0p = req0.split(':');
                       refActionId = req0p[0];
@@ -595,8 +592,8 @@ export class EnvironmentInteraction {
                   //   const checkout = args;
                   // });
                 } else {
-                  ui.notifications?.warn(moduleName + ' | System not supported : ' + getGame().system?.id);
-                  throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                  ui.notifications?.warn(moduleName + ' | System not supported : ' + game.system?.id);
+                  throw new Error(moduleName + ' | System not supported : ' + game.system?.id);
                 }
                 break;
               }
@@ -640,7 +637,7 @@ export class EnvironmentInteraction {
                         refActionId = req0p[0];
                         refId = req0p[1];
                       }
-                    }else{
+                    } else {
                       const [req0, req1] = macroNameOrTypeReq.split(':');
                       const req0p = req0.split(':');
                       refActionId = req0p[0];
@@ -655,8 +652,8 @@ export class EnvironmentInteraction {
                   //   const checkout = args;
                   // });
                 } else {
-                  ui.notifications?.warn(moduleName + ' | System not supported : ' + getGame().system?.id);
-                  throw new Error(moduleName + ' | System not supported : ' + getGame().system?.id);
+                  ui.notifications?.warn(moduleName + ' | System not supported : ' + game.system?.id);
+                  throw new Error(moduleName + ' | System not supported : ' + game.system?.id);
                 }
                 break;
               }
@@ -685,7 +682,7 @@ export class EnvironmentInteraction {
           //   }
           // }
 
-          if (getGame().settings.get(moduleName, 'closeDialog')) {
+          if (game.settings.get(moduleName, 'closeDialog')) {
             const appID = html.closest(`div.app`).data('appid');
             ui.windows[appID].close();
           }

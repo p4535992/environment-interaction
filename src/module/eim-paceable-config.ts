@@ -1,6 +1,7 @@
 import { i18n } from '../eim-main';
 import { Flags } from './eim-models';
-import { getCanvas, getGame, moduleName } from './settings';
+import { moduleName } from './settings';
+import { canvas, game } from './settings';
 
 export class EnvironmentInteractionPlaceableConfig {
   // Hooks
@@ -8,7 +9,7 @@ export class EnvironmentInteractionPlaceableConfig {
     // Add checkbox to token config to flag token as environment token
     /*
     Hooks.on('renderTokenConfig', (app, html, appData) => {
-      if (!getGame().user?.isGM) {
+      if (!game.user?.isGM) {
         return;
       }
       const checked = app.object.getFlag(moduleName, Flags.environmentToken) ? 'checked' : '';
@@ -77,7 +78,7 @@ export class EnvironmentInteractionPlaceableConfig {
     if (!html) {
       return;
     }
-    if (!getGame().user?.isGM) {
+    if (!game.user?.isGM) {
       return;
     }
 
@@ -102,11 +103,10 @@ export class EnvironmentInteractionPlaceableConfig {
     const enviromentActorId = EnvironmentInteractionPlaceableConfig.getEnviroments(obj, Flags.environmentTokenRef);
     const enviromentChecked = EnvironmentInteractionPlaceableConfig.getEnviroments(obj, Flags.environmentToken) ? 'checked' : '';
 
-    const actorsOrderByName = <Actor[]>getGame().actors?.contents
-      .sort((a, b) => a.data.name.localeCompare(b.data.name));
-      // TODO ADD SOME FILTER ???
-      //.filter((actor) => actor.displayed)
-      //.map((actor) => `<option value="${actor.id}">${actor.name}</option>`).join("\n");
+    const actorsOrderByName = <Actor[]>game.actors?.contents.sort((a, b) => a.data.name.localeCompare(b.data.name));
+    // TODO ADD SOME FILTER ???
+    //.filter((actor) => actor.displayed)
+    //.map((actor) => `<option value="${actor.id}">${actor.name}</option>`).join("\n");
     let formConfig = ``;
     const options: string[] = [];
     options.push(`<option value="">${i18n('None')}</option>`);
@@ -167,9 +167,9 @@ export class EnvironmentInteractionPlaceableConfig {
             }
           } else {
             const actorNameOrId = eis;
-            actor = <Actor>getGame().actors?.getName(actorNameOrId);
+            actor = <Actor>game.actors?.getName(actorNameOrId);
             if (!actor) {
-              actor = <Actor>getGame().actors?.get(actorNameOrId);
+              actor = <Actor>game.actors?.get(actorNameOrId);
             }
             if (actor) {
               // Set placeable object flag
@@ -221,9 +221,9 @@ export class EnvironmentInteractionPlaceableConfig {
   //             }
   //           } else {
   //             const actorNameOrId = eis;
-  //             actor = <Actor>getGame().actors?.getName(actorNameOrId);
+  //             actor = <Actor>game.actors?.getName(actorNameOrId);
   //             if (!actor) {
-  //               actor = <Actor>getGame().actors?.get(actorNameOrId);
+  //               actor = <Actor>game.actors?.get(actorNameOrId);
   //             }
   //             if (actor) {
   //               // Set placeable object flag
@@ -245,7 +245,7 @@ export class EnvironmentInteractionPlaceableConfig {
   //     if (noPropertyFound && document.data.flags[moduleName]) {
   //       if (document instanceof TokenDocument) {
   //         // For each token
-  //         getCanvas().tokens?.placeables.forEach((t: Token) => {
+  //         canvas.tokens?.placeables.forEach((t: Token) => {
   //           if (document.actor?.id == t.actor?.id) {
   //             t.document.setFlag(moduleName, Flags.environmentToken, document.getFlag(moduleName, Flags.environmentToken));
   //             t.document.setFlag(moduleName, Flags.environmentTokenRef, document.getFlag(moduleName, Flags.environmentTokenRef));

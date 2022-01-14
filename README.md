@@ -55,6 +55,8 @@ The scope of the module is to give a base for doing smart interactive placable o
 
 **If you want to support more modules of this kind, I invite you to go and support their patreons or kofis account you can found the links on their github pages**
 
+## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder
+
 ## Installation
 
 It's always easiest to install modules from the in game add-on browser.

@@ -1,6 +1,6 @@
 
-import { getGame, getCanvas, moduleName } from './settings';
-
+import { moduleName } from './settings';
+import { canvas, game } from './settings';
 
 export class TriggerHappyEim{
 
@@ -23,18 +23,18 @@ export class TriggerHappyEim{
       x: (update.x || token.data.x) + token.data.width * scene.data.grid / 2,
       y: (update.y || token.data.y) + token.data.height * scene.data.grid / 2
     };
-    const movementTokens = getCanvas().tokens?.placeables.filter((tok) => tok.data._id !== token.id);
+    const movementTokens = canvas.tokens?.placeables.filter((tok) => tok.data._id !== token.id);
     //@ts-ignore
-    const tokens = getGame().triggers._getPlaceablesAt(movementTokens, position);
+    const tokens = game.triggers._getPlaceablesAt(movementTokens, position);
     //@ts-ignore
-    const drawings = getGame().triggers._getPlaceablesAt(getCanvas().drawings?.placeables, position);
+    const drawings = game.triggers._getPlaceablesAt(canvas.drawings?.placeables, position);
     if (tokens.length === 0 && drawings.length === 0){
       return true;
     }
     //@ts-ignore
-    const triggers = getGame().triggers._getTriggersFromTokens(getGame().triggers.triggers, tokens, 'move');
+    const triggers = game.triggers._getTriggersFromTokens(game.triggers.triggers, tokens, 'move');
     //@ts-ignore
-    triggers.push(...getGame().triggers._getTriggersFromDrawings(getGame().triggers.triggers, drawings, 'move'));
+    triggers.push(...game.triggers._getTriggersFromDrawings(game.triggers.triggers, drawings, 'move'));
 
     if (triggers.length === 0){
       return true;
@@ -51,7 +51,7 @@ export class TriggerHappyEim{
     }
     const tokens = [token];
     //@ts-ignore
-    const triggers = getGame().triggers._getTriggersFromTokens(getGame().triggers.triggers, tokens, 'click');
+    const triggers = game.triggers._getTriggersFromTokens(game.triggers.triggers, tokens, 'click');
     if (triggers.length === 0){
       return;
     }
@@ -73,11 +73,11 @@ export class TriggerHappyEim{
           enable = false;
         }
         else if (data == 'toggle'){
-          enable = !getGame().settings.get(moduleName,'enable');
+          enable = !game.settings.get(moduleName,'enable');
         }
 
-        if (enable != getGame().settings.get(moduleName,'enable')) {
-          if (getGame().user?.isGM){
+        if (enable != game.settings.get(moduleName,'enable')) {
+          if (game.user?.isGM){
             shareVision(enable);
             ui.controls?.controls?.find(controls => controls.name == "token").tools.find(tools => tools.name == "enableSharedVision").active = enable;
             ui.controls?.render();

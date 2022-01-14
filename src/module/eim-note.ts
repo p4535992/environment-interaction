@@ -2,7 +2,8 @@ import { executeEIMacro, executeEIMacroContent } from './eim-utils';
 import { field } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/fields.mjs';
 import { i18n } from '../eim-main';
 import { Flags } from './eim-models';
-import { getGame, moduleName } from './settings';
+import { moduleName } from './settings';
+import { canvas, game } from './settings';
 export class EnvironmentInteractionNote extends FormApplication {
   constructor(object, options) {
     super(object, options);
@@ -35,7 +36,7 @@ export class EnvironmentInteractionNote extends FormApplication {
   // }
 
   // get showExtraButtons() {
-  //     return (getGame().dnd5e && this.entity.constructor.name !== 'RollTable');
+  //     return (game.dnd5e && this.entity.constructor.name !== 'RollTable');
   // }
 
   static get defaultOptions() {
@@ -55,8 +56,8 @@ export class EnvironmentInteractionNote extends FormApplication {
 
     data.notes = this.entity.getFlag(moduleName, Flags.notes);
     data.flags = this.entity.data.flags;
-    data.owner = getGame().user?.id;
-    data.isGM = getGame().user?.isGM;
+    data.owner = game.user?.id;
+    data.isGM = game.user?.isGM;
     data.img = this.entity.img;
     data.name = this.entity.name;
     data.id = this.entity.id;
@@ -72,7 +73,7 @@ export class EnvironmentInteractionNote extends FormApplication {
     // html.find('.moveToDescription').click(ev => this._moveToDescription());
     // html.find('.ei-info').click((ev) => this._showInfo());
 
-    if (getGame().modules.get('acelib')?.active) {
+    if (game.modules.get('acelib')?.active) {
       // if (this._retrieveVal($(html), Flags.notesuseasmacro)) {
       this.editor = this._addAceLibEditorToElement(html, `div.form-group.stacked.command.${Flags.notes}`, this.entity.id, Flags.notes);
       // } else {
@@ -156,7 +157,7 @@ export class EnvironmentInteractionNote extends FormApplication {
       //@ts-ignore
       mergeObject(ace.userSettings, {
         mode: 'ace/mode/javascript',
-        wrap: true, //getGame().settings.get(moduleName, 'acelibLineWrap'),
+        wrap: true, //game.settings.get(moduleName, 'acelibLineWrap'),
       }),
     );
 
@@ -179,7 +180,7 @@ export class EnvironmentInteractionNote extends FormApplication {
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css('display', 'none');
 
         // furnace compat / advanced macros
-        const furnace = configElement.find("div.furnace-macro-command");
+        const furnace = configElement.find('div.furnace-macro-command');
         if (furnace.length !== 0) {
           furnace.css('display', '');
           furnace.trigger('change');
@@ -281,7 +282,7 @@ export class EnvironmentInteractionNote extends FormApplication {
   // }
 
   async _updateObject(event, formData) {
-    if (getGame().user?.isGM) {
+    if (game.user?.isGM) {
       const useei = formData[`flags.${moduleName}.${Flags.notesuseei}`];
       if (useei != null && useei != undefined) {
         await this.entity.setFlag(moduleName, Flags.notesuseei, useei);
@@ -410,7 +411,7 @@ export class EnvironmentInteractionNote extends FormApplication {
   }
 
   // async _updateObjectForExcecuteMacro(event, entity, configElement) {
-  //   if (getGame().user?.isGM) {
+  //   if (game.user?.isGM) {
   //     // if (this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesuseei}`)) {
   //     //   await entity.setFlag(moduleName, Flags.notesuseei, this._retrieveVal(configElement,`flags.${moduleName}.${Flags.notesuseei}`));
   //     // } else {
@@ -499,16 +500,16 @@ export class EnvironmentInteractionNote extends FormApplication {
   // }
 
   static _initEntityHook(app, html, data) {
-    if (getGame().user?.isGM) {
+    if (game.user?.isGM) {
       const labelTxt = '';
       const labelStyle = '';
       const title = i18n(`${moduleName}.note.label`);
       const notes = app.entity.getFlag(moduleName, Flags.notes);
       const notesuseei = app.entity.getFlag(moduleName, Flags.notesuseei);
-      // if (getGame().settings.get(moduleName, 'hideLabel') === false) {
+      // if (game.settings.get(moduleName, 'hideLabel') === false) {
       //   labelTxt = ' ' + title;
       // }
-      // if (getGame().settings.get(moduleName, 'colorLabel') === true && notes) {
+      // if (game.settings.get(moduleName, 'colorLabel') === true && notes) {
       //   labelStyle = "style='color:green;'";
       // }
 

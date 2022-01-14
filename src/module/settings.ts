@@ -3,6 +3,9 @@ import { RollHandler } from '../lib/tokenActionHUD/RollHandler';
 import { MonksTokenBarAPI } from './../lib/tokenbarapi/MonksTokenBarAPI';
 import { ENVIRONMENT_TYPE } from './eim-models';
 
+export const game = getGame();
+export const canvas = getCanvas();
+
 export const moduleName = 'environment-interaction-multisystem';
 
 export const ENVIRONMENT_INTERACTION_ITEM_MACRO_MODULE_NAME = 'itemacro';
@@ -20,7 +23,7 @@ export const ENVIRONMENT_INTERACTION_ACELIB_MODULE_NAME = 'acelib';
  * So you will need to deal with the fact that there might not be an initialized canvas at any point in time.
  * @returns
  */
-export function getCanvas(): Canvas {
+function getCanvas(): Canvas {
   if (!(canvas instanceof Canvas) || !canvas.ready) {
     throw new Error('Canvas Is Not Initialized');
   }
@@ -35,7 +38,7 @@ export function getCanvas(): Canvas {
  * So you will need to deal with the fact that there might not be an initialized canvas at any point in time.
  * @returns
  */
-export function getGame(): Game {
+function getGame(): Game {
   if (!(game instanceof Game)) {
     throw new Error('Game Is Not Initialized');
   }
@@ -44,12 +47,12 @@ export function getGame(): Game {
 
 export function getMonkTokenBarAPI(): MonksTokenBarAPI {
   //@ts-ignore
-  return getGame().MonksTokenBar;
+  return game.MonksTokenBar;
 }
 
 export function getTokenActionHUDRollHandler(): RollHandler {
   //@ts-ignore
-  return getGame().tokenActionHUD.systemManager.getRollHandler();
+  return game.tokenActionHUD.systemManager.getRollHandler();
 }
 
 const systemsMonkTokenBarSupported = ['dnd5e', 'sw5e', 'd35e', 'dnd4ebeta', 'pf1', 'pf2e', 'tormenta20', 'sfrpg', 'ose', 'swade', 'coc7'];
@@ -103,25 +106,25 @@ export function isSystemItemMacroSupported() {
 }
 
 export function isItemMacroModuleActive() {
-  return <boolean>getGame().modules.get(ENVIRONMENT_INTERACTION_ITEM_MACRO_MODULE_NAME)?.active;
+  return <boolean>game.modules.get(ENVIRONMENT_INTERACTION_ITEM_MACRO_MODULE_NAME)?.active;
 }
 
 export function isMonkTokensBarModuleActive() {
-  return <boolean>getGame().modules.get(ENVIRONMENT_INTERACTION_MONKS_TOKENBAR_MODULE_NAME)?.active;
+  return <boolean>game.modules.get(ENVIRONMENT_INTERACTION_MONKS_TOKENBAR_MODULE_NAME)?.active;
 }
 
 export function isLmrtfyActive() {
-  return <boolean>getGame().modules.get(ENVIRONMENT_INTERACTION_LMRTFY)?.active;
+  return <boolean>game.modules.get(ENVIRONMENT_INTERACTION_LMRTFY)?.active;
 }
 
 export function isTokenActionHudActive() {
-  return <boolean>getGame().modules.get(ENVIRONMENT_INTERACTION_TOKEN_ACTION_HUD)?.active;
+  return <boolean>game.modules.get(ENVIRONMENT_INTERACTION_TOKEN_ACTION_HUD)?.active;
 }
 
 export const registerSettings = function () {
   // Automatically close interaction selection dialog
-  getGame().settings.register(moduleName, 'closeDialog', {
-    name: getGame().i18n.localize(`${moduleName}.settings.closeDialog.name`),
+  game.settings.register(moduleName, 'closeDialog', {
+    name: game.i18n.localize(`${moduleName}.settings.closeDialog.name`),
     hint: '',
     scope: 'world',
     config: true,
@@ -130,8 +133,8 @@ export const registerSettings = function () {
   });
 
   // Automatically add proficiency to attack rolls
-  // getGame().settings.register(moduleName, 'autoProficiency', {
-  //   name: getGame().i18n.localize(`${moduleName}.settings.autoProficiency.name`),
+  // game.settings.register(moduleName, 'autoProficiency', {
+  //   name: game.i18n.localize(`${moduleName}.settings.autoProficiency.name`),
   //   hint: '',
   //   scope: 'world',
   //   config: true,
@@ -139,7 +142,7 @@ export const registerSettings = function () {
   //   default: true,
   // });
 
-  // getGame().settings.register(moduleName, 'integrationWithPolyglot', {
+  // game.settings.register(moduleName, 'integrationWithPolyglot', {
   //   name: i18n(`${moduleName}.settings.integrationWithPolyglot.name`),
   //   hint: i18n(`${moduleName}.settings.integrationWithPolyglot.hint`),
   //   scope: 'world',
@@ -148,7 +151,7 @@ export const registerSettings = function () {
   //   type: Boolean,
   // });
 
-  // getGame().settings.register(moduleName, 'hideLabel', {
+  // game.settings.register(moduleName, 'hideLabel', {
   //   name: i18n(`${moduleName}.settings.notehidelabel.name`),
   //   hint: i18n(`${moduleName}.settings.notehidelabel.hint`),
   //   scope: 'world',
@@ -157,7 +160,7 @@ export const registerSettings = function () {
   //   type: Boolean,
   // });
 
-  // getGame().settings.register(moduleName, 'colorLabel', {
+  // game.settings.register(moduleName, 'colorLabel', {
   //   name: i18n(`${moduleName}.settings.notecolorlabel.name`),
   //   hint: i18n(`${moduleName}.settings.notecolorlabel.hint`),
   //   scope: 'world',
@@ -166,7 +169,7 @@ export const registerSettings = function () {
   //   type: Boolean,
   // });
 
-  // getGame().settings.register(moduleName, 'acelibDefaultShow', {
+  // game.settings.register(moduleName, 'acelibDefaultShow', {
   //   name: i18n(`${moduleName}.settings.acelibDefaultShow.name`),
   //   hint: i18n(`${moduleName}.settings.acelibDefaultShow.hint`),
   //   default: true,
@@ -175,7 +178,7 @@ export const registerSettings = function () {
   //   config: false,
   // });
 
-  // getGame().settings.register(moduleName, 'acelibLineWrap', {
+  // game.settings.register(moduleName, 'acelibLineWrap', {
   //   name: i18n(`${moduleName}.settings.acelibLineWrap.name`),
   //   hint: i18n(`${moduleName}.settings.acelibLineWrap.hint`),
   //   default: true,

@@ -3,7 +3,8 @@ import { ContestedRoll } from '../lib/tokenbarapi/ContestedRoll';
 import { EnvironmentInteractionNote } from './eim-note';
 import { EnvironmentInteraction } from './eim';
 import { customInfoEnvironmentInteraction, Flags } from './eim-models';
-import { getCanvas, getGame, moduleName } from './settings';
+import { moduleName } from './settings';
+import { canvas, game } from './settings';
 import { MonkTokenBarMessageOptions, MonkTokenBarMessageRequestoption } from '../lib/tokenbarapi/MonksTokenBarAPI';
 import { executeEIMacro } from './eim-utils';
 import { EnvironmentInteractionPlaceableConfig } from './eim-paceable-config';
@@ -13,30 +14,30 @@ let currentContestedRollTokenBar = NaN;
 export const readyHooks = async () => {
   // Register hook callbacks
   // @ts-ignore
-  getGame().EnvironmentInteraction.EnvironmentInteractionPlaceableConfig.registerHooks();
+  game.EnvironmentInteraction.EnvironmentInteractionPlaceableConfig.registerHooks();
 
   Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll | Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
     // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
 
     const customInfo = <customInfoEnvironmentInteraction>(<any>message.data.flags['monks-tokenbar'])?.options?.ei;
 
-    const interactorTokenTokenBar = <Token>getCanvas().tokens?.get(updateId);
+    const interactorTokenTokenBar = <Token>canvas.tokens?.get(updateId);
 
     const total = <number>msgtokenRoll?.total;
 
     const environmentItemId = customInfo.environmentItemID;
     const environmentActorId = customInfo.environmentActorID;
-    const environmentActor = <Actor>getGame().actors?.get(environmentActorId);
+    const environmentActor = <Actor>game.actors?.get(environmentActorId);
     const environmentTokenId = customInfo.environmentTokenID;
-    const environmentToken = <Token>getCanvas().tokens?.get(environmentTokenId);
+    const environmentToken = <Token>canvas.tokens?.get(environmentTokenId);
 
     let dc = customInfo.environmentDC;
 
     const interactorItemId = customInfo.interactorItemID;
     const interactorActorId = customInfo.interactorActorID;
-    const interactorActor = <Actor>getGame().actors?.get(interactorActorId);
+    const interactorActor = <Actor>game.actors?.get(interactorActorId);
     const interactorTokenId = customInfo.interactorTokenID;
-    const interactorToken = <Token>getCanvas().tokens?.get(interactorTokenId);
+    const interactorToken = <Token>canvas.tokens?.get(interactorTokenId);
 
     const isInteractor = interactorTokenTokenBar.id == interactorTokenId;
     // This work because the interactor is the last one called ??
@@ -83,13 +84,13 @@ export const readyHooks = async () => {
     if(!message.roll){
       return;
     }
-    const scene = getGame().scenes?.find((scene:Scene) =>{
+    const scene = game.scenes?.find((scene:Scene) =>{
       return scene.id == speakerInfo.message.speaker.scene;
     });
-    const actor = getGame().actors?.find((actor:Actor) =>{
+    const actor = game.actors?.find((actor:Actor) =>{
       return actor.id == speakerInfo.message.speaker.actor;
     });
-    const token = getCanvas().tokens?.placeables.find((token:Token) =>{
+    const token = canvas.tokens?.placeables.find((token:Token) =>{
       return token.id == speakerInfo.message.speaker.token;
     });
     const alias = speakerInfo.message.speaker.alias;
@@ -104,8 +105,8 @@ export const readyHooks = async () => {
 
     // TODO find a better method this is ugly
     let currentItem;
-    getCanvas().tokens?.placeables.find((token: Token) => {
-      const actor = <Actor>getGame().actors?.find((actor: Actor) => {
+    canvas.tokens?.placeables.find((token: Token) => {
+      const actor = <Actor>game.actors?.find((actor: Actor) => {
         return token.data.actorId == actor.id;
       });
       if (actor) {
@@ -150,9 +151,9 @@ export const readyHooks = async () => {
   */
 
   Hooks.on('renderActorSheet', async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
-    const isgm = getGame().user?.isGM;
+    const isgm = game.user?.isGM;
     if (!isgm) {
-      const actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
+      const actorEntity = <Actor>game.actors?.get(actorObject.actor._id);
       if (actorEntity) {
         // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
         const list = htmlElement.find('li.item');
@@ -168,7 +169,7 @@ export const readyHooks = async () => {
         }
       }
     } else {
-      const actorEntity = <Actor>getGame().actors?.get(actorObject.actor._id);
+      const actorEntity = <Actor>game.actors?.get(actorObject.actor._id);
       if (actorEntity) {
         // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
         const list = htmlElement.find('li.item');
@@ -198,36 +199,36 @@ export const readyHooks = async () => {
   // TRIGGER HAPPY INTEGRATION
   // =============================
 
-  // const triggerHappy = getGame().modules.get("trigger-happy");
+  // const triggerHappy = game.modules.get("trigger-happy");
   // TriggerHappyEim.setTriggerHappyActive(triggerHappy != undefined && triggerHappy.active == true)
 
   // Hooks.on('controlToken',(token,controlled) =>  {
   //   TriggerHappyEim.triggerHappy_ControlToken(token,controlled);
   // });
   // Hooks.on('preUpdateToken',(scene, embedded, update) =>  {
-  //   TriggerHappyEim.triggerHappy_onPreUpdateToken(scene, embedded, update, undefined, <string>getGame().userId)
+  //   TriggerHappyEim.triggerHappy_onPreUpdateToken(scene, embedded, update, undefined, <string>game.userId)
   // });
 };
 
 export const initHooks = async () => {
   // Open module API
   // @ts-ignore
-  getGame().EnvironmentInteraction = EnvironmentInteraction;
+  game.EnvironmentInteraction = EnvironmentInteraction;
   // @ts-ignore
-  getGame().EnvironmentInteraction.EnvironmentInteractionPlaceableConfig = EnvironmentInteractionPlaceableConfig;
+  game.EnvironmentInteraction.EnvironmentInteractionPlaceableConfig = EnvironmentInteractionPlaceableConfig;
 
   // Register settings
   // @ts-ignore
-  // getGame().EnvironmentInteraction.registerSettings();
+  // game.EnvironmentInteraction.registerSettings();
 
   // Register Handlebars helpers
   // @ts-ignore
-  // getGame().EnvironmentInteraction.registerHandlebarsHelpers();
+  // game.EnvironmentInteraction.registerHandlebarsHelpers();
   Handlebars.registerHelper('checkedIf', function (condition) {
     return condition ? 'checked' : '';
   });
 
-  if (getGame().modules.get('acelib')?.active) {
+  if (game.modules.get('acelib')?.active) {
     // Loading acelib module
     //@ts-ignore
     ['ace/mode/json', 'ace/ext/language_tools', 'ace/ext/error_marker', 'ace/theme/twilight', 'ace/snippets/json'].forEach((s) => ace.config.loadModule(s));
@@ -238,7 +239,7 @@ export const setupHooks = async () => {
   // Do anything after initialization but before ready
   // Register wrappers
   // @ts-ignore
-  // getGame().EnvironmentInteraction.registerWrappers();
+  // game.EnvironmentInteraction.registerWrappers();
 
   // Alter mouse interaction for tokens flagged as environment
 
@@ -251,7 +252,7 @@ export const setupHooks = async () => {
     moduleName,
     'CONFIG.Token.objectClass.prototype._canView',
     //@ts-ignore
-    getGame().EnvironmentInteraction._canViewToken,
+    game.EnvironmentInteraction._canViewToken,
     'MIXED',
   );
 
@@ -260,7 +261,7 @@ export const setupHooks = async () => {
     moduleName,
     'CONFIG.Token.objectClass.prototype._onClickLeft',
     //@ts-ignore
-    getGame().EnvironmentInteraction._onClickLeftToken,
+    game.EnvironmentInteraction._onClickLeftToken,
     'MIXED',
   );
   //@ts-ignore
@@ -268,7 +269,7 @@ export const setupHooks = async () => {
     moduleName,
     'CONFIG.Token.objectClass.prototype._onClickLeft2',
     //@ts-ignore
-    getGame().EnvironmentInteraction._onClickLeft2Token,
+    game.EnvironmentInteraction._onClickLeft2Token,
     'MIXED',
   );
 
@@ -281,7 +282,7 @@ export const setupHooks = async () => {
     moduleName,
     'DoorControl.prototype._onMouseDown',
     //@ts-ignore
-    getGame().EnvironmentInteraction._DoorControlPrototypeOnMouseDownHandler,
+    game.EnvironmentInteraction._DoorControlPrototypeOnMouseDownHandler,
     'MIXED',
   );
 
@@ -290,7 +291,7 @@ export const setupHooks = async () => {
   //   moduleName,
   //   'CONFIG.Wall.objectClass.prototype._onClickLeft',
   //   //@ts-ignore
-  //   getGame().EnvironmentInteraction._onClickLeftWall,
+  //   game.EnvironmentInteraction._onClickLeftWall,
   //   'MIXED',
   // );
 
@@ -299,7 +300,7 @@ export const setupHooks = async () => {
   //   moduleName,
   //   'CONFIG.Wall.objectClass.prototype._onClickLeft2',
   //   //@ts-ignore
-  //   getGame().EnvironmentInteraction._onClickLeft2Wall,
+  //   game.EnvironmentInteraction._onClickLeft2Wall,
   //   'MIXED',
   // );
 
@@ -312,15 +313,16 @@ export const setupHooks = async () => {
     moduleName,
     'Note.prototype._onClickLeft',
     //@ts-ignore
-    getGame().EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
-    'MIXED');
+    game.EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
+    'MIXED',
+  );
 
   //@ts-ignore
   libWrapper.register(
     moduleName,
     'Note.prototype._onClickLeft2',
     //@ts-ignore
-    getGame().EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
+    game.EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
     'MIXED',
   );
 };
@@ -330,7 +332,7 @@ export const setupTinyMCEEditor = function () {
   // Add custom stylesheet to TinyMCE Config
   //@ts-ignore
   CONFIG.TinyMCE.content_css.push(`/modules/${moduleName}/styles/environment-interaction-secret.css`);
-  if (getGame().user?.isGM) {
+  if (game.user?.isGM) {
     // Add GM Secret section type
     //@ts-ignore
     const customFormats = CONFIG.TinyMCE.style_formats.find((x) => x.title === 'Custom');
@@ -353,7 +355,7 @@ export const textEditorCreateHandler = function (wrapped, ...args) {
   // const editor = await oldCreate.apply(this, arguments);
   const editor = this as any;
   // If the user is a GM, add the "game-master" class to the tinyMCE iframe body.
-  if (getGame().user?.isGM) {
+  if (game.user?.isGM) {
     editor.dom.addClass('tinymce', 'game-master');
   }
 
@@ -369,7 +371,7 @@ export const textEditorEnrichHTMLHandler = function (wrapped, ...args) {
   const html = document.createElement('div');
   html.innerHTML = content;
 
-  if (!getGame().user?.isGM) {
+  if (!game.user?.isGM) {
     const elements: NodeListOf<Element> = html.querySelectorAll('section.gm-secret');
     elements.forEach((e) => e?.parentNode?.removeChild(e));
   }
