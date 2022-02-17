@@ -1,8 +1,8 @@
 import { Document } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/module.mjs';
-import { debug, error, i18n } from '../eim-main';
+import { debug, error, i18n } from './lib/lib';
 import { Flags } from './eim-models';
-import { moduleName } from './settings';
 import { canvas, game } from './settings';
+import CONSTANTS from './constants';
 
 export function getTokenByTokenID(id) {
   // return await game.scenes.active.data.tokens.find( x => {return x.id === id});
@@ -113,7 +113,7 @@ export const getActorByUuid = async function (uuid) {
 };
 
 export const executeEIMacro = function (item: Item, macroFlag: string, ...args: any[]): any {
-  if (!item.getFlag(moduleName, macroFlag)) {
+  if (!item.getFlag(CONSTANTS.MODULE_NAME, macroFlag)) {
     return false;
   }
   // switch(this.getMacro().data.type){
@@ -125,16 +125,16 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args: 
   // }
 
   const myargs: string[] = [];
-  const flagArgs = `flags.${moduleName}.${macroFlag}-args`;
-  if (item.getFlag(moduleName, flagArgs)) {
-    const currentargs: string[] = (<string>item.getFlag(moduleName, flagArgs)).split(',') ?? [];
+  const flagArgs = `flags.${CONSTANTS.MODULE_NAME}.${macroFlag}-args`;
+  if (item.getFlag(CONSTANTS.MODULE_NAME, flagArgs)) {
+    const currentargs: string[] = (<string>item.getFlag(CONSTANTS.MODULE_NAME, flagArgs)).split(',') ?? [];
     myargs.push(...currentargs);
   }
   myargs.push(...args);
 
   //add variable to the evaluation of the script
   // const item = <Item>this;
-  let macroContent = <string>item.getFlag(moduleName, macroFlag);
+  let macroContent = <string>item.getFlag(CONSTANTS.MODULE_NAME, macroFlag);
   const entityMatchRgxTagger = `@(Macro)\\[([^\\]]+)\\]`;
   const rgxTagger = new RegExp(entityMatchRgxTagger, 'ig');
   const matchAllTags = macroContent.matchAll(rgxTagger);
@@ -197,7 +197,7 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args: 
     // return fn2.apply(item, [item, speaker, actor, token, character, event, ...args]);
     return fn3.call(macro, item, speaker, actor, token, character, event, myargs, interactorToken, interactorActor);
   } catch (err) {
-    ui.notifications?.error(moduleName + ' | ' + i18n(`${moduleName}.macroExecution`));
+    ui.notifications?.error(CONSTANTS.MODULE_NAME + ' | ' + i18n(`${CONSTANTS.MODULE_NAME}.macroExecution`));
     error(err);
   }
 
@@ -252,7 +252,7 @@ export const executeEIMacroContent = function (item: Item, macroContent: string,
   try {
     return fn3.call(macro, item, speaker, actor, token, character, event, myargs, interactorToken, interactorActor);
   } catch (err) {
-    ui.notifications?.error(moduleName + ' | ' + i18n(`${moduleName}.macroExecution`));
+    ui.notifications?.error(CONSTANTS.MODULE_NAME + ' | ' + i18n(`${CONSTANTS.MODULE_NAME}.macroExecution`));
     error(err);
   }
 

@@ -1,4 +1,4 @@
-import { i18n } from '../eim-main';
+import { i18n } from './lib/lib';
 import { RollHandler } from './lib/tokenActionHUD/RollHandler';
 import { MonksTokenBarAPI } from './lib/tokenbarapi/MonksTokenBarAPI';
 import { ENVIRONMENT_TYPE } from './eim-models';
@@ -6,14 +6,6 @@ import CONSTANTS from './constants';
 
 export const game = getGame();
 export const canvas = getCanvas();
-
-export const moduleName = CONSTANTS.MODULE_NAME;
-
-export const ENVIRONMENT_INTERACTION_ITEM_MACRO_MODULE_NAME = 'itemacro';
-export const ENVIRONMENT_INTERACTION_MONKS_TOKENBAR_MODULE_NAME = 'monks-tokenbar';
-export const ENVIRONMENT_INTERACTION_LMRTFY = 'lmrtfy';
-export const ENVIRONMENT_INTERACTION_TOKEN_ACTION_HUD = 'token-action-hud';
-export const ENVIRONMENT_INTERACTION_ACELIB_MODULE_NAME = 'acelib';
 
 /**
  * Because typescript doesn't know when in the lifecycle of foundry your code runs, we have to assume that the
@@ -107,25 +99,25 @@ export function isSystemItemMacroSupported() {
 }
 
 export function isItemMacroModuleActive() {
-  return <boolean>game.modules.get(ENVIRONMENT_INTERACTION_ITEM_MACRO_MODULE_NAME)?.active;
+  return <boolean>game.modules.get(CONSTANTS.MODULE_NAME)?.active;
 }
 
 export function isMonkTokensBarModuleActive() {
-  return <boolean>game.modules.get(ENVIRONMENT_INTERACTION_MONKS_TOKENBAR_MODULE_NAME)?.active;
+  return <boolean>game.modules.get(CONSTANTS.ENVIRONMENT_INTERACTION_MONKS_TOKENBAR_MODULE_NAME)?.active;
 }
 
 export function isLmrtfyActive() {
-  return <boolean>game.modules.get(ENVIRONMENT_INTERACTION_LMRTFY)?.active;
+  return <boolean>game.modules.get(CONSTANTS.ENVIRONMENT_INTERACTION_LMRTFY)?.active;
 }
 
 export function isTokenActionHudActive() {
-  return <boolean>game.modules.get(ENVIRONMENT_INTERACTION_TOKEN_ACTION_HUD)?.active;
+  return <boolean>game.modules.get(CONSTANTS.ENVIRONMENT_INTERACTION_TOKEN_ACTION_HUD)?.active;
 }
 
 export const registerSettings = function () {
   // Automatically close interaction selection dialog
-  game.settings.register(moduleName, 'closeDialog', {
-    name: game.i18n.localize(`${moduleName}.settings.closeDialog.name`),
+  game.settings.register(CONSTANTS.MODULE_NAME, 'closeDialog', {
+    name: game.i18n.localize(`${CONSTANTS.MODULE_NAME}.settings.closeDialog.name`),
     hint: '',
     scope: 'world',
     config: true,
@@ -134,8 +126,8 @@ export const registerSettings = function () {
   });
 
   // Automatically add proficiency to attack rolls
-  // game.settings.register(moduleName, 'autoProficiency', {
-  //   name: game.i18n.localize(`${moduleName}.settings.autoProficiency.name`),
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'autoProficiency', {
+  //   name: game.i18n.localize(`${CONSTANTS.MODULE_NAME}.settings.autoProficiency.name`),
   //   hint: '',
   //   scope: 'world',
   //   config: true,
@@ -143,45 +135,45 @@ export const registerSettings = function () {
   //   default: true,
   // });
 
-  // game.settings.register(moduleName, 'integrationWithPolyglot', {
-  //   name: i18n(`${moduleName}.settings.integrationWithPolyglot.name`),
-  //   hint: i18n(`${moduleName}.settings.integrationWithPolyglot.hint`),
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'integrationWithPolyglot', {
+  //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.integrationWithPolyglot.name`),
+  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.integrationWithPolyglot.hint`),
   //   scope: 'world',
   //   config: true,
   //   default: false,
   //   type: Boolean,
   // });
 
-  // game.settings.register(moduleName, 'hideLabel', {
-  //   name: i18n(`${moduleName}.settings.notehidelabel.name`),
-  //   hint: i18n(`${moduleName}.settings.notehidelabel.hint`),
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'hideLabel', {
+  //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.notehidelabel.name`),
+  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.notehidelabel.hint`),
   //   scope: 'world',
   //   config: false,
   //   default: true,
   //   type: Boolean,
   // });
 
-  // game.settings.register(moduleName, 'colorLabel', {
-  //   name: i18n(`${moduleName}.settings.notecolorlabel.name`),
-  //   hint: i18n(`${moduleName}.settings.notecolorlabel.hint`),
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'colorLabel', {
+  //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.notecolorlabel.name`),
+  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.notecolorlabel.hint`),
   //   scope: 'world',
   //   config: true,
   //   default: false,
   //   type: Boolean,
   // });
 
-  // game.settings.register(moduleName, 'acelibDefaultShow', {
-  //   name: i18n(`${moduleName}.settings.acelibDefaultShow.name`),
-  //   hint: i18n(`${moduleName}.settings.acelibDefaultShow.hint`),
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'acelibDefaultShow', {
+  //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.acelibDefaultShow.name`),
+  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.acelibDefaultShow.hint`),
   //   default: true,
   //   type: Boolean,
   //   scope: 'world',
   //   config: false,
   // });
 
-  // game.settings.register(moduleName, 'acelibLineWrap', {
-  //   name: i18n(`${moduleName}.settings.acelibLineWrap.name`),
-  //   hint: i18n(`${moduleName}.settings.acelibLineWrap.hint`),
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'acelibLineWrap', {
+  //   name: i18n(`${CONSTANTS.MODULE_NAME}.settings.acelibLineWrap.name`),
+  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.settings.acelibLineWrap.hint`),
   //   default: true,
   //   type: Boolean,
   //   scope: 'world',

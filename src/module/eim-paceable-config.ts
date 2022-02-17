@@ -1,7 +1,7 @@
-import { i18n } from '../eim-main';
+import { i18n } from './lib/lib';
 import { Flags } from './eim-models';
-import { moduleName } from './settings';
 import { canvas, game } from './settings';
+import CONSTANTS from './constants';
 
 export class EnvironmentInteractionPlaceableConfig {
   // Hooks
@@ -12,11 +12,11 @@ export class EnvironmentInteractionPlaceableConfig {
       if (!game.user?.isGM) {
         return;
       }
-      const checked = app.object.getFlag(moduleName, Flags.environmentToken) ? 'checked' : '';
+      const checked = app.object.getFlag(CONSTANTS.MODULE_NAME, Flags.environmentToken) ? 'checked' : '';
       const snippet = `
                 <div class="form-group">
-                    <label>${i18n(`${moduleName}.tokenConfig.label`)}</label>
-                    <input type="checkbox" name="flags.${moduleName}.${Flags.environmentToken}" data-dtype="Boolean" ${checked} />
+                    <label>${i18n(`${CONSTANTS.MODULE_NAME}.tokenConfig.label`)}</label>
+                    <input type="checkbox" name="flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentToken}" data-dtype="Boolean" ${checked} />
                 </div>
             `;
       html.find(`div[data-tab="character"]`).append(snippet);
@@ -121,12 +121,12 @@ export class EnvironmentInteractionPlaceableConfig {
     formConfig = `
         <div class="form-group stacked">
           <div class="form-group">
-            <label>${i18n(`${moduleName}.tokenConfig.labelPlaceableObject`)}</label>
-            <input type="checkbox" name="flags.${moduleName}.${Flags.environmentToken}" data-dtype="Boolean" ${enviromentChecked} />
+            <label>${i18n(`${CONSTANTS.MODULE_NAME}.tokenConfig.labelPlaceableObject`)}</label>
+            <input type="checkbox" name="flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentToken}" data-dtype="Boolean" ${enviromentChecked} />
           </div>
           <div class="form-group">
-            <label>${i18n(`${moduleName}.tokenConfig.labelActor`)}</label>
-            <select class="actor-template" name="flags.${moduleName}.${Flags.environmentTokenRef}" value="${enviromentActorId}">
+            <label>${i18n(`${CONSTANTS.MODULE_NAME}.tokenConfig.labelActor`)}</label>
+            <select class="actor-template" name="flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentTokenRef}" value="${enviromentActorId}">
               ${options.join('')}
             </select>
           </div>
@@ -142,8 +142,8 @@ export class EnvironmentInteractionPlaceableConfig {
 
   static _applyEnviroments(document, updateData) {
     const properties: string[] = [];
-    properties.push(`flags.${moduleName}.${Flags.environmentToken}`);
-    properties.push(`flags.${moduleName}.${Flags.environmentTokenRef}`);
+    properties.push(`flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentToken}`);
+    properties.push(`flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentTokenRef}`);
     for (const propertyName of properties) {
       let propertyNameOr = propertyName;
       if (document instanceof Actor) {
@@ -182,9 +182,9 @@ export class EnvironmentInteractionPlaceableConfig {
             // Set actor reference
             // setProperty(actor.data, propertyNameOr, eis);
             setProperty(actor.data.token, propertyNameOr, eis);
-            // actor.setFlag(moduleName, Flags.environmentToken, eis);
+            // actor.setFlag(CONSTANTS.MODULE_NAME, Flags.environmentToken, eis);
           } else {
-            ui.notifications?.warn(`${moduleName} | Can't find the actor`);
+            ui.notifications?.warn(`${CONSTANTS.MODULE_NAME} | Can't find the actor`);
           }
           */
         }
@@ -194,8 +194,8 @@ export class EnvironmentInteractionPlaceableConfig {
 
   //   static _applyEnviromentsSyncCanvas(document, updateData) {
   //     const properties: string[] = [];
-  //     properties.push(`flags.${moduleName}.${Flags.environmentToken}`);
-  //     properties.push(`flags.${moduleName}.${Flags.environmentTokenRef}`);
+  //     properties.push(`flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentToken}`);
+  //     properties.push(`flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentTokenRef}`);
   //     let noPropertyFound = true;
   //     for (const propertyName of properties) {
   //       let propertyNameOr = propertyName;
@@ -234,23 +234,23 @@ export class EnvironmentInteractionPlaceableConfig {
   //             // Set actor reference
   //             // setProperty(actor.data, propertyNameOr, eis);
   //             setProperty(actor.data.token, propertyNameOr, eis);
-  //             // actor.setFlag(moduleName, Flags.environmentToken, eis);
+  //             // actor.setFlag(CONSTANTS.MODULE_NAME, Flags.environmentToken, eis);
   //           } else {
-  //             ui.notifications?.warn(`${moduleName} | Can't find the actor`);
+  //             ui.notifications?.warn(`${CONSTANTS.MODULE_NAME} | Can't find the actor`);
   //           }
   //         }
   //       }
   //     }
   //     // TODO MAKE THIS SYNC BETWEEN TOKEN AND PROTOTYPE TOKEN BETTER
-  //     if (noPropertyFound && document.data.flags[moduleName]) {
+  //     if (noPropertyFound && document.data.flags[CONSTANTS.MODULE_NAME]) {
   //       if (document instanceof TokenDocument) {
   //         // For each token
   //         canvas.tokens?.placeables.forEach((t: Token) => {
   //           if (document.actor?.id == t.actor?.id) {
-  //             t.document.setFlag(moduleName, Flags.environmentToken, document.getFlag(moduleName, Flags.environmentToken));
-  //             t.document.setFlag(moduleName, Flags.environmentTokenRef, document.getFlag(moduleName, Flags.environmentTokenRef));
-  //             setProperty((<Actor>t.actor).data.token, `flags.${moduleName}.${Flags.environmentToken}`, document.getFlag(moduleName, Flags.environmentToken));
-  //             setProperty((<Actor>t.actor).data.token, `flags.${moduleName}.${Flags.environmentTokenRef}`, document.getFlag(moduleName, Flags.environmentTokenRef));
+  //             t.document.setFlag(CONSTANTS.MODULE_NAME, Flags.environmentToken, document.getFlag(CONSTANTS.MODULE_NAME, Flags.environmentToken));
+  //             t.document.setFlag(CONSTANTS.MODULE_NAME, Flags.environmentTokenRef, document.getFlag(CONSTANTS.MODULE_NAME, Flags.environmentTokenRef));
+  //             setProperty((<Actor>t.actor).data.token, `flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentToken}`, document.getFlag(CONSTANTS.MODULE_NAME, Flags.environmentToken));
+  //             setProperty((<Actor>t.actor).data.token, `flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentTokenRef}`, document.getFlag(CONSTANTS.MODULE_NAME, Flags.environmentTokenRef));
   //           }
   //         });
   //       }
@@ -268,20 +268,20 @@ export class EnvironmentInteractionPlaceableConfig {
     const relevantDocument = inObject?.document ?? inObject;
     if (inObject.flags) {
       if (flag == Flags.environmentTokenRef) {
-        const enviroments = getProperty(inObject, `flags.${moduleName}.${flag}`) ?? [];
+        const enviroments = getProperty(inObject, `flags.${CONSTANTS.MODULE_NAME}.${flag}`) ?? [];
         return EnvironmentInteractionPlaceableConfig._validateEnviroments(enviroments, 'getEnviroments');
       } else if (flag == Flags.environmentToken) {
-        const enviroment = getProperty(inObject, `flags.${moduleName}.${flag}`) ?? false;
+        const enviroment = getProperty(inObject, `flags.${CONSTANTS.MODULE_NAME}.${flag}`) ?? false;
         return enviroment;
       } else {
         return null;
       }
     } else if (inObject.data) {
       if (flag == Flags.environmentTokenRef) {
-        const enviroments = relevantDocument?.getFlag(moduleName, flag) ?? [];
+        const enviroments = relevantDocument?.getFlag(CONSTANTS.MODULE_NAME, flag) ?? [];
         return EnvironmentInteractionPlaceableConfig._validateEnviroments(enviroments, 'getEnviroments');
       } else if (flag == Flags.environmentToken) {
-        const enviroment = relevantDocument?.getFlag(moduleName, flag) ?? false;
+        const enviroment = relevantDocument?.getFlag(CONSTANTS.MODULE_NAME, flag) ?? false;
         return enviroment;
       } else {
         return null;
@@ -293,12 +293,12 @@ export class EnvironmentInteractionPlaceableConfig {
 
   static _validateEnviroments(inEnviroments, inFunctionName) {
     if (!(typeof inEnviroments === 'string' || typeof inEnviroments === 'string' || Array.isArray(inEnviroments))) {
-      throw new Error(`${moduleName} | ${inFunctionName} | inEnviroments must be of type string or array`);
+      throw new Error(`${CONSTANTS.MODULE_NAME} | ${inFunctionName} | inEnviroments must be of type string or array`);
     }
     const providedEnviroments = typeof inEnviroments === 'string' ? inEnviroments.split(',') : inEnviroments;
 
     providedEnviroments.forEach((t) => {
-      if (typeof t !== 'string') throw new Error(`${moduleName} | ${inFunctionName} | enviroments in array must be of type string`);
+      if (typeof t !== 'string') throw new Error(`${CONSTANTS.MODULE_NAME} | ${inFunctionName} | enviroments in array must be of type string`);
     });
 
     return providedEnviroments.map((t) => t.trim());

@@ -1,13 +1,13 @@
-import { debug, error, i18n } from '../eim-main';
+import { debug, error, i18n } from './lib/lib';
 import { ContestedRoll } from './lib/tokenbarapi/ContestedRoll';
 import { EnvironmentInteractionNote } from './eim-note';
 import { EnvironmentInteraction } from './eim';
 import { customInfoEnvironmentInteraction, Flags } from './eim-models';
-import { moduleName } from './settings';
 import { canvas, game } from './settings';
 import { MonkTokenBarMessageOptions, MonkTokenBarMessageRequestoption } from './lib/tokenbarapi/MonksTokenBarAPI';
 import { executeEIMacro } from './eim-utils';
 import { EnvironmentInteractionPlaceableConfig } from './eim-paceable-config';
+import CONSTANTS from './constants';
 
 let currentContestedRollTokenBar = NaN;
 
@@ -50,7 +50,7 @@ export const setupHooks = async () => {
 
   //@ts-ignore
   libWrapper.register(
-    moduleName,
+    CONSTANTS.MODULE_NAME,
     'CONFIG.Token.objectClass.prototype._canView',
     //@ts-ignore
     game.EnvironmentInteraction._canViewToken,
@@ -59,7 +59,7 @@ export const setupHooks = async () => {
 
   //@ts-ignore
   libWrapper.register(
-    moduleName,
+    CONSTANTS.MODULE_NAME,
     'CONFIG.Token.objectClass.prototype._onClickLeft',
     //@ts-ignore
     game.EnvironmentInteraction._onClickLeftToken,
@@ -67,7 +67,7 @@ export const setupHooks = async () => {
   );
   //@ts-ignore
   libWrapper.register(
-    moduleName,
+    CONSTANTS.MODULE_NAME,
     'CONFIG.Token.objectClass.prototype._onClickLeft2',
     //@ts-ignore
     game.EnvironmentInteraction._onClickLeft2Token,
@@ -80,7 +80,7 @@ export const setupHooks = async () => {
 
   //@ts-ignore
   libWrapper.register(
-    moduleName,
+    CONSTANTS.MODULE_NAME,
     'DoorControl.prototype._onMouseDown',
     //@ts-ignore
     game.EnvironmentInteraction._DoorControlPrototypeOnMouseDownHandler,
@@ -89,7 +89,7 @@ export const setupHooks = async () => {
 
   // //@ts-ignore
   // libWrapper.register(
-  //   moduleName,
+  //   CONSTANTS.MODULE_NAME,
   //   'CONFIG.Wall.objectClass.prototype._onClickLeft',
   //   //@ts-ignore
   //   game.EnvironmentInteraction._onClickLeftWall,
@@ -98,7 +98,7 @@ export const setupHooks = async () => {
 
   // //@ts-ignore
   // libWrapper.register(
-  //   moduleName,
+  //   CONSTANTS.MODULE_NAME,
   //   'CONFIG.Wall.objectClass.prototype._onClickLeft2',
   //   //@ts-ignore
   //   game.EnvironmentInteraction._onClickLeft2Wall,
@@ -111,7 +111,7 @@ export const setupHooks = async () => {
 
   //@ts-ignore
   libWrapper.register(
-    moduleName,
+    CONSTANTS.MODULE_NAME,
     'Note.prototype._onClickLeft',
     //@ts-ignore
     game.EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
@@ -120,7 +120,7 @@ export const setupHooks = async () => {
 
   //@ts-ignore
   libWrapper.register(
-    moduleName,
+    CONSTANTS.MODULE_NAME,
     'Note.prototype._onClickLeft2',
     //@ts-ignore
     game.EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
@@ -176,15 +176,15 @@ export const readyHooks = async () => {
             executeEIMacro(environmentItem, Flags.notesfailure);
           }
         } else {
-          const macroSuccess = environmentItem?.getFlag(moduleName, Flags.notessuccess);
-          // const macroFailure = environmentItem?.getFlag(moduleName, Flags.notesfailure);
+          const macroSuccess = environmentItem?.getFlag(CONSTANTS.MODULE_NAME, Flags.notessuccess);
+          // const macroFailure = environmentItem?.getFlag(CONSTANTS.MODULE_NAME, Flags.notesfailure);
           if (macroSuccess) {
             executeEIMacro(environmentItem, Flags.notessuccess);
           }
         }
       } else {
-        ui.notifications?.error(moduleName + " | Can't retrieve original item");
-        throw new Error(moduleName + " | Can't retrieve original item");
+        ui.notifications?.error(CONSTANTS.MODULE_NAME + " | Can't retrieve original item");
+        throw new Error(CONSTANTS.MODULE_NAME + " | Can't retrieve original item");
       }
       currentContestedRollTokenBar = NaN;
     } else {
@@ -246,15 +246,15 @@ export const readyHooks = async () => {
           executeEIMacro(currentItem, Flags.notesfailure);
         }
       } else {
-        const macroSuccess = currentItem?.getFlag(moduleName, Flags.notessuccess);
-        const macroFailure = currentItem?.getFlag(moduleName, Flags.notesfailure);
+        const macroSuccess = currentItem?.getFlag(CONSTANTS.MODULE_NAME, Flags.notessuccess);
+        const macroFailure = currentItem?.getFlag(CONSTANTS.MODULE_NAME, Flags.notesfailure);
         if (macroFailure) {
           executeEIMacro(currentItem, Flags.notesfailure);
         }
       }
     }else{
-      ui.notifications?.error(moduleName + ' | Can\'t retrieve original item');
-      throw new Error(moduleName + ' | Can\'t retrieve original item');
+      ui.notifications?.error(CONSTANTS.MODULE_NAME + ' | Can\'t retrieve original item');
+      throw new Error(CONSTANTS.MODULE_NAME + ' | Can\'t retrieve original item');
     }
   });
   */
@@ -262,9 +262,9 @@ export const readyHooks = async () => {
   /*
   setupTinyMCEEditor();
   //@ts-ignore
-  libWrapper.register(moduleName, 'TextEditor.enrichHTML', textEditorEnrichHTMLHandler, 'MIXED');
+  libWrapper.register(CONSTANTS.MODULE_NAME, 'TextEditor.enrichHTML', textEditorEnrichHTMLHandler, 'MIXED');
   //@ts-ignore
-  libWrapper.register(moduleName, 'TextEditor.create', textEditorCreateHandler, 'MIXED');
+  libWrapper.register(CONSTANTS.MODULE_NAME, 'TextEditor.create', textEditorCreateHandler, 'MIXED');
   */
 
   Hooks.on('renderActorSheet', async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
@@ -280,7 +280,7 @@ export const readyHooks = async () => {
           const item = actorEntity.items?.find((item: Item) => {
             return item && item.id == itemId;
           });
-          if (item?.getFlag(moduleName, Flags.notesuseei)) {
+          if (item?.getFlag(CONSTANTS.MODULE_NAME, Flags.notesuseei)) {
             liOnInventory.hide();
           }
         }
@@ -296,7 +296,7 @@ export const readyHooks = async () => {
           const item = actorEntity.items?.find((item: Item) => {
             return item && item.id == itemId;
           });
-          if (item?.getFlag(moduleName, Flags.notesuseei)) {
+          if (item?.getFlag(CONSTANTS.MODULE_NAME, Flags.notesuseei)) {
             liOnInventory.css('background', 'rgba(233, 103, 28, 0.2)');
           }
         }

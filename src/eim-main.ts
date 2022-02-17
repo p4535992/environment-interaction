@@ -12,41 +12,17 @@
 // Import JavaScript modules
 
 // Import TypeScript modules
-import { moduleName, registerSettings } from './module/settings';
+import { registerSettings } from './module/settings';
 import { preloadTemplates } from './module/preloadTemplates';
 import { initHooks, readyHooks, setupHooks } from './module/module';
 import { game } from './module/settings';
-
-export let debugEnabled = 0;
-// 0 = none, warnings = 1, debug = 2, all = 3
-export const debug = (...args) => {
-  if (debugEnabled > 1) console.log(`DEBUG:${moduleName} | `, ...args);
-};
-export const log = (...args) => console.log(`${moduleName} | `, ...args);
-export const warn = (...args) => {
-  if (debugEnabled > 0) console.warn(`${moduleName} | `, ...args);
-};
-export const error = (...args) => console.error(`${moduleName} | `, ...args);
-export const timelog = (...args) => warn(`${moduleName} | `, Date.now(), ...args);
-
-export const i18n = (key) => {
-  return game.i18n.localize(key);
-};
-export const i18nFormat = (key, data = {}) => {
-  return game.i18n.format(key, data);
-};
-
-export const setDebugLevel = (debugText: string) => {
-  debugEnabled = { none: 0, warn: 1, debug: 2, all: 3 }[debugText] || 0;
-  // 0 = none, warnings = 1, debug = 2, all = 3
-  if (debugEnabled >= 3) CONFIG.debug.hooks = true;
-};
+import CONSTANTS from './module/constants';
 
 /* ------------------------------------ */
 /* Initialize module					*/
 /* ------------------------------------ */
 Hooks.once('init', async () => {
-  console.log(`${moduleName} | Initializing ${moduleName}`);
+  console.log(`${CONSTANTS.MODULE_NAME} | Initializing ${CONSTANTS.MODULE_NAME}`);
 
   // Register custom module settings
   registerSettings();
@@ -80,15 +56,15 @@ Hooks.once('setup', function () {
 /* ------------------------------------ */
 Hooks.once('ready', () => {
   if (!game.modules.get('lib-wrapper')?.active && game.user?.isGM) {
-    ui.notifications?.error(`The "${moduleName}" module requires to install and activate the "libWrapper" module.`);
+    ui.notifications?.error(`The "${CONSTANTS.MODULE_NAME}" module requires to install and activate the "libWrapper" module.`);
     return;
   }
   if (!game.modules.get('acelib')?.active && game.user?.isGM) {
-    ui.notifications?.error(`The "${moduleName}" module requires to install and activate the "acelib" module.`);
+    ui.notifications?.error(`The "${CONSTANTS.MODULE_NAME}" module requires to install and activate the "acelib" module.`);
     return;
   }
   // if (!game.modules.get("lib-df-hotkey")?.active && game.user.isGM){
-  //   ui.notifications.error(`The "${moduleName}" module requires to install and activate the "lib-df-hotkey" module.`);
+  //   ui.notifications.error(`The "${CONSTANTS.MODULE_NAME}" module requires to install and activate the "lib-df-hotkey" module.`);
   //   return;
   // }
   readyHooks();
