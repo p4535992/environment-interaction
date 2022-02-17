@@ -1,12 +1,13 @@
 import { i18n } from '../eim-main';
-import { RollHandler } from '../lib/tokenActionHUD/RollHandler';
-import { MonksTokenBarAPI } from './../lib/tokenbarapi/MonksTokenBarAPI';
+import { RollHandler } from './lib/tokenActionHUD/RollHandler';
+import { MonksTokenBarAPI } from './lib/tokenbarapi/MonksTokenBarAPI';
 import { ENVIRONMENT_TYPE } from './eim-models';
+import CONSTANTS from './constants';
 
 export const game = getGame();
 export const canvas = getCanvas();
 
-export const moduleName = 'environment-interaction-multisystem';
+export const moduleName = CONSTANTS.MODULE_NAME;
 
 export const ENVIRONMENT_INTERACTION_ITEM_MACRO_MODULE_NAME = 'itemacro';
 export const ENVIRONMENT_INTERACTION_MONKS_TOKENBAR_MODULE_NAME = 'monks-tokenbar';

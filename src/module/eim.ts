@@ -12,7 +12,7 @@ import {
   moduleName,
 } from './settings';
 import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
-import { MonkTokenBarRollOptions } from '../lib/tokenbarapi/MonksTokenBarAPI';
+import { MonkTokenBarRollOptions } from './lib/tokenbarapi/MonksTokenBarAPI';
 import { executeEIMacro, executeEIMacroContent } from './eim-utils';
 import { EnvironmentInteractionPlaceableConfig } from './eim-paceable-config';
 import { canvas, game } from './settings';

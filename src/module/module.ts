@@ -1,15 +1,132 @@
 import { debug, error, i18n } from '../eim-main';
-import { ContestedRoll } from '../lib/tokenbarapi/ContestedRoll';
+import { ContestedRoll } from './lib/tokenbarapi/ContestedRoll';
 import { EnvironmentInteractionNote } from './eim-note';
 import { EnvironmentInteraction } from './eim';
 import { customInfoEnvironmentInteraction, Flags } from './eim-models';
 import { moduleName } from './settings';
 import { canvas, game } from './settings';
-import { MonkTokenBarMessageOptions, MonkTokenBarMessageRequestoption } from '../lib/tokenbarapi/MonksTokenBarAPI';
+import { MonkTokenBarMessageOptions, MonkTokenBarMessageRequestoption } from './lib/tokenbarapi/MonksTokenBarAPI';
 import { executeEIMacro } from './eim-utils';
 import { EnvironmentInteractionPlaceableConfig } from './eim-paceable-config';
 
 let currentContestedRollTokenBar = NaN;
+
+export const initHooks = async () => {
+  // Open module API
+  // @ts-ignore
+  game.EnvironmentInteraction = EnvironmentInteraction;
+  // @ts-ignore
+  game.EnvironmentInteraction.EnvironmentInteractionPlaceableConfig = EnvironmentInteractionPlaceableConfig;
+
+  // Register settings
+  // @ts-ignore
+  // game.EnvironmentInteraction.registerSettings();
+
+  // Register Handlebars helpers
+  // @ts-ignore
+  // game.EnvironmentInteraction.registerHandlebarsHelpers();
+  Handlebars.registerHelper('checkedIf', function (condition) {
+    return condition ? 'checked' : '';
+  });
+
+  if (game.modules.get('acelib')?.active) {
+    // Loading acelib module
+    //@ts-ignore
+    ['ace/mode/json', 'ace/ext/language_tools', 'ace/ext/error_marker', 'ace/theme/twilight', 'ace/snippets/json'].forEach((s) => ace.config.loadModule(s));
+  }
+};
+
+export const setupHooks = async () => {
+  // Do anything after initialization but before ready
+  // Register wrappers
+  // @ts-ignore
+  // game.EnvironmentInteraction.registerWrappers();
+
+  // Alter mouse interaction for tokens flagged as environment
+
+  // ====================
+  // TOKEN
+  // ====================
+
+  //@ts-ignore
+  libWrapper.register(
+    moduleName,
+    'CONFIG.Token.objectClass.prototype._canView',
+    //@ts-ignore
+    game.EnvironmentInteraction._canViewToken,
+    'MIXED',
+  );
+
+  //@ts-ignore
+  libWrapper.register(
+    moduleName,
+    'CONFIG.Token.objectClass.prototype._onClickLeft',
+    //@ts-ignore
+    game.EnvironmentInteraction._onClickLeftToken,
+    'MIXED',
+  );
+  //@ts-ignore
+  libWrapper.register(
+    moduleName,
+    'CONFIG.Token.objectClass.prototype._onClickLeft2',
+    //@ts-ignore
+    game.EnvironmentInteraction._onClickLeft2Token,
+    'MIXED',
+  );
+
+  // =======================
+  // WALL/DOOR
+  // =======================
+
+  //@ts-ignore
+  libWrapper.register(
+    moduleName,
+    'DoorControl.prototype._onMouseDown',
+    //@ts-ignore
+    game.EnvironmentInteraction._DoorControlPrototypeOnMouseDownHandler,
+    'MIXED',
+  );
+
+  // //@ts-ignore
+  // libWrapper.register(
+  //   moduleName,
+  //   'CONFIG.Wall.objectClass.prototype._onClickLeft',
+  //   //@ts-ignore
+  //   game.EnvironmentInteraction._onClickLeftWall,
+  //   'MIXED',
+  // );
+
+  // //@ts-ignore
+  // libWrapper.register(
+  //   moduleName,
+  //   'CONFIG.Wall.objectClass.prototype._onClickLeft2',
+  //   //@ts-ignore
+  //   game.EnvironmentInteraction._onClickLeft2Wall,
+  //   'MIXED',
+  // );
+
+  // ========================
+  // NOTE/JOURNAL
+  // ========================
+
+  //@ts-ignore
+  libWrapper.register(
+    moduleName,
+    'Note.prototype._onClickLeft',
+    //@ts-ignore
+    game.EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
+    'MIXED',
+  );
+
+  //@ts-ignore
+  libWrapper.register(
+    moduleName,
+    'Note.prototype._onClickLeft2',
+    //@ts-ignore
+    game.EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
+    'MIXED',
+  );
+};
 
 export const readyHooks = async () => {
   // Register hook callbacks
@@ -209,173 +326,3 @@ export const readyHooks = async () => {
   //   TriggerHappyEim.triggerHappy_onPreUpdateToken(scene, embedded, update, undefined, <string>game.userId)
   // });
 };
-
-export const initHooks = async () => {
-  // Open module API
-  // @ts-ignore
-  game.EnvironmentInteraction = EnvironmentInteraction;
-  // @ts-ignore
-  game.EnvironmentInteraction.EnvironmentInteractionPlaceableConfig = EnvironmentInteractionPlaceableConfig;
-
-  // Register settings
-  // @ts-ignore
-  // game.EnvironmentInteraction.registerSettings();
-
-  // Register Handlebars helpers
-  // @ts-ignore
-  // game.EnvironmentInteraction.registerHandlebarsHelpers();
-  Handlebars.registerHelper('checkedIf', function (condition) {
-    return condition ? 'checked' : '';
-  });
-
-  if (game.modules.get('acelib')?.active) {
-    // Loading acelib module
-    //@ts-ignore
-    ['ace/mode/json', 'ace/ext/language_tools', 'ace/ext/error_marker', 'ace/theme/twilight', 'ace/snippets/json'].forEach((s) => ace.config.loadModule(s));
-  }
-};
-
-export const setupHooks = async () => {
-  // Do anything after initialization but before ready
-  // Register wrappers
-  // @ts-ignore
-  // game.EnvironmentInteraction.registerWrappers();
-
-  // Alter mouse interaction for tokens flagged as environment
-
-  // ====================
-  // TOKEN
-  // ====================
-
-  //@ts-ignore
-  libWrapper.register(
-    moduleName,
-    'CONFIG.Token.objectClass.prototype._canView',
-    //@ts-ignore
-    game.EnvironmentInteraction._canViewToken,
-    'MIXED',
-  );
-
-  //@ts-ignore
-  libWrapper.register(
-    moduleName,
-    'CONFIG.Token.objectClass.prototype._onClickLeft',
-    //@ts-ignore
-    game.EnvironmentInteraction._onClickLeftToken,
-    'MIXED',
-  );
-  //@ts-ignore
-  libWrapper.register(
-    moduleName,
-    'CONFIG.Token.objectClass.prototype._onClickLeft2',
-    //@ts-ignore
-    game.EnvironmentInteraction._onClickLeft2Token,
-    'MIXED',
-  );
-
-  // =======================
-  // WALL/DOOR
-  // =======================
-
-  //@ts-ignore
-  libWrapper.register(
-    moduleName,
-    'DoorControl.prototype._onMouseDown',
-    //@ts-ignore
-    game.EnvironmentInteraction._DoorControlPrototypeOnMouseDownHandler,
-    'MIXED',
-  );
-
-  // //@ts-ignore
-  // libWrapper.register(
-  //   moduleName,
-  //   'CONFIG.Wall.objectClass.prototype._onClickLeft',
-  //   //@ts-ignore
-  //   game.EnvironmentInteraction._onClickLeftWall,
-  //   'MIXED',
-  // );
-
-  // //@ts-ignore
-  // libWrapper.register(
-  //   moduleName,
-  //   'CONFIG.Wall.objectClass.prototype._onClickLeft2',
-  //   //@ts-ignore
-  //   game.EnvironmentInteraction._onClickLeft2Wall,
-  //   'MIXED',
-  // );
-
-  // ========================
-  // NOTE/JOURNAL
-  // ========================
-
-  //@ts-ignore
-  libWrapper.register(
-    moduleName,
-    'Note.prototype._onClickLeft',
-    //@ts-ignore
-    game.EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
-    'MIXED',
-  );
-
-  //@ts-ignore
-  libWrapper.register(
-    moduleName,
-    'Note.prototype._onClickLeft2',
-    //@ts-ignore
-    game.EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
-    'MIXED',
-  );
-};
-
-/*
-export const setupTinyMCEEditor = function () {
-  // Add custom stylesheet to TinyMCE Config
-  //@ts-ignore
-  CONFIG.TinyMCE.content_css.push(`/modules/${moduleName}/styles/environment-interaction-secret.css`);
-  if (game.user?.isGM) {
-    // Add GM Secret section type
-    //@ts-ignore
-    const customFormats = CONFIG.TinyMCE.style_formats.find((x) => x.title === 'Custom');
-    //@ts-ignore
-    customFormats.items.push({
-      title: 'GM Secret',
-      block: 'section',
-      classes: 'secret gm-secret',
-      wrapper: true,
-    });
-
-    // If the user is a GM, add a unique class to the body of the document so that we can selectively hide content when this class doesn't exist.
-    $('body').addClass('game-master');
-  }
-};
-
-// Wrap TextEditor.create to add the appropriate class to the created editor
-export const textEditorCreateHandler = function (wrapped, ...args) {
-  // const oldCreate = TextEditor.create;
-  // const editor = await oldCreate.apply(this, arguments);
-  const editor = this as any;
-  // If the user is a GM, add the "game-master" class to the tinyMCE iframe body.
-  if (game.user?.isGM) {
-    editor.dom.addClass('tinymce', 'game-master');
-  }
-
-  return editor;
-  // return wrapped(...args);
-};
-
-// Wrap TextEditor.enrichHTML to remove GM secret sections if the user is not a GM
-export const textEditorEnrichHTMLHandler = function (wrapped, ...args) {
-  // const oldEnrichHTML = TextEditor.enrichHTML;
-  // const content = oldEnrichHTML.apply(this, arguments);
-  const content = this as string;
-  const html = document.createElement('div');
-  html.innerHTML = content;
-
-  if (!game.user?.isGM) {
-    const elements: NodeListOf<Element> = html.querySelectorAll('section.gm-secret');
-    elements.forEach((e) => e?.parentNode?.removeChild(e));
-  }
-  return html.innerHTML;
-  // return wrapped(...args);
-};
-*/

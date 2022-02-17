@@ -14,7 +14,7 @@
 // Import TypeScript modules
 import { moduleName, registerSettings } from './module/settings';
 import { preloadTemplates } from './module/preloadTemplates';
-import { initHooks, readyHooks, setupHooks } from './module/Hooks';
+import { initHooks, readyHooks, setupHooks } from './module/module';
 import { game } from './module/settings';
 
 export let debugEnabled = 0;
