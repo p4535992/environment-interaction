@@ -1,3 +1,7 @@
+### Update 1.1.6
+
+- First official release
+
 ### Update 1.1.5 [BETA]
 
 ### Update 1.1.4 [BETA]

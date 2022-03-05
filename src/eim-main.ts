@@ -70,4 +70,11 @@ Hooks.once('ready', () => {
   readyHooks();
 });
 
-// Add any additional hooks if necessary
+/* ------------------------------------ */
+/* Other Hooks							*/
+/* ------------------------------------ */
+
+Hooks.once('libChangelogsReady', function () {
+  //@ts-ignore
+  libChangelogs.register(CONSTANTS.MODULE_NAME, `First official release`, 'minor');
+});

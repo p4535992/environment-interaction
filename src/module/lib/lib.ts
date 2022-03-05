@@ -1,4 +1,3 @@
-
 import CONSTANTS from '../constants';
 import { canvas, game } from '../settings';
 
@@ -18,9 +17,9 @@ export function wait(ms) {
 // 0 = none, warnings = 1, debug = 2, all = 3
 
 export function debug(msg, args = '') {
-  // if (game.settings.get(CONSTANTS.MODULE_NAME, 'debug')) {
+  if (game.settings.get(CONSTANTS.MODULE_NAME, 'debug')) {
     console.log(`DEBUG | ${CONSTANTS.MODULE_NAME} | ${msg}`, args);
-  // }
+  }
   return msg;
 }
 
@@ -35,6 +34,13 @@ export function notify(message) {
   ui.notifications?.notify(message);
   console.log(message.replace('<br>', '\n'));
   return message;
+}
+
+export function info(info, notify = false) {
+  info = `${CONSTANTS.MODULE_NAME} | ${info}`;
+  if (notify) ui.notifications?.info(info);
+  console.log(info.replace('<br>', '\n'));
+  return info;
 }
 
 export function warn(warning, notify = false) {
@@ -55,11 +61,11 @@ export function timelog(message): void {
 }
 
 export const i18n = (key: string): string => {
-  return game.i18n.localize(key).trim();
+  return game.i18n.localize(key)?.trim();
 };
 
 export const i18nFormat = (key: string, data = {}): string => {
-  return game.i18n.format(key, data).trim();
+  return game.i18n.format(key, data)?.trim();
 };
 
 // export const setDebugLevel = (debugText: string): void => {
@@ -75,6 +81,30 @@ export function dialogWarning(message, icon = 'fas fa-exclamation-triangle') {
         <br><br>${message}
     </p>`;
 }
+
+export function cleanUpString(stringToCleanUp: string) {
+  // regex expression to match all non-alphanumeric characters in string
+  const regex = /[^A-Za-z0-9]/g;
+  if (stringToCleanUp) {
+    return i18n(stringToCleanUp).replace(regex, '').toLowerCase();
+  } else {
+    return stringToCleanUp;
+  }
+}
+
+export function isStringEquals(stringToCheck1: string, stringToCheck2: string, startsWith = true): boolean {
+  if (stringToCheck1 && stringToCheck2) {
+    if (startsWith) {
+      return cleanUpString(stringToCheck1).startsWith(cleanUpString(stringToCheck2));
+    } else {
+      return cleanUpString(stringToCheck1) === cleanUpString(stringToCheck2);
+    }
+  } else {
+    return stringToCheck1 === stringToCheck2;
+  }
+}
+
+// =========================================================================================
 
 // =============================
 // Module specific function
