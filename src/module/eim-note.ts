@@ -500,15 +500,15 @@ export class EnvironmentInteractionNote extends FormApplication {
   // }
 
   static _initEntityHook(app, html, data) {
-    if(!app.entity){
+    if (!app?.object?.document) {
       return;
     }
     if (game.user?.isGM) {
       const labelTxt = '';
       const labelStyle = '';
       const title = i18n(`${CONSTANTS.MODULE_NAME}.note.label`);
-      const notes = app.entity.getFlag(CONSTANTS.MODULE_NAME, Flags.notes);
-      const notesuseei = app.entity.getFlag(CONSTANTS.MODULE_NAME, Flags.notesuseei);
+      const notes = app.object.document.getFlag(CONSTANTS.MODULE_NAME, Flags.notes);
+      const notesuseei = app.object.document.getFlag(CONSTANTS.MODULE_NAME, Flags.notesuseei);
       // if (game.settings.get(CONSTANTS.MODULE_NAME, 'hideLabel') === false) {
       //   labelTxt = ' ' + title;
       // }
@@ -527,15 +527,15 @@ export class EnvironmentInteractionNote extends FormApplication {
       }
       openBtn.click((ev) => {
         let noteApp: any = null;
-        for (const key in app.entity.apps) {
-          const obj = app.entity.apps[key];
+        for (const key in app.object.apps) {
+          const obj = app.object.apps[key];
           if (obj instanceof EnvironmentInteractionNote) {
             noteApp = obj;
             break;
           }
         }
         if (!noteApp) {
-          noteApp = new EnvironmentInteractionNote(app.entity, { submitOnClose: true, closeOnSubmit: false, submitOnUnfocus: true });
+          noteApp = new EnvironmentInteractionNote(app.object, { submitOnClose: true, closeOnSubmit: false, submitOnUnfocus: true });
         }
         noteApp.render(true);
       });
