@@ -500,6 +500,9 @@ export class EnvironmentInteractionNote extends FormApplication {
   // }
 
   static _initEntityHook(app, html, data) {
+    if(!app.entity){
+      return;
+    }
     if (game.user?.isGM) {
       const labelTxt = '';
       const labelStyle = '';

@@ -1,3 +1,7 @@
+### Update 1.1.7
+
+- Little bug fix
+
 ### Update 1.1.6
 
 - First official release
