@@ -1,4 +1,4 @@
-import { customInfoEnvironmentInteraction, ENVIRONMENT_TYPE, Flags } from './eim-models';
+import { customInfoEnvironmentInteraction, ENVIRONMENT_TYPE, EnvironmentInteractionFlags } from './eim-models';
 import { i18n, log } from './lib/lib';
 import {
   getMonkTokenBarAPI,
@@ -10,11 +10,9 @@ import {
   isSystemTokenActionHUDSupported,
   isTokenActionHudActive,
 } from './settings';
-import Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
+import type Document from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { MonkTokenBarRollOptions } from './lib/tokenbarapi/MonksTokenBarAPI';
 import { executeEIMacro, executeEIMacroContent } from './eim-utils';
-import { EnvironmentInteractionPlaceableConfig } from './eim-paceable-config';
-import { canvas, game } from './settings';
 import CONSTANTS from './constants';
 
 export class EnvironmentInteraction {
@@ -29,7 +27,7 @@ export class EnvironmentInteraction {
     //     ? getProperty(token.actor.data.token, `flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentToken}`)
     //     : // ? token.document.getFlag(CONSTANTS.MODULE_NAME,Flags.environmentToken)
     //       false;
-    const isEi = token.document.getFlag(CONSTANTS.MODULE_NAME, Flags.environmentToken) ?? false;
+    const isEi = token.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.environmentToken) ?? false;
     // If token is an environment token, then any use can "view" (allow _clickLeft2 callback)
     if (!isEi) {
       return wrapped(...args);
@@ -45,7 +43,7 @@ export class EnvironmentInteraction {
     //     ? getProperty(token.actor.data.token, `flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentToken}`)
     //     : // ? token.document.getFlag(CONSTANTS.MODULE_NAME,Flags.environmentToken)
     //       false;
-    const isEi = token.document.getFlag(CONSTANTS.MODULE_NAME, Flags.environmentToken) ?? false;
+    const isEi = token.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.environmentToken) ?? false;
     // Prevent deselection of currently controlled token when clicking environment token
     if (!isEi) {
       return wrapped(...args);
@@ -59,7 +57,7 @@ export class EnvironmentInteraction {
     //     ? getProperty(token.actor.data.token, `flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentToken}`)
     //     : // ? token.document.getFlag(CONSTANTS.MODULE_NAME,Flags.environmentToken)
     //       false;
-    const isEi = token.document.getFlag(CONSTANTS.MODULE_NAME, Flags.environmentToken) ?? false;
+    const isEi = token.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.environmentToken) ?? false;
     if (!isEi) {
       return wrapped(...args);
     } else {
@@ -77,7 +75,7 @@ export class EnvironmentInteraction {
     const wall = <Wall>canvas.walls?.placeables.find((x) => {
       return x.id == doorControl.wall.id;
     });
-    const isEi = wall.document.getFlag(CONSTANTS.MODULE_NAME, Flags.environmentToken) ?? false;
+    const isEi = wall.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.environmentToken) ?? false;
     if (!isEi) {
       return wrapped(...args);
     } else {
@@ -91,7 +89,7 @@ export class EnvironmentInteraction {
 
   static _NotePrototypeOnClickLeftHandler = async function (wrapped, ...args) {
     const note = this as Note;
-    const isEi = note.document.getFlag(CONSTANTS.MODULE_NAME, Flags.environmentToken) ?? false;
+    const isEi = note.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.environmentToken) ?? false;
     if (!isEi) {
       return wrapped(...args);
     } else {
@@ -123,7 +121,7 @@ export class EnvironmentInteraction {
   static async interactWithEnvironmentFromPlaceableObject(environmentPlaceableObject: PlaceableObject, ...args) {
     const event = args[0];
 
-    const flagRefActorId = environmentPlaceableObject.document.getFlag(CONSTANTS.MODULE_NAME, Flags.environmentTokenRef);
+    const flagRefActorId = environmentPlaceableObject.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.environmentTokenRef);
     if (!flagRefActorId) {
       ui.notifications?.warn(CONSTANTS.MODULE_NAME + ' | The environment interaction need a valid actor to reference the actions');
       return;
@@ -142,9 +140,9 @@ export class EnvironmentInteraction {
     // for (const type of actionsType) {
     environmentActorExternal?.items
       .filter((environmentItemToCheck) => {
-        if (environmentItemToCheck.getFlag(CONSTANTS.MODULE_NAME, Flags.notesuseei)) {
-          if (environmentItemToCheck.getFlag(CONSTANTS.MODULE_NAME, Flags.notescondition)) {
-            const result = executeEIMacro(environmentItemToCheck, Flags.notescondition);
+        if (environmentItemToCheck.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)) {
+          if (environmentItemToCheck.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notescondition)) {
+            const result = executeEIMacro(environmentItemToCheck, EnvironmentInteractionFlags.notescondition);
             if (result) {
               return result;
             } else {
@@ -201,7 +199,7 @@ export class EnvironmentInteraction {
         //const environment = <Actor>canvas.tokens?.get(environmentToken.id)?.actor;
         //const environmentItem = <Item>environment.items.get(itemID);
         const environmentItem = <Item>environmentActorExternal?.items.get(itemID);
-        let contentInfo = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notesinfo);
+        let contentInfo = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesinfo);
         if (!contentInfo) {
           contentInfo = 'No info provided';
         }
@@ -263,7 +261,7 @@ export class EnvironmentInteraction {
           customInfo.environmentItemID = <string>environmentItem.id;
 
           let interactorItemTmp: Item;
-          if (environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notesuseitemenvironment)) {
+          if (environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseitemenvironment)) {
             interactorItemTmp = environmentItem;
             customInfo.interactorTokenID = <string>environmentToken.id;
             customInfo.interactorActorID = <string>environmentToken.actor?.id;
@@ -285,7 +283,7 @@ export class EnvironmentInteraction {
           // let interactorItem = environmentItem;
           try {
             // Integration with 'item macro'
-            const useItemMacro = <boolean>environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notesuseitemmacro);
+            const useItemMacro = <boolean>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseitemmacro);
             if (useItemMacro) {
               //@ts-ignore
               if (interactorItemTmp.data.flags.itemacro?.macro && isItemMacroModuleActive()) {
@@ -306,25 +304,25 @@ export class EnvironmentInteraction {
             }
 
             // Integration with 'use as macro'
-            const useAsMacro = <boolean>environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notesuseasmacro);
-            const explicitDC = <number>environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notesexplicitdc);
+            const useAsMacro = <boolean>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseasmacro);
+            const explicitDC = <number>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesexplicitdc);
             if (useAsMacro) {
-              const macroContent = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notes);
-              const macroArgs = environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notesargs);
+              const macroContent = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes);
+              const macroArgs = environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesargs);
               const result = executeEIMacroContent(environmentItem, macroContent, macroArgs);
               if (result >= explicitDC) {
-                const macroContentSuccess = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notessuccess);
-                const macroArgsSuccess = environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notessuccessargs);
+                const macroContentSuccess = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccess);
+                const macroArgsSuccess = environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccessargs);
                 executeEIMacroContent(environmentItem, macroContentSuccess, macroArgsSuccess);
               } else {
-                const macroContentFailure = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notesfailure);
-                const macroArgsFailure = environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notesfailureargs);
+                const macroContentFailure = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailure);
+                const macroArgsFailure = environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailureargs);
                 executeEIMacroContent(environmentItem, macroContentFailure, macroArgsFailure);
               }
               return;
             }
 
-            const REQUEST_LABEL = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notes);
+            const REQUEST_LABEL = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes);
             if (!REQUEST_LABEL) {
               ui.notifications?.warn(CONSTANTS.MODULE_NAME + ' | No label event is setted for the environment interaction with the item');
               return;
@@ -345,7 +343,7 @@ export class EnvironmentInteraction {
 
             // const groupsReq = myRequestArray[2]?.trim() ? Array.from(myRequestArray[2]?.trim().split(',')) : [];
 
-            const dcReq = <number>environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notesexplicitdc);
+            const dcReq = <number>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesexplicitdc);
             //myRequestArray[4]?.trim() ? <number>Number.parseInt(myRequestArray[4]?.trim()) : null;
 
             // if ([ENVIRONMENT_TYPE.ATTACK].includes(noteDetail)) {
@@ -377,12 +375,12 @@ export class EnvironmentInteraction {
                 const roll = new Roll(macroNameOrTypeReq).roll();
                 const result = <number>roll.total ?? 0;
                 if (result >= explicitDC) {
-                  const macroContentSuccess = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notessuccess);
-                  const macroArgsSuccess = environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notessuccessargs);
+                  const macroContentSuccess = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccess);
+                  const macroArgsSuccess = environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccessargs);
                   executeEIMacroContent(environmentItem, macroContentSuccess, macroArgsSuccess);
                 } else {
-                  const macroContentFailure = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notesfailure);
-                  const macroArgsFailure = environmentItem.getFlag(CONSTANTS.MODULE_NAME, Flags.notesfailureargs);
+                  const macroContentFailure = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailure);
+                  const macroArgsFailure = environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailureargs);
                   executeEIMacroContent(environmentItem, macroContentFailure, macroArgsFailure);
                 }
                 break;
@@ -416,14 +414,14 @@ export class EnvironmentInteraction {
                     let refActionId, refId;
                     if (macroNameOrTypeReq.includes(':')) {
                       if (macroNameOrTypeReq.includes(',')) {
-                        const [req0, req1] = macroNameOrTypeReq.split(',');
-                        const req0p = req0.split(':');
+                        const [req0, req1] = <string[]>macroNameOrTypeReq.split(',');
+                        const req0p = (<string>req0).split(':');
                         refActionId = req0p[0];
                         refId = req0p[1];
                       }
                     } else {
                       const [req0, req1] = macroNameOrTypeReq.split(':');
-                      const req0p = req0.split(':');
+                      const req0p = (<string>req0).split(':');
                       refActionId = req0p[0];
                       refId = req0p[1];
                     }
@@ -459,7 +457,11 @@ export class EnvironmentInteraction {
 
                   const groupsReq = labelOrDcReq?.trim() ? Array.from(labelOrDcReq?.trim().split(',')) : [];
 
-                  options.requestoptions.push({ id: macroNameOrTypeReq.split(':')[0], text: macroNameOrTypeReq.split(':')[1], groups: groupsReq });
+                  options.requestoptions.push({
+                    id: <string>macroNameOrTypeReq.split(':')[0],
+                    text: <string>macroNameOrTypeReq.split(':')[1],
+                    groups: groupsReq,
+                  });
                   if (options.request.includes(':')) {
                     const some = await getMonkTokenBarAPI().requestRoll([interactorToken], options);
                     log(some);
@@ -481,13 +483,13 @@ export class EnvironmentInteraction {
                     if (macroNameOrTypeReq.includes(':')) {
                       if (macroNameOrTypeReq.includes(',')) {
                         const [req0, req1] = macroNameOrTypeReq.split(',');
-                        const req0p = req0.split(':');
+                        const req0p = (<string>req0).split(':');
                         refActionId = req0p[0];
                         refId = req0p[1];
                       }
                     } else {
                       const [req0, req1] = macroNameOrTypeReq.split(':');
-                      const req0p = req0.split(':');
+                      const req0p = (<string>req0).split(':');
                       refActionId = req0p[0];
                       refId = req0p[1];
                     }
@@ -545,13 +547,25 @@ export class EnvironmentInteraction {
                       // eslint-disable-next-line @typescript-eslint/no-array-constructor
                       // options.requestoptions.push({ id: 'save', text: req0.split(':')[1], groups: [] });
                       // options.requestoptions.push({ id: 'save', text: req1.split(':')[1], groups: [] });
-                      options.requestoptions.push({ id: req0.split(':')[0], text: req0.split(':')[1], groups: groupsReq });
-                      options.requestoptions.push({ id: req1.split(':')[0], text: req1.split(':')[1], groups: groupsReq });
+                      options.requestoptions.push({
+                        id: <string>(<string>req0).split(':')[0],
+                        text: <string>(<string>req0).split(':')[1],
+                        groups: groupsReq,
+                      });
+                      options.requestoptions.push({
+                        id: <string>(<string>req1).split(':')[0],
+                        text: <string>(<string>req1).split(':')[1],
+                        groups: groupsReq,
+                      });
                       const some = await getMonkTokenBarAPI().requestContestedRoll(request1, request0, options);
                       log(some);
                     } else {
                       const groupsReq = labelOrDcReq?.trim() ? Array.from(labelOrDcReq?.trim().split(',')) : [];
-                      options.requestoptions.push({ id: macroNameOrTypeReq.split(':')[0], text: macroNameOrTypeReq.split(':')[1], groups: groupsReq });
+                      options.requestoptions.push({
+                        id: <string>macroNameOrTypeReq.split(':')[0],
+                        text: <string>macroNameOrTypeReq.split(':')[1],
+                        groups: groupsReq,
+                      });
                       const some = await getMonkTokenBarAPI().requestRoll([interactorToken], options);
                       log(some);
                     }
@@ -573,13 +587,13 @@ export class EnvironmentInteraction {
                     if (macroNameOrTypeReq.includes(':')) {
                       if (macroNameOrTypeReq.includes(',')) {
                         const [req0, req1] = macroNameOrTypeReq.split(',');
-                        const req0p = req0.split(':');
+                        const req0p = (<string>req0).split(':');
                         refActionId = req0p[0];
                         refId = req0p[1];
                       }
                     } else {
                       const [req0, req1] = macroNameOrTypeReq.split(':');
-                      const req0p = req0.split(':');
+                      const req0p = (<string>req0).split(':');
                       refActionId = req0p[0];
                       refId = req0p[1];
                     }
@@ -611,7 +625,11 @@ export class EnvironmentInteraction {
 
                   const groupsReq = labelOrDcReq?.trim() ? Array.from(labelOrDcReq?.trim().split(',')) : [];
 
-                  options.requestoptions.push({ id: macroNameOrTypeReq.split(':')[0], text: macroNameOrTypeReq.split(':')[1], groups: groupsReq });
+                  options.requestoptions.push({
+                    id: <string>macroNameOrTypeReq.split(':')[0],
+                    text: <string>macroNameOrTypeReq.split(':')[1],
+                    groups: groupsReq,
+                  });
                   if (options.request.includes(':')) {
                     const some = await getMonkTokenBarAPI().requestRoll([interactorToken], options);
                     log(some);
@@ -633,13 +651,13 @@ export class EnvironmentInteraction {
                     if (macroNameOrTypeReq.includes(':')) {
                       if (macroNameOrTypeReq.includes(',')) {
                         const [req0, req1] = macroNameOrTypeReq.split(',');
-                        const req0p = req0.split(':');
+                        const req0p = (<string>req0).split(':');
                         refActionId = req0p[0];
                         refId = req0p[1];
                       }
                     } else {
                       const [req0, req1] = macroNameOrTypeReq.split(':');
-                      const req0p = req0.split(':');
+                      const req0p = (<string>req0).split(':');
                       refActionId = req0p[0];
                       refId = req0p[1];
                     }
@@ -684,7 +702,7 @@ export class EnvironmentInteraction {
 
           if (game.settings.get(CONSTANTS.MODULE_NAME, 'closeDialog')) {
             const appID = html.closest(`div.app`).data('appid');
-            ui.windows[appID].close();
+            ui.windows[appID]?.close();
           }
         });
     };

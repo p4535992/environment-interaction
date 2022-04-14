@@ -49,7 +49,7 @@ export const ENVIRONMENT_TYPE = {
 //   interactorTokenID: string;
 // }
 
-export const Flags = {
+export const EnvironmentInteractionFlags = {
   environmentTokenRef: 'environmentTokenRef',
   environmentToken: 'environmentToken',
   notesuseei: 'notes-use-environment-interaction',

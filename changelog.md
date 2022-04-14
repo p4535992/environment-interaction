@@ -1,3 +1,7 @@
+### Update 1.1.9
+
+- Update typescript
+
 ### Update 1.1.7-1.1.8
 
 - Little bug fix

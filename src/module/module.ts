@@ -1,10 +1,7 @@
-import { debug, error, i18n } from './lib/lib';
-import { ContestedRoll } from './lib/tokenbarapi/ContestedRoll';
+import type { ContestedRoll } from './lib/tokenbarapi/ContestedRoll';
 import { EnvironmentInteractionNote } from './eim-note';
 import { EnvironmentInteraction } from './eim';
-import { customInfoEnvironmentInteraction, Flags } from './eim-models';
-import { canvas, game } from './settings';
-import { MonkTokenBarMessageOptions, MonkTokenBarMessageRequestoption } from './lib/tokenbarapi/MonksTokenBarAPI';
+import { customInfoEnvironmentInteraction, EnvironmentInteractionFlags } from './eim-models';
 import { executeEIMacro } from './eim-utils';
 import { EnvironmentInteractionPlaceableConfig } from './eim-paceable-config';
 import CONSTANTS from './constants';
@@ -18,13 +15,9 @@ export const initHooks = async () => {
   // @ts-ignore
   game.EnvironmentInteraction.EnvironmentInteractionPlaceableConfig = EnvironmentInteractionPlaceableConfig;
 
-  // Register settings
-  // @ts-ignore
-  // game.EnvironmentInteraction.registerSettings();
-
   // Register Handlebars helpers
   // @ts-ignore
-  // game.EnvironmentInteraction.registerHandlebarsHelpers();
+  // registerHandlebarsHelpers();
   Handlebars.registerHelper('checkedIf', function (condition) {
     return condition ? 'checked' : '';
   });
@@ -40,7 +33,7 @@ export const setupHooks = async () => {
   // Do anything after initialization but before ready
   // Register wrappers
   // @ts-ignore
-  // game.EnvironmentInteraction.registerWrappers();
+  // registerWrappers();
 
   // Alter mouse interaction for tokens flagged as environment
 
@@ -171,15 +164,15 @@ export const readyHooks = async () => {
         // }
         if (dc != null && dc != undefined && !isNaN(dc)) {
           if (total >= dc) {
-            executeEIMacro(environmentItem, Flags.notessuccess);
+            executeEIMacro(environmentItem, EnvironmentInteractionFlags.notessuccess);
           } else {
-            executeEIMacro(environmentItem, Flags.notesfailure);
+            executeEIMacro(environmentItem, EnvironmentInteractionFlags.notesfailure);
           }
         } else {
-          const macroSuccess = environmentItem?.getFlag(CONSTANTS.MODULE_NAME, Flags.notessuccess);
+          const macroSuccess = environmentItem?.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccess);
           // const macroFailure = environmentItem?.getFlag(CONSTANTS.MODULE_NAME, Flags.notesfailure);
           if (macroSuccess) {
-            executeEIMacro(environmentItem, Flags.notessuccess);
+            executeEIMacro(environmentItem, EnvironmentInteractionFlags.notessuccess);
           }
         }
       } else {
@@ -280,7 +273,7 @@ export const readyHooks = async () => {
           const item = actorEntity.items?.find((item: Item) => {
             return item && item.id == itemId;
           });
-          if (item?.getFlag(CONSTANTS.MODULE_NAME, Flags.notesuseei)) {
+          if (item?.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)) {
             liOnInventory.hide();
           }
         }
@@ -296,7 +289,7 @@ export const readyHooks = async () => {
           const item = actorEntity.items?.find((item: Item) => {
             return item && item.id == itemId;
           });
-          if (item?.getFlag(CONSTANTS.MODULE_NAME, Flags.notesuseei)) {
+          if (item?.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)) {
             liOnInventory.css('background', 'rgba(233, 103, 28, 0.2)');
           }
         }

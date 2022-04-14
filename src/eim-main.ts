@@ -15,7 +15,6 @@
 import { registerSettings } from './module/settings';
 import { preloadTemplates } from './module/preloadTemplates';
 import { initHooks, readyHooks, setupHooks } from './module/module';
-import { game } from './module/settings';
 import CONSTANTS from './module/constants';
 
 /* ------------------------------------ */
@@ -76,5 +75,5 @@ Hooks.once('ready', () => {
 
 Hooks.once('libChangelogsReady', function () {
   //@ts-ignore
-  libChangelogs.register(CONSTANTS.MODULE_NAME, `First official release`, 'minor');
+  libChangelogs.register(CONSTANTS.MODULE_NAME, `Update typescript`, 'minor');
 });

@@ -1,6 +1,5 @@
 import { i18n } from './lib/lib';
-import { Flags } from './eim-models';
-import { canvas, game } from './settings';
+import { EnvironmentInteractionFlags } from './eim-models';
 import CONSTANTS from './constants';
 
 export class EnvironmentInteractionPlaceableConfig {
@@ -100,8 +99,8 @@ export class EnvironmentInteractionPlaceableConfig {
       return;
     }
 
-    const enviromentActorId = EnvironmentInteractionPlaceableConfig.getEnviroments(obj, Flags.environmentTokenRef);
-    const enviromentChecked = EnvironmentInteractionPlaceableConfig.getEnviroments(obj, Flags.environmentToken) ? 'checked' : '';
+    const enviromentActorId = EnvironmentInteractionPlaceableConfig.getEnviroments(obj, EnvironmentInteractionFlags.environmentTokenRef);
+    const enviromentChecked = EnvironmentInteractionPlaceableConfig.getEnviroments(obj, EnvironmentInteractionFlags.environmentToken) ? 'checked' : '';
 
     const actorsOrderByName = <Actor[]>game.actors?.contents.sort((a, b) => a.data.name.localeCompare(b.data.name));
     // TODO ADD SOME FILTER ???
@@ -122,11 +121,11 @@ export class EnvironmentInteractionPlaceableConfig {
         <div class="form-group stacked">
           <div class="form-group">
             <label>${i18n(`${CONSTANTS.MODULE_NAME}.tokenConfig.labelPlaceableObject`)}</label>
-            <input type="checkbox" name="flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentToken}" data-dtype="Boolean" ${enviromentChecked} />
+            <input type="checkbox" name="flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.environmentToken}" data-dtype="Boolean" ${enviromentChecked} />
           </div>
           <div class="form-group">
             <label>${i18n(`${CONSTANTS.MODULE_NAME}.tokenConfig.labelActor`)}</label>
-            <select class="actor-template" name="flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentTokenRef}" value="${enviromentActorId}">
+            <select class="actor-template" name="flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.environmentTokenRef}" value="${enviromentActorId}">
               ${options.join('')}
             </select>
           </div>
@@ -142,8 +141,8 @@ export class EnvironmentInteractionPlaceableConfig {
 
   static _applyEnviroments(document, updateData) {
     const properties: string[] = [];
-    properties.push(`flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentToken}`);
-    properties.push(`flags.${CONSTANTS.MODULE_NAME}.${Flags.environmentTokenRef}`);
+    properties.push(`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.environmentToken}`);
+    properties.push(`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.environmentTokenRef}`);
     for (const propertyName of properties) {
       let propertyNameOr = propertyName;
       if (document instanceof Actor) {
@@ -267,20 +266,20 @@ export class EnvironmentInteractionPlaceableConfig {
   static getEnviroments(inObject, flag) {
     const relevantDocument = inObject?.document ?? inObject;
     if (inObject.flags) {
-      if (flag == Flags.environmentTokenRef) {
+      if (flag == EnvironmentInteractionFlags.environmentTokenRef) {
         const enviroments = getProperty(inObject, `flags.${CONSTANTS.MODULE_NAME}.${flag}`) ?? [];
         return EnvironmentInteractionPlaceableConfig._validateEnviroments(enviroments, 'getEnviroments');
-      } else if (flag == Flags.environmentToken) {
+      } else if (flag == EnvironmentInteractionFlags.environmentToken) {
         const enviroment = getProperty(inObject, `flags.${CONSTANTS.MODULE_NAME}.${flag}`) ?? false;
         return enviroment;
       } else {
         return null;
       }
     } else if (inObject.data) {
-      if (flag == Flags.environmentTokenRef) {
+      if (flag == EnvironmentInteractionFlags.environmentTokenRef) {
         const enviroments = relevantDocument?.getFlag(CONSTANTS.MODULE_NAME, flag) ?? [];
         return EnvironmentInteractionPlaceableConfig._validateEnviroments(enviroments, 'getEnviroments');
-      } else if (flag == Flags.environmentToken) {
+      } else if (flag == EnvironmentInteractionFlags.environmentToken) {
         const enviroment = relevantDocument?.getFlag(CONSTANTS.MODULE_NAME, flag) ?? false;
         return enviroment;
       } else {

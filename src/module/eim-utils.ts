@@ -1,7 +1,6 @@
-import { Document } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/module.mjs';
+import type { Document } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/module.mjs';
 import { debug, error, i18n } from './lib/lib';
-import { Flags } from './eim-models';
-import { canvas, game } from './settings';
+import { EnvironmentInteractionFlags } from './eim-models';
 import CONSTANTS from './constants';
 
 export function getTokenByTokenID(id) {
@@ -50,7 +49,7 @@ export const getFirstPlayerTokenSelected = function (): Token | null {
     return null;
     //}
   }
-  return selectedTokens[0];
+  return <Token>selectedTokens[0];
 };
 
 /**
@@ -67,7 +66,7 @@ export const getFirstPlayerToken = function (): Token | null {
     return null;
   }
   // If exactly one token is selected, take that
-  token = controlled[0];
+  token = <Token>controlled[0];
   if (!token) {
     if (!controlled.length || controlled.length == 0) {
       // If no token is selected use the token of the users character
@@ -143,7 +142,7 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args: 
       if (matchTag) {
         const [textMatched, entity, id, label] = matchTag;
         // Remove prefix '@Macro[' and suffix ']'
-        const macroName = textMatched.substring(7, textMatched.length - 1);
+        const macroName = (<string>textMatched).substring(7, (<string>textMatched).length - 1);
         macroContent = (<Macro>game.macros?.getName(macroName)).data.command;
       }
     }

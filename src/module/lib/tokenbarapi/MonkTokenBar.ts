@@ -1,6 +1,5 @@
-import { MessageData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/foundry.js/roll';
-import { AppTokenBar } from './AppTokenBar';
-import { BaseRolls } from './BaseRolls';
+import type { AppTokenBar } from './AppTokenBar';
+import type { BaseRolls } from './BaseRolls';
 
 export interface MonksTokenBar {
   tracker: boolean;

@@ -1,5 +1,5 @@
-import { customInfoEnvironmentInteraction } from '../../eim-models';
-import { AppTokenBar } from './AppTokenBar';
+import type { customInfoEnvironmentInteraction } from '../../eim-models';
+import type { AppTokenBar } from './AppTokenBar';
 
 /**
  * game.MonksTokenBar
