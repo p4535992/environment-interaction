@@ -498,15 +498,21 @@ export class EnvironmentInteractionNote extends FormApplication {
   // }
 
   static _initEntityHook(app, html, data) {
-    if (!app?.object?.document) {
+    if (!app?.object) {
       return;
     }
     if (game.user?.isGM) {
       const labelTxt = '';
       const labelStyle = '';
       const title = i18n(`${CONSTANTS.MODULE_NAME}.note.label`);
-      const notes = app.object.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes);
-      const notesuseei = app.object.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei);
+      const notes = 
+        app.object.document
+        ? app.object.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes)
+        : app.object.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes);;
+      const notesuseei = 
+        app.object.document
+        ? app.object.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)
+        : app.object.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei);
       // if (game.settings.get(CONSTANTS.MODULE_NAME, 'hideLabel') === false) {
       //   labelTxt = ' ' + title;
       // }

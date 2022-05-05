@@ -75,5 +75,5 @@ Hooks.once('ready', () => {
 
 Hooks.once('libChangelogsReady', function () {
   //@ts-ignore
-  libChangelogs.register(CONSTANTS.MODULE_NAME, `Update typescript`, 'minor');
+  libChangelogs.register(CONSTANTS.MODULE_NAME, `Little update on 'app.object.document' check`, 'minor');
 });

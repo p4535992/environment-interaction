@@ -1,3 +1,7 @@
+### Update 1.1.10
+
+- Little update on 'app.object.document' check
+
 ### Update 1.1.9
 
 - Update typescript
