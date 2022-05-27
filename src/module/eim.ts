@@ -1,5 +1,5 @@
 import { customInfoEnvironmentInteraction, ENVIRONMENT_TYPE, EnvironmentInteractionFlags } from './eim-models';
-import { i18n, log } from './lib/lib';
+import { i18n, is_real_number, log, warn } from './lib/lib';
 import {
   getMonkTokenBarAPI,
   getTokenActionHUDRollHandler,
@@ -97,10 +97,14 @@ export class EnvironmentInteraction {
     }
   };
 
+  // ========================
+  // MODULE
+  // ========================
+
   // Environment Interaction
   // static async interactWithEnvironmentFromActor(environmentActor: Actor, ...args) {
   //   if (!environmentActor?.id) {
-  //     ui.notifications?.warn(CONSTANTS.MODULE_NAME + ' | The environment interaction need the token is been liked to a actor');
+  //     warn(`The environment interaction need the token is been liked to a actor`, true);
   //     return;
   //   }
   //   EnvironmentInteraction.interactWithEnvironmentFromTokenDocument(<TokenDocument>environmentActor.token, ...args);
@@ -123,13 +127,13 @@ export class EnvironmentInteraction {
 
     const flagRefActorId = environmentPlaceableObject.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.environmentTokenRef);
     if (!flagRefActorId) {
-      ui.notifications?.warn(CONSTANTS.MODULE_NAME + ' | The environment interaction need a valid actor to reference the actions');
+      warn(`The environment interaction need a valid actor to reference the actions`,true);
       return;
     }
 
     const environmentActorExternal = <Actor>game.actors?.get(flagRefActorId);
     if (!environmentActorExternal?.id) {
-      ui.notifications?.warn(CONSTANTS.MODULE_NAME + ' | The environment interaction need a existing actor to reference the actions');
+      warn(`The environment interaction need a existing actor to reference the actions`,true);
       return;
     }
 
@@ -212,7 +216,7 @@ export class EnvironmentInteraction {
             //$(".ei.info").parent().next().addClass(".customcss");
           },
           close: (html) => {
-            console.log('Conferma finestra chiusa');
+            log('Confirmed closed window');
           },
         });
         d.render(true);
@@ -220,18 +224,18 @@ export class EnvironmentInteraction {
         html.on('click', `button.ei-flex-container`, async (event) => {
           // TODO integration mutlitoken ????
           if (<number>canvas.tokens?.controlled.length > 1) {
-            ui.notifications?.warn(CONSTANTS.MODULE_NAME + ' | The interaction support only one selected token at the time');
+            warn(`The interaction support only one selected token at the time`, true);
             return;
           }
 
           const interactorToken = <Token>canvas.tokens?.controlled[0];
           if (!interactorToken) {
-            ui.notifications?.warn(CONSTANTS.MODULE_NAME + ' | ' + i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.selectTokenWarn`));
+            warn(i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.selectTokenWarn`), true);
             return;
           }
 
           if (interactorToken.id == environmentPlaceableObject.id) {
-            ui.notifications?.warn(CONSTANTS.MODULE_NAME + " | The interactor can't be the environment");
+            warn(`The interactor can't be the environment`, true);
             return;
           }
           //Get current system config
@@ -285,6 +289,7 @@ export class EnvironmentInteraction {
             // Integration with 'item macro'
             const useItemMacro = <boolean>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseitemmacro);
             if (useItemMacro) {
+              log(`Try to use the integration with 'item macro'`);
               //@ts-ignore
               if (interactorItemTmp.data.flags.itemacro?.macro && isItemMacroModuleActive()) {
                 //if (ownedItem.type === ITEM_TYPE.LOOT) {
@@ -294,11 +299,11 @@ export class EnvironmentInteraction {
                   interactorItemTmp.executeMacro();
                   return;
                 } else {
-                  ui.notifications?.warn(CONSTANTS.MODULE_NAME + " | No macro found for the integration with 'item macro' for launch a macro");
+                  warn(`No macro found for the integration with 'item macro' for launch a macro`, true);
                   return;
                 }
               } else {
-                ui.notifications?.warn(CONSTANTS.MODULE_NAME + " | Can't use the integration with 'item macro' system not supported or hte module is not active");
+                warn(`Can't use the integration with 'item macro' system not supported or hte module is not active`, true);
                 return;
               }
             }
@@ -324,12 +329,12 @@ export class EnvironmentInteraction {
 
             const REQUEST_LABEL = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes);
             if (!REQUEST_LABEL) {
-              ui.notifications?.warn(CONSTANTS.MODULE_NAME + ' | No label event is setted for the environment interaction with the item');
+              warn(`No label event is setted for the environment interaction with the item`, true);
               return;
             }
             const myRequestArray = REQUEST_LABEL.split('|') ?? [];
             if (myRequestArray.length == 0) {
-              ui.notifications?.warn(CONSTANTS.MODULE_NAME + " | The label event setted for the environment interaction is invalid '" + REQUEST_LABEL + "'");
+              warn(`The label event setted for the environment interaction is invalid '${REQUEST_LABEL}'`, true);
               return;
             }
 
@@ -350,12 +355,12 @@ export class EnvironmentInteraction {
             log(environmentTypeReq + '|' + macroNameOrTypeReq + '|' + labelOrDcReq + '|' + dcReq);
 
             if (!environmentTypeReq) {
-              ui.notifications?.warn(CONSTANTS.MODULE_NAME + " | The label setted for the environment interaction has invalid environmentTypeReq= '" + environmentTypeReq + "'");
+              warn(`The label setted for the environment interaction has invalid environmentTypeReq= '${environmentTypeReq}'`, true);
               return;
             }
 
             if (!macroNameOrTypeReq) {
-              ui.notifications?.warn(CONSTANTS.MODULE_NAME + " | The label setted for the environment interaction has invalid macroNameOrTypeReq = '" + macroNameOrTypeReq + "'");
+              warn(`The label setted for the environment interaction has invalid macroNameOrTypeReq = '${macroNameOrTypeReq}'`, true);
               return;
             }
 
@@ -372,8 +377,28 @@ export class EnvironmentInteraction {
                 break;
               }
               case ENVIRONMENT_TYPE.DICE: {
-                const roll = new Roll(macroNameOrTypeReq).roll();
-                const result = <number>roll.total ?? 0;
+                // const roll = new Roll(macroNameOrTypeReq).roll();
+                // const result = <number>await roll.data.total ?? 0;
+                let result = 0;
+                const formula = macroNameOrTypeReq.includes('data') ? macroNameOrTypeReq.replace(/data\./g, '@') : macroNameOrTypeReq;
+                const data = interactorToken.document.actor ? interactorToken.document.actor.getRollData() : {};
+                const roll = new Roll(formula, data);
+                let myresult = 0;
+                //roll.roll();
+                try {
+                  await roll.evaluate();
+                  myresult = roll.total ? <number>roll.total : parseInt(roll.result);
+                } catch (e) {
+                  myresult = parseInt(eval(roll.result));
+                }
+                //myvalue = roll.total || 0;
+                if (!is_real_number(myresult)) {
+                  warn(`The formula '${formula}' doesn't return a number we set the default 1`, true);
+                  result = 1;
+                } else {
+                  result = myresult;
+                }
+
                 if (result >= explicitDC) {
                   const macroContentSuccess = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccess);
                   const macroArgsSuccess = environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccessargs);
@@ -390,12 +415,12 @@ export class EnvironmentInteraction {
                   const macroName = macroNameOrTypeReq;
                   const macro = <Macro>(game.macros?.getName(macroName) || game.macros?.get(macroName));
                   if (!macro) {
-                    ui.notifications?.warn(CONSTANTS.MODULE_NAME + ' | No macro found with name/id : ' + macroName);
+                    warn(`No macro found with name/id : ${macroName}`, true);
                   }
                   macro.execute({ actor: <Actor>interactorToken.actor, token: interactorToken });
                 } else {
-                  ui.notifications?.warn(CONSTANTS.MODULE_NAME + " | Can't interact with item for launch a macro");
-                  throw new Error(CONSTANTS.MODULE_NAME + " | Can't interact with item for launch a macro");
+                  warn(`Can't interact with item for launch a macro`, true);
+                  //throw new Error(`Can't interact with item for launch a macro`);
                 }
                 break;
               }
@@ -404,6 +429,7 @@ export class EnvironmentInteraction {
                 // Is managed from the system with manual intervetion
                 // Macro type depends for now on the system used
                 if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
+                  log(`Try the Token Action HUD integration`);
                   let payload;
                   // manage generic case with key 'item'
                   if (macroNameOrTypeReq == 'item') {
@@ -434,8 +460,8 @@ export class EnvironmentInteraction {
                   //   const checkout = args;
                   // });
                 } else {
-                  ui.notifications?.warn(CONSTANTS.MODULE_NAME + ' | System not supported : ' + game.system?.id);
-                  throw new Error(CONSTANTS.MODULE_NAME + ' | System not supported : ' + game.system?.id);
+                  warn(`System not supported : ${game.system?.id}`, true);
+                  //throw new Error(`System not supported : ${game.system?.id}`);
                 }
                 break;
               }
@@ -445,6 +471,7 @@ export class EnvironmentInteraction {
                 //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
                 // )
                 if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
+                  log(`Try the Monk Tokens Bar integration`);
                   const options = new MonkTokenBarRollOptions();
                   options.ei = customInfo;
 
@@ -470,9 +497,10 @@ export class EnvironmentInteraction {
                     //   const checkout = msgtokenRoll.total;
                     // });
                   } else {
-                    ui.notifications?.warn(i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.noValidRequestWarn`));
+                    warn(i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.noValidRequestWarn`) + ` for monk token bar integration ${options.request}`, true);
                   }
                 } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
+                  log(`Try the Token Action HUD integration`);
                   let payload;
                   if (macroNameOrTypeReq == 'item') {
                     const tokenId = interactorToken.id;
@@ -502,8 +530,8 @@ export class EnvironmentInteraction {
                   //   const checkout = args;
                   // });
                 } else {
-                  ui.notifications?.warn(CONSTANTS.MODULE_NAME + ' | System not supported : ' + game.system?.id);
-                  throw new Error(CONSTANTS.MODULE_NAME + ' | System not supported : ' + game.system?.id);
+                  warn(`System not supported : ${game.system?.id}`, true);
+                  //throw new Error(`System not supported : ${game.system?.id}`);
                 }
                 break;
               }
@@ -514,6 +542,7 @@ export class EnvironmentInteraction {
                 //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
                 // )
                 if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
+                  log(`Try the Monk Tokens Bar integration`);
                   //const save = environmentItem.data.data.save.ability;
                   //interactor.rollAbilitySave(save);
                   const options = new MonkTokenBarRollOptions();
@@ -574,9 +603,10 @@ export class EnvironmentInteraction {
                     //   const checkout = msgtokenRoll.total;
                     // });
                   } else {
-                    ui.notifications?.warn(i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.noValidRequestWarn`));
+                    warn(i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.noValidRequestWarn`) + ` for monk token bar integration ${options.request}`, true);
                   }
                 } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
+                  log(`Try the Token Action HUD integration`);
                   let payload;
                   if (macroNameOrTypeReq == 'item') {
                     const tokenId = interactorToken.id;
@@ -606,13 +636,14 @@ export class EnvironmentInteraction {
                   //   const checkout = args;
                   // });
                 } else {
-                  ui.notifications?.warn(CONSTANTS.MODULE_NAME + ' | System not supported : ' + game.system?.id);
-                  throw new Error(CONSTANTS.MODULE_NAME + ' | System not supported : ' + game.system?.id);
+                  warn(`System not supported : ${game.system?.id}`, true);
+                  //throw new Error(`System not supported : ${game.system?.id}`);
                 }
                 break;
               }
               default: {
                 if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
+                  log(`Try the Monk Tokens Bar integration`);
                   const options = new MonkTokenBarRollOptions();
                   options.ei = customInfo;
 
@@ -638,9 +669,10 @@ export class EnvironmentInteraction {
                     //   const checkout = msgtokenRoll.total;
                     // });
                   } else {
-                    ui.notifications?.warn(i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.noValidRequestWarn`));
+                    warn(i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.noValidRequestWarn`) + ` for monk token bar integration ${options.request}`, true);
                   }
                 } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
+                  log(`Try the Token Action HUD integration`);
                   let payload;
                   if (macroNameOrTypeReq == 'item') {
                     const tokenId = interactorToken.id;
@@ -670,8 +702,8 @@ export class EnvironmentInteraction {
                   //   const checkout = args;
                   // });
                 } else {
-                  ui.notifications?.warn(CONSTANTS.MODULE_NAME + ' | System not supported : ' + game.system?.id);
-                  throw new Error(CONSTANTS.MODULE_NAME + ' | System not supported : ' + game.system?.id);
+                  warn(`System not supported : ${game.system?.id}`, true);
+                  //throw new Error(`System not supported : ${game.system?.id}`);
                 }
                 break;
               }

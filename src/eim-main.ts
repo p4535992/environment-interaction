@@ -16,6 +16,7 @@ import { registerSettings } from './module/settings';
 import { preloadTemplates } from './module/preloadTemplates';
 import { initHooks, readyHooks, setupHooks } from './module/module';
 import CONSTANTS from './module/constants';
+import type API from './module/api';
 
 /* ------------------------------------ */
 /* Initialize module					*/
@@ -73,7 +74,43 @@ Hooks.once('ready', () => {
 /* Other Hooks							*/
 /* ------------------------------------ */
 
-Hooks.once('libChangelogsReady', function () {
-  //@ts-ignore
-  libChangelogs.register(CONSTANTS.MODULE_NAME, `Little update on 'app.object.document' check`, 'minor');
-});
+export interface EimModuleData {
+  api: typeof API;
+  socket: any;
+}
+
+/**
+ * Initialization helper, to set API.
+ * @param api to set to game module.
+ */
+export function setApi(api: typeof API): void {
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as EimModuleData;
+  data.api = api;
+}
+
+/**
+ * Returns the set API.
+ * @returns Api from games module.
+ */
+export function getApi(): typeof API {
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as EimModuleData;
+  return data.api;
+}
+
+/**
+ * Initialization helper, to set Socket.
+ * @param socket to set to game module.
+ */
+export function setSocket(socket: any): void {
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as EimModuleData;
+  data.socket = socket;
+}
+
+/*
+ * Returns the set socket.
+ * @returns Socket from games module.
+ */
+export function getSocket() {
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as EimModuleData;
+  return data.socket;
+}

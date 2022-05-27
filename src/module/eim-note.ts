@@ -1,5 +1,5 @@
 import { executeEIMacro, executeEIMacroContent } from './eim-utils';
-import { i18n } from './lib/lib';
+import { error, i18n } from './lib/lib';
 import { EnvironmentInteractionFlags } from './eim-models';
 import CONSTANTS from './constants';
 export class EnvironmentInteractionNote extends FormApplication {
@@ -400,7 +400,7 @@ export class EnvironmentInteractionNote extends FormApplication {
 
       this.render();
     } else {
-      ui.notifications?.error('You have to be GM to edit Environment Interaction Notes.');
+      error('You have to be GM to edit Environment Interaction Notes.', true);
     }
   }
 
@@ -505,11 +505,11 @@ export class EnvironmentInteractionNote extends FormApplication {
       const labelTxt = '';
       const labelStyle = '';
       const title = i18n(`${CONSTANTS.MODULE_NAME}.note.label`);
-      const notes = 
+      const notes =
         app.object.document
         ? app.object.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes)
         : app.object.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes);;
-      const notesuseei = 
+      const notesuseei =
         app.object.document
         ? app.object.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)
         : app.object.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei);

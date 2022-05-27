@@ -4,6 +4,12 @@
             <img src="{{img}}" data-edit="img" title="{{name}}" height="64" width="64"/>
             <h1><input name="name" type="text" value="{{name}}" placeholder="Name" disabled/></h1>
         </header>
+
+    <fieldset>
+
+        <legend>{{localize "environment-interaction-multisystem.note.event-basic-setting"}}</legend>
+        {{!-- <p>NOTE: XXX --}}
+        <hr>
         <!--
         {{#if showExtraButtons}}
             <div class="controlls">
@@ -37,14 +43,6 @@
             </div>
         </div>
         <div class="form-group stacked">
-            <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction-multisystem.note.event-use-as-macro"}}">
-                <input type="checkbox" name="flags.environment-interaction-multisystem.notes-use-as-macro"
-                    value="{{flags.environment-interaction-multisystem.notes-use-as-macro}}"
-                    {{checkedIf flags.environment-interaction-multisystem.notes-use-as-macro}}/>
-                <label>{{localize "environment-interaction-multisystem.note.event-use-as-macro"}}</label>
-            </div>
-        </div>
-        <div class="form-group stacked">
             <label>{{localize "environment-interaction-multisystem.note.event-detail"}}</label>
             <div class="form-group">
                 <input type="text" name="flags.environment-interaction-multisystem.notes-detail" placeholder="" value="{{flags.environment-interaction-multisystem.notes-detail}}" />
@@ -55,6 +53,26 @@
             <fieldset style="margin: 3px 0;">
                 {{editor content=flags.environment-interaction-multisystem.notes-info target="flags.environment-interaction-multisystem.notes-info" button=true owner=owner editable=true}}
             </fieldset>
+        </div>
+
+    </fieldset>
+    <hr>
+
+    {{!-- START PRESET SETTINGS --}}
+
+    <fieldset>
+
+        <legend>{{localize "environment-interaction-multisystem.note.event-advanced-setting"}}</legend>
+        {{!-- <p>NOTE: XXX --}}
+        <hr>
+
+        <div class="form-group stacked">
+            <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction-multisystem.note.event-use-as-macro"}}">
+                <input type="checkbox" name="flags.environment-interaction-multisystem.notes-use-as-macro"
+                    value="{{flags.environment-interaction-multisystem.notes-use-as-macro}}"
+                    {{checkedIf flags.environment-interaction-multisystem.notes-use-as-macro}}/>
+                <label>{{localize "environment-interaction-multisystem.note.event-use-as-macro"}}</label>
+            </div>
         </div>
         <div class="form-group stacked">
             <label>{{localize "environment-interaction-multisystem.note.event-explicit-dc"}}</label>
@@ -110,4 +128,5 @@
             -->
         </footer>
     {{!-- {{/if}} --}}
+    </fieldset>
 </form>
