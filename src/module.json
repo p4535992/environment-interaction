@@ -55,7 +55,7 @@
   "system": [],
   "scripts": ["module/lib/dd.min.js"],
   "esmodules": ["eim-main.js"],
-  "styles": ["styles/eim.css", "styles/eim-macro-editor.css"],
+  "styles": ["styles/eim.css", "styles/eim-macro-editor.css", "styles/dd.css"],
   "minimumCoreVersion": "9",
   "compatibleCoreVersion": "9",
   "url": "https://github.com/p4535992/environment-interaction-multisystem",

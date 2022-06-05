@@ -179,31 +179,38 @@ export class EnvironmentInteraction {
         },
       };
     }
-    if (game.user?.isGM && environmentPlaceableObject instanceof Token) {
-      buttons.openSheetToken = {
-        label: i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.openCharacterSheetToken`),
-        callback: () => {
-          // const actor = <Actor>environmentPlaceableObject.actor;
-          // let sourceToken:Token;
-          // if (actor.getActiveTokens()?.length > 0) {
-          //   sourceToken = <Token>actor.getActiveTokens()[0];
-          // }else{
-          //   sourceToken = <Token>canvas.tokens?.placeables.find((t) => {
-          //     return isStringEquals(t.name,sourceToken.name);
-          //   });
-          // }
-          // sourceToken?.sheet?.render(true);
-          environmentPlaceableObject?.sheet?.render(true);
-        },
-      };
+    if (game.user?.isGM) {
+      if (environmentPlaceableObject instanceof Token) {
+        buttons.openSheetToken = {
+          label: i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.openCharacterSheetToken`),
+          callback: () => {
+            // const actor = <Actor>environmentPlaceableObject.actor;
+            // let sourceToken:Token;
+            // if (actor.getActiveTokens()?.length > 0) {
+            //   sourceToken = <Token>actor.getActiveTokens()[0];
+            // }else{
+            //   sourceToken = <Token>canvas.tokens?.placeables.find((t) => {
+            //     return isStringEquals(t.name,environmentPlaceableObject.name);
+            //   });
+            // }
+            //@ts-ignore
+            // sourceToken?.sheet?.render(true, {sourceToken});
+            environmentPlaceableObject?.sheet?.render(true, {environmentPlaceableObject});
+            //@ts-ignore
+            // sourceToken?.sheet?.render(true, {environmentPlaceableObject});
+          },
+        };
+      }
       buttons.openPlaceableObject = {
         label: i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.openPlaceableObject`),
         callback: () => {
-          // if (environmentPlaceableObject instanceof Token) {
-          environmentPlaceableObject.actor?.sheet?.render(true);
-          // } else {
-          //   environmentPlaceableObject.sheet?.render(true);
-          // }
+          if (environmentPlaceableObject instanceof Token) {
+            //@ts-ignore
+            environmentPlaceableObject.actor?.sheet?.render(true, {environmentPlaceableObject});
+          } else {
+            //@ts-ignore
+            environmentPlaceableObject.sheet?.render(true, {environmentPlaceableObject});
+          }
         },
       };
     }
