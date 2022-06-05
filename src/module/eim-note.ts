@@ -161,6 +161,7 @@ export class EnvironmentInteractionNote extends FormApplication {
 
     configElement.find(`.ei-macro-editor-button-${entityFieldId}-${flagRef}`).on('click', (event) => {
       event.preventDefault();
+      event.stopPropagation();
       if (configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).css('display') == 'none') {
         configElement.find(`.command textarea[name="${entityFieldName}"]`).css('display', 'none');
         configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).css('display', '');
@@ -188,6 +189,7 @@ export class EnvironmentInteractionNote extends FormApplication {
 
     configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).on('click', (event) => {
       event.preventDefault();
+      event.stopPropagation();
       if (configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).hasClass('fullscreen')) {
         configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).removeClass('fullscreen');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).removeClass('fullscreen');
@@ -228,6 +230,7 @@ export class EnvironmentInteractionNote extends FormApplication {
 
     configElement.find(`.ei-macro-execute-button-${entityFieldId}-${flagRef}`).on('click', (event) => {
       event.preventDefault();
+      event.stopPropagation();
 
       let args: string[] = [];
       const contentLabel = this._retrieveVal(configElement, flagArgs);

@@ -118,6 +118,8 @@ export class EnvironmentInteractionPlaceableConfig {
     });
 
     formConfig = `
+    <fieldset class="eim-filedset">
+      <legend>${i18n(`${CONSTANTS.MODULE_NAME}.tokenConfig.labelTitle`)}</legend>
       <div class="form-group stacked">
         <div class="form-group">
           <label>${i18n(`${CONSTANTS.MODULE_NAME}.tokenConfig.labelPlaceableObject`)}</label>
@@ -137,6 +139,7 @@ export class EnvironmentInteractionPlaceableConfig {
           </select>
         </div>
       </div>
+    </fieldset>
     `;
     
     if (insertBefore) {

@@ -210,3 +210,23 @@ export function duplicateExtended(obj: any): any {
 // =============================
 // Module specific function
 // =============================
+
+/**
+ * TODO if i need to manage the roll for specific system usually is enough item.roll()
+ * @href https://github.com/itamarcu/roll-from-compendium/blob/master/scripts/roll-from-compendium.js
+ */
+export async function rollDependingOnSystem(item: Item) {
+  // if (game.system.id === 'pf2e') {
+  //   if (item.type === 'spell') {
+  //     return pf2eCastSpell(item, actor, dummyActor)
+  //   } else {
+  //     return pf2eItemToMessage(item)
+  //   }
+  // }
+  // if (game.system.id === 'dnd5e') {
+  //   const actorHasItem = !!actor.items.get(item.id)
+  //   return dnd5eRollItem(item, actor, actorHasItem)
+  // }
+  //@ts-ignore
+  return item.roll();
+}

@@ -28,6 +28,11 @@
       "acelibLineWrap": {
         "name": "Wrap lines?",
         "hint": " "
+      },
+      "debug":{
+        "name": "Enable debugging",
+        "label": "Prints debug messages to the console",
+        "hint": " "
       }
     },
     "handlebarsHelper": {
@@ -38,7 +43,8 @@
     },
     "interactWithEnvironment": {
       "openCharacterSheet": "[GM] Open Actor Environment",
-      "openPlaceableObject": "[GM] Open Placeable Object",
+      "openCharacterSheetToken": "[GM] Open Token Environment",
+      "openPlaceableObject": "Open Placeable Object",
       "selectTokenWarn": "Select a token to interact with environment.",
       "noValidRequestWarn": "The string request for tokenbar module is not a valid one",
       "Check": "Check",
@@ -46,7 +52,8 @@
     },
     "tokenConfig": {
       "labelPlaceableObject": "Apply Environment Interaction ?",
-      "labelActor": "Link to Environment Actor"
+      "labelActor": "Link to Environment Actor",
+      "labelTitle": "Environment Interaction Panel"
     },
     "note": {
       "label": "Environment Interaction Note",

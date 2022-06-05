@@ -1,5 +1,5 @@
 import { customInfoEnvironmentInteraction, ENVIRONMENT_TYPE, EnvironmentInteractionFlags } from './eim-models';
-import { i18n, is_real_number, log, warn } from './lib/lib';
+import { debug, i18n, isStringEquals, is_real_number, log, rollDependingOnSystem, warn } from './lib/lib';
 import {
   getMonkTokenBarAPI,
   getTokenActionHUDRollHandler,
@@ -180,6 +180,22 @@ export class EnvironmentInteraction {
       };
     }
     if (game.user?.isGM && environmentPlaceableObject instanceof Token) {
+      buttons.openSheetToken = {
+        label: i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.openCharacterSheetToken`),
+        callback: () => {
+          // const actor = <Actor>environmentPlaceableObject.actor;
+          // let sourceToken:Token;
+          // if (actor.getActiveTokens()?.length > 0) {
+          //   sourceToken = <Token>actor.getActiveTokens()[0];
+          // }else{
+          //   sourceToken = <Token>canvas.tokens?.placeables.find((t) => {
+          //     return isStringEquals(t.name,sourceToken.name);
+          //   });
+          // }
+          // sourceToken?.sheet?.render(true);
+          environmentPlaceableObject?.sheet?.render(true);
+        },
+      };
       buttons.openPlaceableObject = {
         label: i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.openPlaceableObject`),
         callback: () => {
@@ -199,6 +215,8 @@ export class EnvironmentInteraction {
     };
     const render = (html) => {
       html.on('click', `button.ei-info`, async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         const itemID = <string>event.currentTarget.id;
         //const environment = <Actor>canvas.tokens?.get(environmentToken.id)?.actor;
         //const environmentItem = <Item>environment.items.get(itemID);
@@ -222,6 +240,8 @@ export class EnvironmentInteraction {
         d.render(true);
       }),
         html.on('click', `button.ei-flex-container`, async (event) => {
+          event.preventDefault();
+          event.stopPropagation();
           // TODO integration mutlitoken ????
           if (<number>canvas.tokens?.controlled.length > 1) {
             warn(`The interaction support only one selected token at the time`, true);
@@ -288,6 +308,12 @@ export class EnvironmentInteraction {
           try {
             // Integration with 'item macro'
             const useItemMacro = <boolean>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseitemmacro);
+            // Integration with 'use as macro'
+            const useAsMacro = <boolean>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseasmacro);
+            const explicitDC = <number>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesexplicitdc);
+            const REQUEST_LABEL = 
+              <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes) ?? '';
+
             if (useItemMacro) {
               log(`Try to use the integration with 'item macro'`);
               //@ts-ignore
@@ -308,9 +334,6 @@ export class EnvironmentInteraction {
               }
             }
 
-            // Integration with 'use as macro'
-            const useAsMacro = <boolean>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseasmacro);
-            const explicitDC = <number>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesexplicitdc);
             if (useAsMacro) {
               const macroContent = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes);
               const macroArgs = environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesargs);
@@ -327,9 +350,10 @@ export class EnvironmentInteraction {
               return;
             }
 
-            const REQUEST_LABEL = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes);
             if (!REQUEST_LABEL) {
-              warn(`No label event is setted for the environment interaction with the item`, true);
+              debug(`No label event is setted for the environment interaction with the item`);
+              rollDependingOnSystem(interactorItemTmp);
+              // warn(`No label event is setted for the environment interaction with the item`, true);
               return;
             }
             const myRequestArray = REQUEST_LABEL.split('|') ?? [];
@@ -372,11 +396,13 @@ export class EnvironmentInteraction {
 
             switch (environmentTypeReq) {
               case ENVIRONMENT_TYPE.ITEM: {
+                debug(`Enviroment type is ITEM`);
                 //@ts-ignore
                 environmentItem.roll();
                 break;
               }
               case ENVIRONMENT_TYPE.DICE: {
+                debug(`Enviroment type is DICE`);
                 // const roll = new Roll(macroNameOrTypeReq).roll();
                 // const result = <number>await roll.data.total ?? 0;
                 let result = 0;
@@ -411,6 +437,7 @@ export class EnvironmentInteraction {
                 break;
               }
               case ENVIRONMENT_TYPE.MACRO: {
+                debug(`Enviroment type is MACRO`);
                 if (macroNameOrTypeReq) {
                   const macroName = macroNameOrTypeReq;
                   const macro = <Macro>(game.macros?.getName(macroName) || game.macros?.get(macroName));
@@ -426,6 +453,7 @@ export class EnvironmentInteraction {
               }
               // may need to update certain item properties like proficiency/equipped
               case ENVIRONMENT_TYPE.ATTACK: {
+                debug(`Enviroment type is ATTACK`);
                 // Is managed from the system with manual intervetion
                 // Macro type depends for now on the system used
                 if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
@@ -466,6 +494,7 @@ export class EnvironmentInteraction {
                 break;
               }
               case ENVIRONMENT_TYPE.ABILITY: {
+                debug(`Enviroment type is ABILITY`);
                 // (
                 //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}],
                 //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
@@ -537,6 +566,7 @@ export class EnvironmentInteraction {
               }
               case ENVIRONMENT_TYPE.SAVE:
               case ENVIRONMENT_TYPE.SKILL: {
+                debug(`Enviroment type is SAVE OR SKILL`);
                 // (
                 //  [{token:"Thoramir", altKey: true},"John Locke", {token:"Toadvine", fastForward:true}],
                 //  {request:'perception',dc:15, silent:true, fastForward:false, flavor:'Testing flavor'}
@@ -642,6 +672,7 @@ export class EnvironmentInteraction {
                 break;
               }
               default: {
+                debug(`Enviroment type is DEFAULT`);
                 if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
                   log(`Try the Monk Tokens Bar integration`);
                   const options = new MonkTokenBarRollOptions();

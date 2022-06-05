@@ -143,4 +143,13 @@ export const registerSettings = function () {
   //   scope: 'world',
   //   config: false,
   // });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {
+    name: `${CONSTANTS.MODULE_NAME}.settings.debug.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.settings.debug.hint`,
+    scope: 'world',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
 };
