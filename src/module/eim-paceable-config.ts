@@ -111,26 +111,34 @@ export class EnvironmentInteractionPlaceableConfig {
     options.push(`<option value="">${i18n('None')}</option>`);
     actorsOrderByName.forEach((a: Actor) => {
       if (enviromentActorId == a.id) {
-        options.push(`<option selected="selected" value="${a.id}">${a.name}</option>`);
+        options.push(`<option data-image="${a.img}"  selected="selected" value="${a.id}">${a.name}</option>`);
       } else {
-        options.push(`<option value="${a.id}">${a.name}</option>`);
+        options.push(`<option data-image="${a.img}"  value="${a.id}">${a.name}</option>`);
       }
     });
 
     formConfig = `
-        <div class="form-group stacked">
-          <div class="form-group">
-            <label>${i18n(`${CONSTANTS.MODULE_NAME}.tokenConfig.labelPlaceableObject`)}</label>
-            <input type="checkbox" name="flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.environmentToken}" data-dtype="Boolean" ${enviromentChecked} />
-          </div>
-          <div class="form-group">
-            <label>${i18n(`${CONSTANTS.MODULE_NAME}.tokenConfig.labelActor`)}</label>
-            <select class="actor-template" name="flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.environmentTokenRef}" value="${enviromentActorId}">
-              ${options.join('')}
-            </select>
-          </div>
+      <div class="form-group stacked">
+        <div class="form-group">
+          <label>${i18n(`${CONSTANTS.MODULE_NAME}.tokenConfig.labelPlaceableObject`)}</label>
+          <input 
+            type="checkbox" 
+            name="flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.environmentToken}" 
+            data-dtype="Boolean" ${enviromentChecked} />
         </div>
-      `;
+        <div class="form-group">
+          <label>${i18n(`${CONSTANTS.MODULE_NAME}.tokenConfig.labelActor`)}</label>
+          <select 
+            class="actor-template" 
+            name="flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.environmentTokenRef}" 
+            value="${enviromentActorId}"
+            data-dtype="String" is="ms-dropdown-eim">
+            ${options.join('')}
+          </select>
+        </div>
+      </div>
+    `;
+    
     if (insertBefore) {
       $(formConfig).insertBefore(html);
     } else {
