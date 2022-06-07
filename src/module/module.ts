@@ -25,7 +25,7 @@ export const initHooks = async () => {
   if (game.modules.get('acelib')?.active) {
     // Loading acelib module
     //@ts-ignore
-    ['ace/mode/json', 'ace/ext/language_tools', 'ace/ext/error_marker', 'ace/theme/twilight', 'ace/snippets/json'].forEach((s) => ace.config.loadModule(s));
+    // ['ace/mode/json', 'ace/ext/language_tools', 'ace/ext/error_marker', 'ace/theme/twilight', 'ace/snippets/json'].forEach((s) => ace.config.loadModule(s));
   }
 };
 
@@ -126,64 +126,74 @@ export const readyHooks = async () => {
   // @ts-ignore
   game.EnvironmentInteraction.EnvironmentInteractionPlaceableConfig.registerHooks();
 
-  Hooks.on('tokenBarUpdateRoll', (tokenBarApp: ContestedRoll | Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
-    // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
+  Hooks.on(
+    'tokenBarUpdateRoll',
+    (tokenBarApp: ContestedRoll | Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
+      // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
 
-    const customInfo = <customInfoEnvironmentInteraction>(<any>message.data.flags['monks-tokenbar'])?.options?.ei;
+      const customInfo = <customInfoEnvironmentInteraction>(<any>message.data.flags['monks-tokenbar'])?.options?.ei;
 
-    const interactorTokenTokenBar = <Token>canvas.tokens?.get(updateId);
+      const interactorTokenTokenBar = <Token>canvas.tokens?.get(updateId);
 
-    const total = <number>msgtokenRoll?.total;
+      const total = <number>msgtokenRoll?.total;
 
-    const environmentItemId = customInfo.environmentItemID;
-    const environmentActorId = customInfo.environmentActorID;
-    const environmentActor = <Actor>game.actors?.get(environmentActorId);
-    const environmentTokenId = customInfo.environmentTokenID;
-    const environmentToken = <Token>canvas.tokens?.get(environmentTokenId);
+      const environmentItemId = customInfo.environmentItemID;
+      const environmentActorId = customInfo.environmentActorID;
+      const environmentActor = <Actor>game.actors?.get(environmentActorId);
+      const environmentTokenId = customInfo.environmentTokenID;
+      const environmentToken = <Token>canvas.tokens?.get(environmentTokenId);
 
-    let dc = customInfo.environmentDC;
+      let dc = customInfo.environmentDC;
 
-    const interactorItemId = customInfo.interactorItemID;
-    const interactorActorId = customInfo.interactorActorID;
-    const interactorActor = <Actor>game.actors?.get(interactorActorId);
-    const interactorTokenId = customInfo.interactorTokenID;
-    const interactorToken = <Token>canvas.tokens?.get(interactorTokenId);
+      const interactorItemId = customInfo.interactorItemID;
+      const interactorActorId = customInfo.interactorActorID;
+      const interactorActor = <Actor>game.actors?.get(interactorActorId);
+      const interactorTokenId = customInfo.interactorTokenID;
+      const interactorToken = <Token>canvas.tokens?.get(interactorTokenId);
 
-    const isInteractor = interactorTokenTokenBar.id == interactorTokenId;
-    // This work because the interactor is the last one called ??
-    if (isInteractor) {
-      const environmentItem = <Item>environmentActor.items.find((item: Item) => {
-        return item.id == environmentItemId;
-      });
+      const isInteractor = interactorTokenTokenBar.id == interactorTokenId;
+      // This work because the interactor is the last one called ??
+      if (isInteractor) {
+        const environmentItem = <Item>environmentActor.items.find((item: Item) => {
+          return item.id == environmentItemId;
+        });
 
-      if (environmentItem) {
-        // if (dc == null || dc == undefined || isNaN(dc)) {
-        if (currentContestedRollTokenBar != null && currentContestedRollTokenBar != undefined && !isNaN(currentContestedRollTokenBar)) {
-          dc = currentContestedRollTokenBar;
-        }
-        // }
-        if (dc != null && dc != undefined && !isNaN(dc)) {
-          if (total >= dc) {
-            executeEIMacro(environmentItem, EnvironmentInteractionFlags.notessuccess);
+        if (environmentItem) {
+          // if (dc == null || dc == undefined || isNaN(dc)) {
+          if (
+            currentContestedRollTokenBar != null &&
+            currentContestedRollTokenBar != undefined &&
+            !isNaN(currentContestedRollTokenBar)
+          ) {
+            dc = currentContestedRollTokenBar;
+          }
+          // }
+          if (dc != null && dc != undefined && !isNaN(dc)) {
+            if (total >= dc) {
+              executeEIMacro(environmentItem, EnvironmentInteractionFlags.notessuccess);
+            } else {
+              executeEIMacro(environmentItem, EnvironmentInteractionFlags.notesfailure);
+            }
           } else {
-            executeEIMacro(environmentItem, EnvironmentInteractionFlags.notesfailure);
+            const macroSuccess = environmentItem?.getFlag(
+              CONSTANTS.MODULE_NAME,
+              EnvironmentInteractionFlags.notessuccess,
+            );
+            // const macroFailure = environmentItem?.getFlag(CONSTANTS.MODULE_NAME, Flags.notesfailure);
+            if (macroSuccess) {
+              executeEIMacro(environmentItem, EnvironmentInteractionFlags.notessuccess);
+            }
           }
         } else {
-          const macroSuccess = environmentItem?.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccess);
-          // const macroFailure = environmentItem?.getFlag(CONSTANTS.MODULE_NAME, Flags.notesfailure);
-          if (macroSuccess) {
-            executeEIMacro(environmentItem, EnvironmentInteractionFlags.notessuccess);
-          }
+          ui.notifications?.error(CONSTANTS.MODULE_NAME + " | Can't retrieve original item");
+          throw new Error(CONSTANTS.MODULE_NAME + " | Can't retrieve original item");
         }
+        currentContestedRollTokenBar = NaN;
       } else {
-        ui.notifications?.error(CONSTANTS.MODULE_NAME + " | Can't retrieve original item");
-        throw new Error(CONSTANTS.MODULE_NAME + " | Can't retrieve original item");
+        currentContestedRollTokenBar = total;
       }
-      currentContestedRollTokenBar = NaN;
-    } else {
-      currentContestedRollTokenBar = total;
-    }
-  });
+    },
+  );
 
   // Hooks.on('forceUpdateTokenActionHUD', (args) => {
   //   const checkout = args;
@@ -260,42 +270,45 @@ export const readyHooks = async () => {
   libWrapper.register(CONSTANTS.MODULE_NAME, 'TextEditor.create', textEditorCreateHandler, 'MIXED');
   */
 
-  Hooks.on('renderActorSheet', async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
-    const isgm = game.user?.isGM;
-    if (!isgm) {
-      const actorEntity = <Actor>game.actors?.get(actorObject.actor._id);
-      if (actorEntity) {
-        // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
-        const list = htmlElement.find('li.item');
-        for (const li of list) {
-          const liOnInventory = $(li);
-          const itemId = liOnInventory.attr('data-item-id');
-          const item = actorEntity.items?.find((item: Item) => {
-            return item && item.id == itemId;
-          });
-          if (item?.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)) {
-            liOnInventory.hide();
+  Hooks.on(
+    'renderActorSheet',
+    async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
+      const isgm = game.user?.isGM;
+      if (!isgm) {
+        const actorEntity = <Actor>game.actors?.get(actorObject.actor._id);
+        if (actorEntity) {
+          // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
+          const list = htmlElement.find('li.item');
+          for (const li of list) {
+            const liOnInventory = $(li);
+            const itemId = liOnInventory.attr('data-item-id');
+            const item = actorEntity.items?.find((item: Item) => {
+              return item && item.id == itemId;
+            });
+            if (item?.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)) {
+              liOnInventory.hide();
+            }
+          }
+        }
+      } else {
+        const actorEntity = <Actor>game.actors?.get(actorObject.actor._id);
+        if (actorEntity) {
+          // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
+          const list = htmlElement.find('li.item');
+          for (const li of list) {
+            const liOnInventory = $(li);
+            const itemId = liOnInventory.attr('data-item-id');
+            const item = actorEntity.items?.find((item: Item) => {
+              return item && item.id == itemId;
+            });
+            if (item?.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)) {
+              liOnInventory.css('background', 'rgba(233, 103, 28, 0.2)');
+            }
           }
         }
       }
-    } else {
-      const actorEntity = <Actor>game.actors?.get(actorObject.actor._id);
-      if (actorEntity) {
-        // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
-        const list = htmlElement.find('li.item');
-        for (const li of list) {
-          const liOnInventory = $(li);
-          const itemId = liOnInventory.attr('data-item-id');
-          const item = actorEntity.items?.find((item: Item) => {
-            return item && item.id == itemId;
-          });
-          if (item?.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)) {
-            liOnInventory.css('background', 'rgba(233, 103, 28, 0.2)');
-          }
-        }
-      }
-    }
-  });
+    },
+  );
 
   Hooks.on('renderItemSheet', (app, html, data) => {
     // Activate only for item in a actor

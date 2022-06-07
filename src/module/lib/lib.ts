@@ -32,7 +32,9 @@ export function getOwnedTokens(priorityToControlledIfGM: boolean): Token[] {
   }
   let ownedTokens = <Token[]>canvas.tokens?.placeables.filter((token) => token.isOwner && (!token.data.hidden || gm));
   if (ownedTokens.length === 0 || !canvas.tokens?.controlled[0]) {
-    ownedTokens = <Token[]>canvas.tokens?.placeables.filter((token) => (token.observer || token.isOwner) && (!token.data.hidden || gm));
+    ownedTokens = <Token[]>(
+      canvas.tokens?.placeables.filter((token) => (token.observer || token.isOwner) && (!token.data.hidden || gm))
+    );
   }
   return ownedTokens;
 }

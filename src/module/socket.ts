@@ -37,7 +37,6 @@ export function registerSocket() {
    */
   eimSocket.register(SOCKET_HANDLERS.CALL_HOOK, (hook, ...args) => callHook(hook, ...args));
 
-
   setSocket(eimSocket);
   return eimSocket;
 }

@@ -73,7 +73,12 @@ export class EnvironmentInteractionNote extends FormApplication {
 
     if (game.modules.get('acelib')?.active) {
       // if (this._retrieveVal($(html), Flags.notesuseasmacro)) {
-      this.editor = this._addAceLibEditorToElement(html, `div.form-group.stacked.command.${EnvironmentInteractionFlags.notes}`, this.entity.id, EnvironmentInteractionFlags.notes);
+      this.editor = this._addAceLibEditorToElement(
+        html,
+        `div.form-group.stacked.command.${EnvironmentInteractionFlags.notes}`,
+        this.entity.id,
+        EnvironmentInteractionFlags.notes,
+      );
       // } else {
       // TODO HIDE notes-args element...
       //html.find('.ei-info')
@@ -104,14 +109,20 @@ export class EnvironmentInteractionNote extends FormApplication {
     //html.find('[data-toggle="tooltip"]').tooltip();
   }
 
-  _addAceLibEditorToElement(html, entityClassName, entityFieldId, flagRef): any {
+  _addAceLibEditorToElement(
+    html: JQuery<HTMLElement>,
+    entityClassName: string,
+    entityFieldId: string,
+    flagRef: string,
+  ): any {
     const entityFieldName = `flags.${CONSTANTS.MODULE_NAME}.${flagRef}`;
     const flagArgs = `flags.${CONSTANTS.MODULE_NAME}.${flagRef}-args`;
     /** @type {JQuery} */
     const configElement = $(html);
     configElement
       //.find("div.form-group.stacked.command.condition")
-      .find(entityClassName).append(`<button type="button" class="ei-macro-editor-expand ei-macro-editor-expand-${entityFieldId}-${flagRef}" title="Expand Editor"><i class="fas fa-expand-alt"></i></button>
+      .find(entityClassName)
+      .append(`<button type="button" class="ei-macro-editor-expand ei-macro-editor-expand-${entityFieldId}-${flagRef}" title="Expand Editor"><i class="fas fa-expand-alt"></i></button>
         <div class="ei-macro-editor ei-macro-editor-${entityFieldId}-${flagRef}" id="macroEditor-${entityFieldId}-${flagRef}"></div>`);
     //if (game.settings.get("macroeditor", "defaultShow")) {
     configElement.find(`.command textarea[name="${entityFieldName}"]`).css('display', 'none');
@@ -131,33 +142,37 @@ export class EnvironmentInteractionNote extends FormApplication {
       .find(`div.form-group.stacked.command.${flagRef}`)
       // .append(`<input type="text" class="ei-macro-execute-args-button-${entityFieldId}-${flagArgs}" title="Additional args for macro" name="flags.${CONSTANTS.MODULE_NAME}.${flagArgs}"
       //   placeHolder="Additional args e.g.'arg0,arg1,ecc.' on the macro are recovered from args[0],args[1],ecc."></input>`)
-      .append(`<button type="button" class="ei-macro-editor-button-${entityFieldId}-${flagRef}" title="Toggle Code Editor" name="editorButton"><i class="fas fa-terminal"></i></button>`)
-      .append(`<button type="button" class="ei-macro-execute-button-${entityFieldId}-${flagRef}" title="Execute Macro" name="executeButton"><i class="fas fa-running"></i></button>`);
+      .append(
+        `<button type="button" class="ei-macro-editor-button-${entityFieldId}-${flagRef}" title="Toggle Code Editor" name="editorButton"><i class="fas fa-terminal"></i></button>`,
+      )
+      .append(
+        `<button type="button" class="ei-macro-execute-button-${entityFieldId}-${flagRef}" title="Execute Macro" name="executeButton"><i class="fas fa-running"></i></button>`,
+      );
 
     //@ts-ignore
     const editorElement = ace.edit(`macroEditor-${entityFieldId}-${flagRef}`);
 
-    editorElement.session.on('changeMode', function (e, session) {
-      if ('ace/mode/javascript' === session.getMode().$id) {
-        if (session.$worker) {
-          session.$worker.send('setOptions', [
-            {
-              esversion: 9,
-              esnext: false,
-            },
-          ]);
-        }
-      }
-    });
+    // editorElement.session.on('changeMode', function (e, session) {
+    //   if ('ace/mode/javascript' === session.getMode().$id) {
+    //     if (session.$worker) {
+    //       session.$worker.send('setOptions', [
+    //         {
+    //           esversion: 9,
+    //           esnext: false,
+    //         },
+    //       ]);
+    //     }
+    //   }
+    // });
 
-    // Merge ace-lib user-settings with module settings
-    editorElement.setOptions(
-      //@ts-ignore
-      mergeObject(ace.userSettings, {
-        mode: 'ace/mode/javascript',
-        wrap: true, //game.settings.get(CONSTANTS.MODULE_NAME, 'acelibLineWrap'),
-      }),
-    );
+    // // Merge ace-lib user-settings with module settings
+    // editorElement.setOptions(
+    //   //@ts-ignore
+    //   mergeObject(ace.userSettings, {
+    //     mode: 'ace/mode/javascript',
+    //     wrap: true, //game.settings.get(CONSTANTS.MODULE_NAME, 'acelibLineWrap'),
+    //   }),
+    // );
 
     configElement.find(`.ei-macro-editor-button-${entityFieldId}-${flagRef}`).on('click', (event) => {
       event.preventDefault();
@@ -194,7 +209,9 @@ export class EnvironmentInteractionNote extends FormApplication {
         configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).removeClass('fullscreen');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).removeClass('fullscreen');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).prop('title', 'Expand Editor');
-        configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef} i.fas.fa-compress-alt`).attr('class', 'fas fa-expand-alt');
+        configElement
+          .find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef} i.fas.fa-compress-alt`)
+          .attr('class', 'fas fa-expand-alt');
         // configElement.find('.window-resizable-handle').css('display', '');
         // configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css("display", "");
         configElement.find(`.ei-macro-editor-expand`).css('display', '');
@@ -202,7 +219,9 @@ export class EnvironmentInteractionNote extends FormApplication {
         configElement.find(`.ei-macro-editor-${entityFieldId}-${flagRef}`).addClass('fullscreen');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).addClass('fullscreen');
         configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).prop('title', 'Shrink Editor');
-        configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef} i.fas.fa-expand-alt`).attr('class', 'fas fa-compress-alt');
+        configElement
+          .find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef} i.fas.fa-expand-alt`)
+          .attr('class', 'fas fa-compress-alt');
         // configElement.find('.window-resizable-handle').css('display', 'none');
         // configElement.find(`.ei-macro-editor-expand-${entityFieldId}-${flagRef}`).css("display", "none");
         configElement.find(`.ei-macro-editor-expand`).css('display', 'none');
@@ -298,9 +317,14 @@ export class EnvironmentInteractionNote extends FormApplication {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseitemmacro, null);
       }
 
-      const useitemenvironment = formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesuseitemenvironment}`];
+      const useitemenvironment =
+        formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesuseitemenvironment}`];
       if (useitemenvironment != null && useitemenvironment != undefined) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseitemenvironment, useitemenvironment);
+        await this.entity.setFlag(
+          CONSTANTS.MODULE_NAME,
+          EnvironmentInteractionFlags.notesuseitemenvironment,
+          useitemenvironment,
+        );
       } else {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseitemenvironment, null);
       }
@@ -366,9 +390,14 @@ export class EnvironmentInteractionNote extends FormApplication {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notescondition, null);
       }
 
-      const notesconditionargs = formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesconditionargs}`];
+      const notesconditionargs =
+        formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesconditionargs}`];
       if (notesconditionargs != null && notesconditionargs != undefined) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesconditionargs, notesconditionargs);
+        await this.entity.setFlag(
+          CONSTANTS.MODULE_NAME,
+          EnvironmentInteractionFlags.notesconditionargs,
+          notesconditionargs,
+        );
       } else {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesconditionargs, null);
       }
@@ -380,9 +409,14 @@ export class EnvironmentInteractionNote extends FormApplication {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccess, null);
       }
 
-      const notessuccessargs = formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notessuccessargs}`];
+      const notessuccessargs =
+        formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notessuccessargs}`];
       if (notessuccessargs != null && notessuccessargs != undefined) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccessargs, notessuccessargs);
+        await this.entity.setFlag(
+          CONSTANTS.MODULE_NAME,
+          EnvironmentInteractionFlags.notessuccessargs,
+          notessuccessargs,
+        );
       } else {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccessargs, null);
       }
@@ -394,9 +428,14 @@ export class EnvironmentInteractionNote extends FormApplication {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailure, null);
       }
 
-      const notesfailureargs = formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesfailureargs}`];
+      const notesfailureargs =
+        formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesfailureargs}`];
       if (notesfailureargs != null && notesfailureargs != undefined) {
-        await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailureargs, notesfailureargs);
+        await this.entity.setFlag(
+          CONSTANTS.MODULE_NAME,
+          EnvironmentInteractionFlags.notesfailureargs,
+          notesfailureargs,
+        );
       } else {
         await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailureargs, null);
       }
@@ -508,12 +547,10 @@ export class EnvironmentInteractionNote extends FormApplication {
       const labelTxt = '';
       const labelStyle = '';
       const title = i18n(`${CONSTANTS.MODULE_NAME}.note.label`);
-      const notes =
-        app.object.document
+      const notes = app.object.document
         ? app.object.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes)
-        : app.object.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes);;
-      const notesuseei =
-        app.object.document
+        : app.object.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes);
+      const notesuseei = app.object.document
         ? app.object.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)
         : app.object.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei);
       // if (game.settings.get(CONSTANTS.MODULE_NAME, 'hideLabel') === false) {
@@ -542,7 +579,11 @@ export class EnvironmentInteractionNote extends FormApplication {
           }
         }
         if (!noteApp) {
-          noteApp = new EnvironmentInteractionNote(app.object, { submitOnClose: true, closeOnSubmit: false, submitOnUnfocus: true });
+          noteApp = new EnvironmentInteractionNote(app.object, {
+            submitOnClose: true,
+            closeOnSubmit: false,
+            submitOnUnfocus: true,
+          });
         }
         noteApp.render(true);
       });

@@ -1,7 +1,12 @@
 export interface ContestedRoll {
   rollDice(dice): Roll;
 
-  returnRoll(id, roll, actor, rollmode): { id: string; roll: Roll; finish: { id: string; reveal: boolean; userid: string } };
+  returnRoll(
+    id,
+    roll,
+    actor,
+    rollmode,
+  ): { id: string; roll: Roll; finish: { id: string; reveal: boolean; userid: string } };
 
   _rollAbility(data, request, requesttype, rollmode, ffwd, e): Roll;
 

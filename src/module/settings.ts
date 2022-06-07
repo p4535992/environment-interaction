@@ -12,7 +12,19 @@ export function getTokenActionHUDRollHandler(): RollHandler {
   return game.tokenActionHUD.systemManager.getRollHandler();
 }
 
-const systemsMonkTokenBarSupported = ['dnd5e', 'sw5e', 'd35e', 'dnd4ebeta', 'pf1', 'pf2e', 'tormenta20', 'sfrpg', 'ose', 'swade', 'coc7'];
+const systemsMonkTokenBarSupported = [
+  'dnd5e',
+  'sw5e',
+  'd35e',
+  'dnd4ebeta',
+  'pf1',
+  'pf2e',
+  'tormenta20',
+  'sfrpg',
+  'ose',
+  'swade',
+  'coc7',
+];
 
 export function isSystemMonkTokenBarSupported() {
   return systemsMonkTokenBarSupported.includes(game?.system.id.toLowerCase());

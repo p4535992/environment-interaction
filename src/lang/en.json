@@ -29,7 +29,7 @@
         "name": "Wrap lines?",
         "hint": " "
       },
-      "debug":{
+      "debug": {
         "name": "Enable debugging",
         "label": "Prints debug messages to the console",
         "hint": " "
@@ -69,7 +69,8 @@
       "event-success": "SUCCESS: Macro/Code to run when the interaction is consider a success",
       "event-failure": "FAILURE: Macro/Code to run when the interaction is consider a failure",
       "event-basic-setting": "BASIC SETTINGS",
-      "event-advanced-setting": "ADVANCED SETTINGS"
+      "event-advanced-setting": "ADVANCED SETTINGS",
+      "event-note-about-settings": "You need the advanced settings only for when you need to automatically compare the value with a reference dc value for very high level triggers. From experience I can say that almost nobody uses this part of the module, 99% of the masters do the comparison and trigger the trigger manually."
     },
     "macroExecution": "There was an error in your macro syntax. See the console (F12) for details"
   }

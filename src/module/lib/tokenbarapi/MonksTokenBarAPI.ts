@@ -11,7 +11,11 @@ export interface MonksTokenBarAPI {
 
   requestRoll(tokens: Token[], options?: MonkTokenBarRollOptions): Promise<void>;
 
-  requestContestedRoll(request0: MonkTokenBarContestedRollRequest, request1: MonkTokenBarContestedRollRequest, options?: MonkTokenBarRollOptions): Promise<void>;
+  requestContestedRoll(
+    request0: MonkTokenBarContestedRollRequest,
+    request1: MonkTokenBarContestedRollRequest,
+    options?: MonkTokenBarRollOptions,
+  ): Promise<void>;
 
   /*
    * Used to open a dialog to assign xp to tokens

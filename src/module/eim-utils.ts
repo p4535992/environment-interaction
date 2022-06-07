@@ -189,7 +189,18 @@ export const executeEIMacro = function (item: Item, macroFlag: string, ...args: 
   // })();`;
   // const fn = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', body);
   // const fn2 = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', macro.data.command);
-  const fn3 = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', 'interactorToken', 'interactorActor', macro.data.command);
+  const fn3 = new Function(
+    'item',
+    'speaker',
+    'actor',
+    'token',
+    'character',
+    'event',
+    'args',
+    'interactorToken',
+    'interactorActor',
+    macro.data.command,
+  );
   //attempt script execution
   try {
     // return fn.call(macro, item, speaker, actor, token, character, event, args);
@@ -246,7 +257,18 @@ export const executeEIMacroContent = function (item: Item, macroContent: string,
   const interactorToken = <Token>canvas.tokens?.controlled[0];
   const interactorActor = <Actor>interactorToken?.actor;
 
-  const fn3 = new Function('item', 'speaker', 'actor', 'token', 'character', 'event', 'args', 'interactorToken', 'interactorActor', macro.data.command);
+  const fn3 = new Function(
+    'item',
+    'speaker',
+    'actor',
+    'token',
+    'character',
+    'event',
+    'args',
+    'interactorToken',
+    'interactorActor',
+    macro.data.command,
+  );
   //attempt script execution
   try {
     return fn3.call(macro, item, speaker, actor, token, character, event, myargs, interactorToken, interactorActor);

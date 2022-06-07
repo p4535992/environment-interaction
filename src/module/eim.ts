@@ -125,15 +125,18 @@ export class EnvironmentInteraction {
   static async interactWithEnvironmentFromPlaceableObject(environmentPlaceableObject: PlaceableObject, ...args) {
     const event = args[0];
 
-    const flagRefActorId = environmentPlaceableObject.document.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.environmentTokenRef);
+    const flagRefActorId = environmentPlaceableObject.document.getFlag(
+      CONSTANTS.MODULE_NAME,
+      EnvironmentInteractionFlags.environmentTokenRef,
+    );
     if (!flagRefActorId) {
-      warn(`The environment interaction need a valid actor to reference the actions`,true);
+      warn(`The environment interaction need a valid actor to reference the actions`, true);
       return;
     }
 
     const environmentActorExternal = <Actor>game.actors?.get(flagRefActorId);
     if (!environmentActorExternal?.id) {
-      warn(`The environment interaction need a existing actor to reference the actions`,true);
+      warn(`The environment interaction need a existing actor to reference the actions`, true);
       return;
     }
 
@@ -169,7 +172,9 @@ export class EnvironmentInteraction {
       });
     // }
 
-    const content = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/interaction-dialog.hbs`, { items });
+    const content = await renderTemplate(`/modules/${CONSTANTS.MODULE_NAME}/templates/interaction-dialog.hbs`, {
+      items,
+    });
     const buttons = <any>{};
     if (game.user?.isGM) {
       buttons.openSheet = {
@@ -195,7 +200,7 @@ export class EnvironmentInteraction {
             // }
             //@ts-ignore
             // sourceToken?.sheet?.render(true, {sourceToken});
-            environmentPlaceableObject?.sheet?.render(true, {environmentPlaceableObject});
+            environmentPlaceableObject?.sheet?.render(true, { environmentPlaceableObject });
             //@ts-ignore
             // sourceToken?.sheet?.render(true, {environmentPlaceableObject});
           },
@@ -206,10 +211,10 @@ export class EnvironmentInteraction {
         callback: () => {
           if (environmentPlaceableObject instanceof Token) {
             //@ts-ignore
-            environmentPlaceableObject.actor?.sheet?.render(true, {environmentPlaceableObject});
+            environmentPlaceableObject.actor?.sheet?.render(true, { environmentPlaceableObject });
           } else {
             //@ts-ignore
-            environmentPlaceableObject.sheet?.render(true, {environmentPlaceableObject});
+            environmentPlaceableObject.sheet?.render(true, { environmentPlaceableObject });
           }
         },
       };
@@ -299,7 +304,9 @@ export class EnvironmentInteraction {
             customInfo.interactorItemID = <string>environmentItem.id;
           } else {
             // We need to create a temporary token for applying all the feature of the player
-            const [ownedItemTmp] = <Document<any, Actor>[]>await interactorToken.actor?.createEmbeddedDocuments('Item', [environmentItem.toObject()]);
+            const [ownedItemTmp] = <Document<any, Actor>[]>(
+              await interactorToken.actor?.createEmbeddedDocuments('Item', [environmentItem.toObject()])
+            );
             interactorItemTmp = <Item>ownedItemTmp;
             customInfo.interactorTokenID = <string>interactorToken.id;
             customInfo.interactorActorID = <string>interactorToken.actor?.id;
@@ -314,11 +321,17 @@ export class EnvironmentInteraction {
           // let interactorItem = environmentItem;
           try {
             // Integration with 'item macro'
-            const useItemMacro = <boolean>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseitemmacro);
+            const useItemMacro = <boolean>(
+              environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseitemmacro)
+            );
             // Integration with 'use as macro'
-            const useAsMacro = <boolean>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseasmacro);
-            const explicitDC = <number>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesexplicitdc);
-            const REQUEST_LABEL = 
+            const useAsMacro = <boolean>(
+              environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseasmacro)
+            );
+            const explicitDC = <number>(
+              environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesexplicitdc)
+            );
+            const REQUEST_LABEL =
               <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes) ?? '';
 
             if (useItemMacro) {
@@ -336,22 +349,37 @@ export class EnvironmentInteraction {
                   return;
                 }
               } else {
-                warn(`Can't use the integration with 'item macro' system not supported or hte module is not active`, true);
+                warn(
+                  `Can't use the integration with 'item macro' system not supported or hte module is not active`,
+                  true,
+                );
                 return;
               }
             }
 
             if (useAsMacro) {
-              const macroContent = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes);
+              const macroContent = <string>(
+                environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes)
+              );
               const macroArgs = environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesargs);
               const result = executeEIMacroContent(environmentItem, macroContent, macroArgs);
               if (result >= explicitDC) {
-                const macroContentSuccess = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccess);
-                const macroArgsSuccess = environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccessargs);
+                const macroContentSuccess = <string>(
+                  environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccess)
+                );
+                const macroArgsSuccess = environmentItem.getFlag(
+                  CONSTANTS.MODULE_NAME,
+                  EnvironmentInteractionFlags.notessuccessargs,
+                );
                 executeEIMacroContent(environmentItem, macroContentSuccess, macroArgsSuccess);
               } else {
-                const macroContentFailure = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailure);
-                const macroArgsFailure = environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailureargs);
+                const macroContentFailure = <string>(
+                  environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailure)
+                );
+                const macroArgsFailure = environmentItem.getFlag(
+                  CONSTANTS.MODULE_NAME,
+                  EnvironmentInteractionFlags.notesfailureargs,
+                );
                 executeEIMacroContent(environmentItem, macroContentFailure, macroArgsFailure);
               }
               return;
@@ -379,19 +407,27 @@ export class EnvironmentInteraction {
 
             // const groupsReq = myRequestArray[2]?.trim() ? Array.from(myRequestArray[2]?.trim().split(',')) : [];
 
-            const dcReq = <number>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesexplicitdc);
+            const dcReq = <number>(
+              environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesexplicitdc)
+            );
             //myRequestArray[4]?.trim() ? <number>Number.parseInt(myRequestArray[4]?.trim()) : null;
 
             // if ([ENVIRONMENT_TYPE.ATTACK].includes(noteDetail)) {
             log(environmentTypeReq + '|' + macroNameOrTypeReq + '|' + labelOrDcReq + '|' + dcReq);
 
             if (!environmentTypeReq) {
-              warn(`The label setted for the environment interaction has invalid environmentTypeReq= '${environmentTypeReq}'`, true);
+              warn(
+                `The label setted for the environment interaction has invalid environmentTypeReq= '${environmentTypeReq}'`,
+                true,
+              );
               return;
             }
 
             if (!macroNameOrTypeReq) {
-              warn(`The label setted for the environment interaction has invalid macroNameOrTypeReq = '${macroNameOrTypeReq}'`, true);
+              warn(
+                `The label setted for the environment interaction has invalid macroNameOrTypeReq = '${macroNameOrTypeReq}'`,
+                true,
+              );
               return;
             }
 
@@ -413,7 +449,9 @@ export class EnvironmentInteraction {
                 // const roll = new Roll(macroNameOrTypeReq).roll();
                 // const result = <number>await roll.data.total ?? 0;
                 let result = 0;
-                const formula = macroNameOrTypeReq.includes('data') ? macroNameOrTypeReq.replace(/data\./g, '@') : macroNameOrTypeReq;
+                const formula = macroNameOrTypeReq.includes('data')
+                  ? macroNameOrTypeReq.replace(/data\./g, '@')
+                  : macroNameOrTypeReq;
                 const data = interactorToken.document.actor ? interactorToken.document.actor.getRollData() : {};
                 const roll = new Roll(formula, data);
                 let myresult = 0;
@@ -433,12 +471,22 @@ export class EnvironmentInteraction {
                 }
 
                 if (result >= explicitDC) {
-                  const macroContentSuccess = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccess);
-                  const macroArgsSuccess = environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccessargs);
+                  const macroContentSuccess = <string>(
+                    environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccess)
+                  );
+                  const macroArgsSuccess = environmentItem.getFlag(
+                    CONSTANTS.MODULE_NAME,
+                    EnvironmentInteractionFlags.notessuccessargs,
+                  );
                   executeEIMacroContent(environmentItem, macroContentSuccess, macroArgsSuccess);
                 } else {
-                  const macroContentFailure = <string>environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailure);
-                  const macroArgsFailure = environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailureargs);
+                  const macroContentFailure = <string>(
+                    environmentItem.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailure)
+                  );
+                  const macroArgsFailure = environmentItem.getFlag(
+                    CONSTANTS.MODULE_NAME,
+                    EnvironmentInteractionFlags.notesfailureargs,
+                  );
                   executeEIMacroContent(environmentItem, macroContentFailure, macroArgsFailure);
                 }
                 break;
@@ -533,7 +581,11 @@ export class EnvironmentInteraction {
                     //   const checkout = msgtokenRoll.total;
                     // });
                   } else {
-                    warn(i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.noValidRequestWarn`) + ` for monk token bar integration ${options.request}`, true);
+                    warn(
+                      i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.noValidRequestWarn`) +
+                        ` for monk token bar integration ${options.request}`,
+                      true,
+                    );
                   }
                 } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
                   log(`Try the Token Action HUD integration`);
@@ -640,7 +692,11 @@ export class EnvironmentInteraction {
                     //   const checkout = msgtokenRoll.total;
                     // });
                   } else {
-                    warn(i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.noValidRequestWarn`) + ` for monk token bar integration ${options.request}`, true);
+                    warn(
+                      i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.noValidRequestWarn`) +
+                        ` for monk token bar integration ${options.request}`,
+                      true,
+                    );
                   }
                 } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
                   log(`Try the Token Action HUD integration`);
@@ -707,7 +763,11 @@ export class EnvironmentInteraction {
                     //   const checkout = msgtokenRoll.total;
                     // });
                   } else {
-                    warn(i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.noValidRequestWarn`) + ` for monk token bar integration ${options.request}`, true);
+                    warn(
+                      i18n(`${CONSTANTS.MODULE_NAME}.interactWithEnvironment.noValidRequestWarn`) +
+                        ` for monk token bar integration ${options.request}`,
+                      true,
+                    );
                   }
                 } else if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
                   log(`Try the Token Action HUD integration`);

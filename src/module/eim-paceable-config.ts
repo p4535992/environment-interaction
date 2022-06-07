@@ -25,15 +25,42 @@ export class EnvironmentInteractionPlaceableConfig {
 
     Hooks.on('renderFormApplication', EnvironmentInteractionPlaceableConfig._handleRenderFormApplication);
 
-    Hooks.on('preUpdateActor', EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig));
-    Hooks.on('preUpdateToken', EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig));
-    Hooks.on('preUpdateTile', EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig));
-    Hooks.on('preUpdateDrawing', EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig));
-    Hooks.on('preUpdateWall', EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig));
-    Hooks.on('preUpdateLight', EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig));
-    Hooks.on('preUpdateAmbientSound', EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig));
-    Hooks.on('preUpdateMeasuredTemplate', EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig));
-    Hooks.on('preUpdateNote', EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig));
+    Hooks.on(
+      'preUpdateActor',
+      EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig),
+    );
+    Hooks.on(
+      'preUpdateToken',
+      EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig),
+    );
+    Hooks.on(
+      'preUpdateTile',
+      EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig),
+    );
+    Hooks.on(
+      'preUpdateDrawing',
+      EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig),
+    );
+    Hooks.on(
+      'preUpdateWall',
+      EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig),
+    );
+    Hooks.on(
+      'preUpdateLight',
+      EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig),
+    );
+    Hooks.on(
+      'preUpdateAmbientSound',
+      EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig),
+    );
+    Hooks.on(
+      'preUpdateMeasuredTemplate',
+      EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig),
+    );
+    Hooks.on(
+      'preUpdateNote',
+      EnvironmentInteractionPlaceableConfig._applyEnviroments.bind(EnvironmentInteractionPlaceableConfig),
+    );
   }
 
   static configHandlers = [
@@ -48,7 +75,9 @@ export class EnvironmentInteractionPlaceableConfig {
   ];
 
   static _handleRenderFormApplication(app, html) {
-    const found = EnvironmentInteractionPlaceableConfig.configHandlers.find((config) => app instanceof config.classType);
+    const found = EnvironmentInteractionPlaceableConfig.configHandlers.find(
+      (config) => app instanceof config.classType,
+    );
     if (!found) return;
     EnvironmentInteractionPlaceableConfig[found.method](app, html, true);
   }
@@ -99,8 +128,16 @@ export class EnvironmentInteractionPlaceableConfig {
       return;
     }
 
-    const enviromentActorId = EnvironmentInteractionPlaceableConfig.getEnviroments(obj, EnvironmentInteractionFlags.environmentTokenRef);
-    const enviromentChecked = EnvironmentInteractionPlaceableConfig.getEnviroments(obj, EnvironmentInteractionFlags.environmentToken) ? 'checked' : '';
+    const enviromentActorId = EnvironmentInteractionPlaceableConfig.getEnviroments(
+      obj,
+      EnvironmentInteractionFlags.environmentTokenRef,
+    );
+    const enviromentChecked = EnvironmentInteractionPlaceableConfig.getEnviroments(
+      obj,
+      EnvironmentInteractionFlags.environmentToken,
+    )
+      ? 'checked'
+      : '';
 
     const actorsOrderByName = <Actor[]>game.actors?.contents.sort((a, b) => a.data.name.localeCompare(b.data.name));
     // TODO ADD SOME FILTER ???
@@ -141,7 +178,7 @@ export class EnvironmentInteractionPlaceableConfig {
       </div>
     </fieldset>
     `;
-    
+
     if (insertBefore) {
       $(formConfig).insertBefore(html);
     } else {
@@ -308,7 +345,8 @@ export class EnvironmentInteractionPlaceableConfig {
     const providedEnviroments = typeof inEnviroments === 'string' ? inEnviroments.split(',') : inEnviroments;
 
     providedEnviroments.forEach((t) => {
-      if (typeof t !== 'string') throw new Error(`${CONSTANTS.MODULE_NAME} | ${inFunctionName} | enviroments in array must be of type string`);
+      if (typeof t !== 'string')
+        throw new Error(`${CONSTANTS.MODULE_NAME} | ${inFunctionName} | enviroments in array must be of type string`);
     });
 
     return providedEnviroments.map((t) => t.trim());

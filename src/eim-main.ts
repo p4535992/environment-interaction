@@ -56,11 +56,15 @@ Hooks.once('setup', function () {
 /* ------------------------------------ */
 Hooks.once('ready', () => {
   if (!game.modules.get('lib-wrapper')?.active && game.user?.isGM) {
-    ui.notifications?.error(`The "${CONSTANTS.MODULE_NAME}" module requires to install and activate the "libWrapper" module.`);
+    ui.notifications?.error(
+      `The "${CONSTANTS.MODULE_NAME}" module requires to install and activate the "libWrapper" module.`,
+    );
     return;
   }
   if (!game.modules.get('acelib')?.active && game.user?.isGM) {
-    ui.notifications?.error(`The "${CONSTANTS.MODULE_NAME}" module requires to install and activate the "acelib" module.`);
+    ui.notifications?.error(
+      `The "${CONSTANTS.MODULE_NAME}" module requires to install and activate the "acelib" module.`,
+    );
     return;
   }
   // if (!game.modules.get("lib-df-hotkey")?.active && game.user.isGM){

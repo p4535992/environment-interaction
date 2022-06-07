@@ -27,7 +27,7 @@
 }
 
 .ei-macro-editor-expand {
-  position: absolute;
+  /* position: absolute; */ /* 4535992 */
   filter: opacity(0.4);
   border-radius: 0.5em;
   height: 2em;

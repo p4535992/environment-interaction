@@ -1,3 +1,7 @@
+### Update 1.2.0
+
+- Upgrade in preparation of fvtt 10
+
 ### Update 1.1.10
 
 - Little update on 'app.object.document' check
