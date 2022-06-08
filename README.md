@@ -12,7 +12,7 @@
 
 ![GitHub all releases](https://img.shields.io/github/downloads/p4535992/environment-interaction-multisystem/total?style=for-the-badge)
 
-### If you want to buy me a coffee [![alt-text](https://img.shields.io/badge/-Patreon-%23
+### If you want to buy me a coffee [![alt-text](https://img.shields.io/badge/-Patreon-%23ff424d?style=for-the-badge)](https://www.patreon.com/p4535992)
 
 Environment Interaction allows GM users to create "environment tokens" that characters can interact with. These interactions can include weapon attacks, skill checks and saves, and even executing macros.
 
