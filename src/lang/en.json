@@ -29,6 +29,10 @@
         "name": "Wrap lines?",
         "hint": " "
       },
+      "delayedTimeBeforeDeleteTheEnvironmentItem":{
+        "name": "Delayed time before delete the environment item",
+        "hint": "Duration in seconds before delete the environment item. This is a 'can't avoid feature', When using automatize modules like MidiQol the module will not allow the attack to be rolled from the chat card or other 'after' mechanisms (as the item no longer exists on the actor at the point where that attack is clicked), and will pop an error that \"the requested item (id) no longer exists on the actor (name)\"."
+      },
       "debug": {
         "name": "Enable debugging",
         "label": "Prints debug messages to the console",

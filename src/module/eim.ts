@@ -1,5 +1,5 @@
 import { customInfoEnvironmentInteraction, ENVIRONMENT_TYPE, EnvironmentInteractionFlags } from './eim-models';
-import { debug, i18n, isStringEquals, is_real_number, log, rollDependingOnSystem, warn } from './lib/lib';
+import { debug, i18n, isStringEquals, is_real_number, log, rollDependingOnSystem, wait, warn } from './lib/lib';
 import {
   getMonkTokenBarAPI,
   getTokenActionHUDRollHandler,
@@ -438,12 +438,18 @@ export class EnvironmentInteraction {
             customInfo.environmentDC = dcReq;
 
             switch (environmentTypeReq) {
+              // ==================================
+              // Item integration
+              // ==================================
               case ENVIRONMENT_TYPE.ITEM: {
                 debug(`Enviroment type is ITEM`);
                 //@ts-ignore
                 environmentItem.roll();
                 break;
               }
+              // ==================================
+              // Dice integration
+              // ==================================
               case ENVIRONMENT_TYPE.DICE: {
                 debug(`Enviroment type is DICE`);
                 // const roll = new Roll(macroNameOrTypeReq).roll();
@@ -491,6 +497,9 @@ export class EnvironmentInteraction {
                 }
                 break;
               }
+              // ==================================
+              // Macro integration
+              // ==================================
               case ENVIRONMENT_TYPE.MACRO: {
                 debug(`Enviroment type is MACRO`);
                 if (macroNameOrTypeReq) {
@@ -506,9 +515,12 @@ export class EnvironmentInteraction {
                 }
                 break;
               }
-              // may need to update certain item properties like proficiency/equipped
+              // ==================================
+              // Token Action HUD integration for ability\skills\item
+              // ==================================
               case ENVIRONMENT_TYPE.ATTACK: {
                 debug(`Enviroment type is ATTACK`);
+                // TODO may need to update certain item properties like proficiency/equipped
                 // Is managed from the system with manual intervetion
                 // Macro type depends for now on the system used
                 if (isSystemTokenActionHUDSupported() && isTokenActionHudActive()) {
@@ -548,6 +560,9 @@ export class EnvironmentInteraction {
                 }
                 break;
               }
+              // ==================================
+              // Monk Tokens Bar integration for ability\skills
+              // ==================================
               case ENVIRONMENT_TYPE.ABILITY: {
                 debug(`Enviroment type is ABILITY`);
                 // (
@@ -623,6 +638,9 @@ export class EnvironmentInteraction {
                 }
                 break;
               }
+              // ==================================
+              // Monk Tokens Bar integration for ability\skills
+              // ==================================
               case ENVIRONMENT_TYPE.SAVE:
               case ENVIRONMENT_TYPE.SKILL: {
                 debug(`Enviroment type is SAVE OR SKILL`);
@@ -734,6 +752,9 @@ export class EnvironmentInteraction {
                 }
                 break;
               }
+              // ==================================
+              // Default integration
+              // ==================================
               default: {
                 debug(`Enviroment type is DEFAULT`);
                 if (isSystemMonkTokenBarSupported() && isMonkTokensBarModuleActive()) {
@@ -813,6 +834,9 @@ export class EnvironmentInteraction {
               });
               if (found) {
                 if (interactorItemTmp.actor?.id == interactorToken.actor?.id) {
+                  // Wait tot. seconds before delete the item
+                  const delay = <number>game.settings.get(CONSTANTS.MODULE_NAME,'delayedTimeBeforeDeleteTheEnvironmentItem');
+                  wait(delay);
                   await interactorItemTmp.delete();
                   //interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>interactorItemTmp.id]);
                 }

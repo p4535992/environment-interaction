@@ -1,6 +1,7 @@
 import type { RollHandler } from './lib/tokenActionHUD/RollHandler';
 import type { MonksTokenBarAPI } from './lib/tokenbarapi/MonksTokenBarAPI';
 import CONSTANTS from './constants';
+import { i18n } from './lib/lib';
 
 export function getMonkTokenBarAPI(): MonksTokenBarAPI {
   //@ts-ignore
@@ -155,6 +156,15 @@ export const registerSettings = function () {
   //   scope: 'world',
   //   config: false,
   // });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'delayedTimeBeforeDeleteTheEnvironmentItem', {
+    name: `${CONSTANTS.MODULE_NAME}.settings.delayedTimeBeforeDeleteTheEnvironmentItem.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.settings.delayedTimeBeforeDeleteTheEnvironmentItem.hint`,
+    default: 300,
+    type: Number,
+    scope: 'world',
+    config: false,
+  });
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {
     name: `${CONSTANTS.MODULE_NAME}.settings.debug.name`,
