@@ -160,7 +160,7 @@ export const registerSettings = function () {
   game.settings.register(CONSTANTS.MODULE_NAME, 'delayedTimeBeforeDeleteTheEnvironmentItem', {
     name: `${CONSTANTS.MODULE_NAME}.settings.delayedTimeBeforeDeleteTheEnvironmentItem.name`,
     hint: `${CONSTANTS.MODULE_NAME}.settings.delayedTimeBeforeDeleteTheEnvironmentItem.hint`,
-    default: 300,
+    default: 15, // seconds
     type: Number,
     scope: 'world',
     config: false,
