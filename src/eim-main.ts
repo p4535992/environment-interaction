@@ -12,66 +12,66 @@
 // Import JavaScript modules
 
 // Import TypeScript modules
-import { registerSettings } from './module/settings';
-import { preloadTemplates } from './module/preloadTemplates';
-import { initHooks, readyHooks, setupHooks } from './module/module';
-import CONSTANTS from './module/constants';
-import type API from './module/api';
+import { registerSettings } from "./scripts/settings";
+import { preloadTemplates } from "./scripts/preloadTemplates";
+import { initHooks, readyHooks, setupHooks } from "./scripts/module";
+import CONSTANTS from "./scripts/constants";
+import type API from "./scripts/api";
 
 /* ------------------------------------ */
 /* Initialize module					*/
 /* ------------------------------------ */
-Hooks.once('init', async () => {
-  console.log(`${CONSTANTS.MODULE_NAME} | Initializing ${CONSTANTS.MODULE_NAME}`);
+Hooks.once("init", async () => {
+	console.log(`${CONSTANTS.MODULE_NAME} | Initializing ${CONSTANTS.MODULE_NAME}`);
 
-  // Register custom module settings
-  registerSettings();
+	// Register custom module settings
+	registerSettings();
 
-  initHooks();
-  // Assign custom classes and constants here
+	initHooks();
+	// Assign custom classes and constants here
 
-  // Register custom module settings
-  //registerSettings();
-  //fetchParams();
+	// Register custom module settings
+	//registerSettings();
+	//fetchParams();
 
-  // Preload Handlebars templates
-  await preloadTemplates();
-  // Register custom sheets (if any)
+	// Preload Handlebars templates
+	await preloadTemplates();
+	// Register custom sheets (if any)
 });
 
 /* ------------------------------------ */
 /* Setup module							*/
 /* ------------------------------------ */
-Hooks.once('setup', function () {
-  // Do anything after initialization but before ready
-  //setupModules();
+Hooks.once("setup", function () {
+	// Do anything after initialization but before ready
+	//setupModules();
 
-  setupHooks();
+	setupHooks();
 
-  registerSettings();
+	registerSettings();
 });
 
 /* ------------------------------------ */
 /* When ready							*/
 /* ------------------------------------ */
-Hooks.once('ready', () => {
-  if (!game.modules.get('lib-wrapper')?.active && game.user?.isGM) {
-    ui.notifications?.error(
-      `The "${CONSTANTS.MODULE_NAME}" module requires to install and activate the "libWrapper" module.`,
-    );
-    return;
-  }
-  if (!game.modules.get('acelib')?.active && game.user?.isGM) {
-    ui.notifications?.error(
-      `The "${CONSTANTS.MODULE_NAME}" module requires to install and activate the "acelib" module.`,
-    );
-    return;
-  }
-  // if (!game.modules.get("lib-df-hotkey")?.active && game.user.isGM){
-  //   ui.notifications.error(`The "${CONSTANTS.MODULE_NAME}" module requires to install and activate the "lib-df-hotkey" module.`);
-  //   return;
-  // }
-  readyHooks();
+Hooks.once("ready", () => {
+	if (!game.modules.get("lib-wrapper")?.active && game.user?.isGM) {
+		ui.notifications?.error(
+			`The "${CONSTANTS.MODULE_NAME}" module requires to install and activate the "libWrapper" module.`
+		);
+		return;
+	}
+	if (!game.modules.get("acelib")?.active && game.user?.isGM) {
+		ui.notifications?.error(
+			`The "${CONSTANTS.MODULE_NAME}" module requires to install and activate the "acelib" module.`
+		);
+		return;
+	}
+	// if (!game.modules.get("lib-df-hotkey")?.active && game.user.isGM){
+	//   ui.notifications.error(`The "${CONSTANTS.MODULE_NAME}" module requires to install and activate the "lib-df-hotkey" module.`);
+	//   return;
+	// }
+	readyHooks();
 });
 
 /* ------------------------------------ */
@@ -79,8 +79,8 @@ Hooks.once('ready', () => {
 /* ------------------------------------ */
 
 export interface EimModuleData {
-  api: typeof API;
-  socket: any;
+	api: typeof API;
+	socket: any;
 }
 
 /**
@@ -88,8 +88,8 @@ export interface EimModuleData {
  * @param api to set to game module.
  */
 export function setApi(api: typeof API): void {
-  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as EimModuleData;
-  data.api = api;
+	const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as EimModuleData;
+	data.api = api;
 }
 
 /**
@@ -97,8 +97,8 @@ export function setApi(api: typeof API): void {
  * @returns Api from games module.
  */
 export function getApi(): typeof API {
-  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as EimModuleData;
-  return data.api;
+	const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as EimModuleData;
+	return data.api;
 }
 
 /**
@@ -106,8 +106,8 @@ export function getApi(): typeof API {
  * @param socket to set to game module.
  */
 export function setSocket(socket: any): void {
-  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as EimModuleData;
-  data.socket = socket;
+	const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as EimModuleData;
+	data.socket = socket;
 }
 
 /*
@@ -115,6 +115,6 @@ export function setSocket(socket: any): void {
  * @returns Socket from games module.
  */
 export function getSocket() {
-  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as EimModuleData;
-  return data.socket;
+	const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as EimModuleData;
+	return data.socket;
 }

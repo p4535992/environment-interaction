@@ -3,7 +3,7 @@
     "title": "Environment Interaction Multisystem",
     "description": "Create environment placeable object that characters can interact with.",
     "version": "1.3.0",
-    "main": "main.js",
+    "main": "eim-main.js",
   "scripts": {
     "publish": "gulp publish --update",
     "package": "gulp package",

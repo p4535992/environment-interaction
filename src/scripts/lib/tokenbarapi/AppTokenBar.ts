@@ -1,39 +1,39 @@
 export interface AppTokenBar {
-  buttons: any;
+	buttons: any;
 
-  tokens: Token[];
+	tokens: Token[];
 
-  thumbnails: any[];
+	thumbnails: any[];
 
-  _hover: boolean;
+	_hover: boolean;
 
-  get defaultOptions();
+	get defaultOptions();
 
-  getData(options);
+	getData(options);
 
-  getPos();
+	getPos();
 
-  setPos();
+	setPos();
 
-  refresh();
+	refresh();
 
-  processStat(formula, data);
+	processStat(formula, data);
 
-  getCurrentTokens();
+	getCurrentTokens();
 
-  getResourceBar(token, bar);
+	getResourceBar(token, bar);
 
-  updateToken(tkn, refresh);
+	updateToken(tkn, refresh);
 
-  activateListeners(html);
+	activateListeners(html);
 
-  _contextMenu(html);
+	_contextMenu(html);
 
-  getEntry(id);
+	getEntry(id);
 
-  _onClickToken(event);
+	_onClickToken(event);
 
-  _onDblClickToken(event);
+	_onDblClickToken(event);
 
-  _onHoverToken(event);
+	_onHoverToken(event);
 }

@@ -4,7 +4,7 @@
 /**
  * This is important for the bundle.js
  */
-const mainFilePath = `src/main.ts`; // MOD 4535992
+const mainFilePath = `src/eim-main.ts`; // MOD 4535992
 
 const gulp = require(`gulp`);
 const fs = require(`fs`);
@@ -138,10 +138,8 @@ const createTransformer = () => {
                         return factory.updateExportDeclaration(node, node.decorators, node.modifiers, false, node.exportClause, newModuleSpecifier,undefined);
                     }
                 }
-                console.log(`22`);
                 return visitEachChild(node, visitor, context);
             }
-            console.log(`23`);
             return visitNode(node, visitor);
         };
     };

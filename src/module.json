@@ -1,85 +1,85 @@
 {
-  "name": "environment-interaction-multisystem",
-  "title": "Environment Interaction Multisystem",
-  "description": "Create environment placeable object that characters can interact with.",
-  "version": "1.2.1",
-  "author": "enso, p4535992",
-  "authors": [
-    { "name": "enso" },
-    {
-      "name": "p4535992",
-      "url": "https://github.com/p4535992",
-      "discord": "",
-      "twitter": "",
-      "patreon": "",
-      "github": "p4535992",
-      "ko-fi": "",
-      "reddit": "",
-      "email": ""
-    }
-  ],
-  "type": "module",
-  "socket": true,
-  "includes": [
-    "./assets/**",
-    "./lang/**",
-    "./scripts/**",
-    "./styles/**",
-    "./templates/**",
-    "./module.json",
-    "./README.md",
-    "./icons/**",
-    "./packs/**"
-  ],
-  "media": [
-    {
-      "type": "icon",
-      "location": ""
-    },
-    {
-      "type": "cover",
-      "location": ""
-    },
-    {
-      "type": "screenshot",
-      "location": ""
-    }
-  ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json"
-    }
-  ],
-  "system": [],
-  "scripts": ["module/lib/dd.min.js"],
-  "esmodules": ["eim-main.js"],
-  "styles": ["styles/eim.css", "styles/eim-macro-editor.css", "styles/dd.css"],
-  "minimumCoreVersion": "9",
-  "compatibleCoreVersion": "9",
-  "url": "https://github.com/p4535992/environment-interaction-multisystem",
-  "manifest": "https://github.com/p4535992/environment-interaction-multisystem/releases/latest/download/module.json",
-  "download": "https://github.com/p4535992/environment-interaction-multisystem/releases/latest/download/module.zip",
-  "readme": "https://github.com/p4535992/environment-interaction-multisystem/blob/v1.2.1/README.md",
-  "changelog": "https://github.com/p4535992/environment-interaction-multisystem/blob/v1.2.1/changelog.md",
-  "bugs": "https://github.com/p4535992/environment-interaction-multisystem/issues",
-  "allowBugReporter": true,
-  "manifestPlusVersion": "1.2.0",
-  "dependencies": [
-    {
-      "name": "lib-wrapper"
-    },
-    {
-      "name": "socketlib"
-    },
-    {
-      "name": "acelib",
-      "type": "module"
-    }
-  ],
-  "flags": {
-    "manifestPlusVersion": "1.2.0",
-    "allowBugReporter": true
-  }
+	"name": "environment-interaction-multisystem",
+	"title": "Environment Interaction Multisystem",
+	"description": "Create environment placeable object that characters can interact with.",
+	"version": "1.2.1",
+	"author": "enso, p4535992",
+	"authors": [
+		{ "name": "enso" },
+		{
+			"name": "p4535992",
+			"url": "https://github.com/p4535992",
+			"discord": "",
+			"twitter": "",
+			"patreon": "",
+			"github": "p4535992",
+			"ko-fi": "",
+			"reddit": "",
+			"email": ""
+		}
+	],
+	"type": "module",
+	"socket": true,
+	"includes": [
+		"./assets/**",
+		"./lang/**",
+		"./scripts/**",
+		"./styles/**",
+		"./templates/**",
+		"./module.json",
+		"./README.md",
+		"./icons/**",
+		"./packs/**"
+	],
+	"media": [
+		{
+			"type": "icon",
+			"location": ""
+		},
+		{
+			"type": "cover",
+			"location": ""
+		},
+		{
+			"type": "screenshot",
+			"location": ""
+		}
+	],
+	"languages": [
+		{
+			"lang": "en",
+			"name": "English",
+			"path": "lang/en.json"
+		}
+	],
+	"system": [],
+	"scripts": ["module/lib/dd.min.js"],
+	"esmodules": ["eim-main.js"],
+	"styles": ["styles/eim.css", "styles/eim-macro-editor.css", "styles/dd.css"],
+	"minimumCoreVersion": "9",
+	"compatibleCoreVersion": "9",
+	"url": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem",
+	"manifest": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/releases/latest/download/module.json",
+	"download": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/releases/latest/download/module.zip",
+	"readme": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/blob/v1.2.1/README.md",
+	"changelog": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/blob/v1.2.1/changelog.md",
+	"bugs": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/issues",
+	"allowBugReporter": true,
+	"manifestPlusVersion": "1.2.0",
+	"dependencies": [
+		{
+			"name": "lib-wrapper"
+		},
+		{
+			"name": "socketlib"
+		},
+		{
+			"name": "acelib",
+			"type": "module"
+		}
+	],
+	"flags": {
+		"manifestPlusVersion": "1.2.0",
+		"allowBugReporter": true
+	}
 }

@@ -1,81 +1,81 @@
 {
-  "environment-interaction-multisystem": {
-    "settings": {
-      "closeDialog": {
-        "name": "Automatically Close Interaction Selection Dialog",
-        "hint": " "
-      },
-      "autoProficiency": {
-        "name": "Automatically Add Proficiency Bonus to Attack Rolls",
-        "hint": " "
-      },
-      "integrationWithPolyglot": {
-        "name": "Integration with Polyglot",
-        "hint": "Set up different rolltable one for each language and change the audio file with customized one for that language"
-      },
-      "notehidelabel": {
-        "name": "Hide Environment Interaction Note Label",
-        "hint": "If checked only the icon will appear"
-      },
-      "notecolorlabel": {
-        "name": "Change Color when Notes are present",
-        "hint": "Change Color when Notes are present"
-      },
-      "acelibDefaultShow": {
-        "name": "Show Macro editor by default",
-        "hint": "Shows the code editor by default instead of the default editor"
-      },
-      "acelibLineWrap": {
-        "name": "Wrap lines?",
-        "hint": " "
-      },
-      "delayedTimeBeforeDeleteTheEnvironmentItem": {
-        "name": "Delayed time in seconds before delete the environment item",
-        "hint": "Duration in seconds before delete the environment item. This is a 'can't avoid feature', When using automatize modules like MidiQol the module will not allow the attack to be rolled from the chat card or other 'after' mechanisms (as the item no longer exists on the actor at the point where that attack is clicked), and will pop an error that \"the requested item (id) no longer exists on the actor (name)\".There is a optional integration with the 'Hurry up' module if present and active."
-      },
-      "debug": {
-        "name": "Enable debugging",
-        "label": "Prints debug messages to the console",
-        "hint": " "
-      }
-    },
-    "handlebarsHelper": {
-      "Macro": "Macro"
-    },
-    "autoProficiency": {
-      "content": "Add proficiency bonus?"
-    },
-    "interactWithEnvironment": {
-      "openCharacterSheet": "[GM] Open Actor Environment",
-      "openCharacterSheetToken": "[GM] Open Token Environment",
-      "openPlaceableObject": "Open Placeable Object",
-      "selectTokenWarn": "Select a token to interact with environment.",
-      "noValidRequestWarn": "The string request for tokenbar module is not a valid one",
-      "Check": "Check",
-      "title": "Select Action"
-    },
-    "tokenConfig": {
-      "labelPlaceableObject": "Apply Environment Interaction ?",
-      "labelActor": "Link to Environment Actor",
-      "labelTitle": "Environment Interaction Panel"
-    },
-    "note": {
-      "label": "Environment Interaction Note",
-      "event-use-environment-interaction": "ENABLE: Enable this item for the environment interaction, will become invisible for all non GM player and will show up on the interaction  item list, it will apply with css a background color to these items in the inventory",
-      "event-use-item-macro": "ITEM MACRO: Enable the item macro integration, if this enable will launch the macro setted with the module 'item macro' (if present or it will do nothing), and will ignore the 'EVENT','SUCCESS' and 'FAILURE' settings",
-      "event-use-item-environment": "ITEM ENVIRONMENT: Enable the use of the environment token instead the standard use, where the action is launched like the item was in the inventory of the interactor token (the player usually). ATTENTION : If is a contested roll is a contested roll with himself",
-      "event-use-as-macro": "EVENT AS MACRO: This checkbox set up the 'EVENT' like a input macro. The macro MUST return a numeric value to compare with the DC for acknowledge a 'SUCCESS' or a 'FAILURE'",
-      "event-detail": "DETAIL: the sub-label with some additional info on the voice",
-      "event-info": "INFO: dialog showed up when click on the information icon if you want to show some information before click",
-      "event-explicit-dc": "DC o NUMBER FLAG: This is the number to check with the result of the 'EVENT'. If the result of 'EVENT' is >= of this value is a success else a failure",
-      "event": "EVENT: the label for manage the interaction, or a macro with a return number for compare with the DC",
-      "event-condition": "CONDITION: Macro/Code for decide if the interactor token can see the voice",
-      "event-success": "SUCCESS: Macro/Code to run when the interaction is consider a success",
-      "event-failure": "FAILURE: Macro/Code to run when the interaction is consider a failure",
-      "event-basic-setting": "BASIC SETTINGS",
-      "event-advanced-setting": "ADVANCED SETTINGS",
-      "event-note-about-settings": "You need the advanced settings only for when you need to automatically compare the value with a reference dc value for very high level triggers. From experience I can say that almost nobody uses this part of the module, 99% of the masters do the comparison and trigger the trigger manually."
-    },
-    "macroExecution": "There was an error in your macro syntax. See the console (F12) for details"
-  }
+	"environment-interaction-multisystem": {
+		"settings": {
+			"closeDialog": {
+				"name": "Automatically Close Interaction Selection Dialog",
+				"hint": " "
+			},
+			"autoProficiency": {
+				"name": "Automatically Add Proficiency Bonus to Attack Rolls",
+				"hint": " "
+			},
+			"integrationWithPolyglot": {
+				"name": "Integration with Polyglot",
+				"hint": "Set up different rolltable one for each language and change the audio file with customized one for that language"
+			},
+			"notehidelabel": {
+				"name": "Hide Environment Interaction Note Label",
+				"hint": "If checked only the icon will appear"
+			},
+			"notecolorlabel": {
+				"name": "Change Color when Notes are present",
+				"hint": "Change Color when Notes are present"
+			},
+			"acelibDefaultShow": {
+				"name": "Show Macro editor by default",
+				"hint": "Shows the code editor by default instead of the default editor"
+			},
+			"acelibLineWrap": {
+				"name": "Wrap lines?",
+				"hint": " "
+			},
+			"delayedTimeBeforeDeleteTheEnvironmentItem": {
+				"name": "Delayed time in seconds before delete the environment item",
+				"hint": "Duration in seconds before delete the environment item. This is a 'can't avoid feature', When using automatize modules like MidiQol the module will not allow the attack to be rolled from the chat card or other 'after' mechanisms (as the item no longer exists on the actor at the point where that attack is clicked), and will pop an error that \"the requested item (id) no longer exists on the actor (name)\".There is a optional integration with the 'Hurry up' module if present and active."
+			},
+			"debug": {
+				"name": "Enable debugging",
+				"label": "Prints debug messages to the console",
+				"hint": " "
+			}
+		},
+		"handlebarsHelper": {
+			"Macro": "Macro"
+		},
+		"autoProficiency": {
+			"content": "Add proficiency bonus?"
+		},
+		"interactWithEnvironment": {
+			"openCharacterSheet": "[GM] Open Actor Environment",
+			"openCharacterSheetToken": "[GM] Open Token Environment",
+			"openPlaceableObject": "Open Placeable Object",
+			"selectTokenWarn": "Select a token to interact with environment.",
+			"noValidRequestWarn": "The string request for tokenbar module is not a valid one",
+			"Check": "Check",
+			"title": "Select Action"
+		},
+		"tokenConfig": {
+			"labelPlaceableObject": "Apply Environment Interaction ?",
+			"labelActor": "Link to Environment Actor",
+			"labelTitle": "Environment Interaction Panel"
+		},
+		"note": {
+			"label": "Environment Interaction Note",
+			"event-use-environment-interaction": "ENABLE: Enable this item for the environment interaction, will become invisible for all non GM player and will show up on the interaction  item list, it will apply with css a background color to these items in the inventory",
+			"event-use-item-macro": "ITEM MACRO: Enable the item macro integration, if this enable will launch the macro setted with the module 'item macro' (if present or it will do nothing), and will ignore the 'EVENT','SUCCESS' and 'FAILURE' settings",
+			"event-use-item-environment": "ITEM ENVIRONMENT: Enable the use of the environment token instead the standard use, where the action is launched like the item was in the inventory of the interactor token (the player usually). ATTENTION : If is a contested roll is a contested roll with himself",
+			"event-use-as-macro": "EVENT AS MACRO: This checkbox set up the 'EVENT' like a input macro. The macro MUST return a numeric value to compare with the DC for acknowledge a 'SUCCESS' or a 'FAILURE'",
+			"event-detail": "DETAIL: the sub-label with some additional info on the voice",
+			"event-info": "INFO: dialog showed up when click on the information icon if you want to show some information before click",
+			"event-explicit-dc": "DC o NUMBER FLAG: This is the number to check with the result of the 'EVENT'. If the result of 'EVENT' is >= of this value is a success else a failure",
+			"event": "EVENT: the label for manage the interaction, or a macro with a return number for compare with the DC",
+			"event-condition": "CONDITION: Macro/Code for decide if the interactor token can see the voice",
+			"event-success": "SUCCESS: Macro/Code to run when the interaction is consider a success",
+			"event-failure": "FAILURE: Macro/Code to run when the interaction is consider a failure",
+			"event-basic-setting": "BASIC SETTINGS",
+			"event-advanced-setting": "ADVANCED SETTINGS",
+			"event-note-about-settings": "You need the advanced settings only for when you need to automatically compare the value with a reference dc value for very high level triggers. From experience I can say that almost nobody uses this part of the module, 99% of the masters do the comparison and trigger the trigger manually."
+		},
+		"macroExecution": "There was an error in your macro syntax. See the console (F12) for details"
+	}
 }

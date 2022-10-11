@@ -1,205 +1,205 @@
-import type { ContestedRoll } from './lib/tokenbarapi/ContestedRoll';
-import { EnvironmentInteractionNote } from './eim-note';
-import { EnvironmentInteraction } from './eim';
-import { customInfoEnvironmentInteraction, EnvironmentInteractionFlags } from './eim-models';
-import { executeEIMacro } from './eim-utils';
-import { EnvironmentInteractionPlaceableConfig } from './eim-paceable-config';
-import CONSTANTS from './constants';
+import type { ContestedRoll } from "./lib/tokenbarapi/ContestedRoll";
+import { EnvironmentInteractionNote } from "./eim-note";
+import { EnvironmentInteraction } from "./eim";
+import { customInfoEnvironmentInteraction, EnvironmentInteractionFlags } from "./eim-models";
+import { executeEIMacro } from "./eim-utils";
+import { EnvironmentInteractionPlaceableConfig } from "./eim-paceable-config";
+import CONSTANTS from "./constants";
 
 let currentContestedRollTokenBar = NaN;
 
 export const initHooks = async () => {
-  // Open module API
-  // @ts-ignore
-  game.EnvironmentInteraction = EnvironmentInteraction;
-  // @ts-ignore
-  game.EnvironmentInteraction.EnvironmentInteractionPlaceableConfig = EnvironmentInteractionPlaceableConfig;
+	// Open module API
+	// @ts-ignore
+	game.EnvironmentInteraction = EnvironmentInteraction;
+	// @ts-ignore
+	game.EnvironmentInteraction.EnvironmentInteractionPlaceableConfig = EnvironmentInteractionPlaceableConfig;
 
-  // Register Handlebars helpers
-  // @ts-ignore
-  // registerHandlebarsHelpers();
-  Handlebars.registerHelper('checkedIf', function (condition) {
-    return condition ? 'checked' : '';
-  });
+	// Register Handlebars helpers
+	// @ts-ignore
+	// registerHandlebarsHelpers();
+	Handlebars.registerHelper("checkedIf", function (condition) {
+		return condition ? "checked" : "";
+	});
 
-  if (game.modules.get('acelib')?.active) {
-    // Loading acelib module
-    //@ts-ignore
-    // ['ace/mode/json', 'ace/ext/language_tools', 'ace/ext/error_marker', 'ace/theme/twilight', 'ace/snippets/json'].forEach((s) => ace.config.loadModule(s));
-  }
+	if (game.modules.get("acelib")?.active) {
+		// Loading acelib module
+		//@ts-ignore
+		// ['ace/mode/json', 'ace/ext/language_tools', 'ace/ext/error_marker', 'ace/theme/twilight', 'ace/snippets/json'].forEach((s) => ace.config.loadModule(s));
+	}
 };
 
 export const setupHooks = async () => {
-  // Do anything after initialization but before ready
-  // Register wrappers
-  // @ts-ignore
-  // registerWrappers();
+	// Do anything after initialization but before ready
+	// Register wrappers
+	// @ts-ignore
+	// registerWrappers();
 
-  // Alter mouse interaction for tokens flagged as environment
+	// Alter mouse interaction for tokens flagged as environment
 
-  // ====================
-  // TOKEN
-  // ====================
+	// ====================
+	// TOKEN
+	// ====================
 
-  //@ts-ignore
-  libWrapper.register(
-    CONSTANTS.MODULE_NAME,
-    'CONFIG.Token.objectClass.prototype._canView',
-    //@ts-ignore
-    game.EnvironmentInteraction._canViewToken,
-    'MIXED',
-  );
+	//@ts-ignore
+	libWrapper.register(
+		CONSTANTS.MODULE_NAME,
+		"CONFIG.Token.objectClass.prototype._canView",
+		//@ts-ignore
+		game.EnvironmentInteraction._canViewToken,
+		"MIXED"
+	);
 
-  //@ts-ignore
-  libWrapper.register(
-    CONSTANTS.MODULE_NAME,
-    'CONFIG.Token.objectClass.prototype._onClickLeft',
-    //@ts-ignore
-    game.EnvironmentInteraction._onClickLeftToken,
-    'MIXED',
-  );
-  //@ts-ignore
-  libWrapper.register(
-    CONSTANTS.MODULE_NAME,
-    'CONFIG.Token.objectClass.prototype._onClickLeft2',
-    //@ts-ignore
-    game.EnvironmentInteraction._onClickLeft2Token,
-    'MIXED',
-  );
+	//@ts-ignore
+	libWrapper.register(
+		CONSTANTS.MODULE_NAME,
+		"CONFIG.Token.objectClass.prototype._onClickLeft",
+		//@ts-ignore
+		game.EnvironmentInteraction._onClickLeftToken,
+		"MIXED"
+	);
+	//@ts-ignore
+	libWrapper.register(
+		CONSTANTS.MODULE_NAME,
+		"CONFIG.Token.objectClass.prototype._onClickLeft2",
+		//@ts-ignore
+		game.EnvironmentInteraction._onClickLeft2Token,
+		"MIXED"
+	);
 
-  // =======================
-  // WALL/DOOR
-  // =======================
+	// =======================
+	// WALL/DOOR
+	// =======================
 
-  //@ts-ignore
-  libWrapper.register(
-    CONSTANTS.MODULE_NAME,
-    'DoorControl.prototype._onMouseDown',
-    //@ts-ignore
-    game.EnvironmentInteraction._DoorControlPrototypeOnMouseDownHandler,
-    'MIXED',
-  );
+	//@ts-ignore
+	libWrapper.register(
+		CONSTANTS.MODULE_NAME,
+		"DoorControl.prototype._onMouseDown",
+		//@ts-ignore
+		game.EnvironmentInteraction._DoorControlPrototypeOnMouseDownHandler,
+		"MIXED"
+	);
 
-  // //@ts-ignore
-  // libWrapper.register(
-  //   CONSTANTS.MODULE_NAME,
-  //   'CONFIG.Wall.objectClass.prototype._onClickLeft',
-  //   //@ts-ignore
-  //   game.EnvironmentInteraction._onClickLeftWall,
-  //   'MIXED',
-  // );
+	// //@ts-ignore
+	// libWrapper.register(
+	//   CONSTANTS.MODULE_NAME,
+	//   'CONFIG.Wall.objectClass.prototype._onClickLeft',
+	//   //@ts-ignore
+	//   game.EnvironmentInteraction._onClickLeftWall,
+	//   'MIXED',
+	// );
 
-  // //@ts-ignore
-  // libWrapper.register(
-  //   CONSTANTS.MODULE_NAME,
-  //   'CONFIG.Wall.objectClass.prototype._onClickLeft2',
-  //   //@ts-ignore
-  //   game.EnvironmentInteraction._onClickLeft2Wall,
-  //   'MIXED',
-  // );
+	// //@ts-ignore
+	// libWrapper.register(
+	//   CONSTANTS.MODULE_NAME,
+	//   'CONFIG.Wall.objectClass.prototype._onClickLeft2',
+	//   //@ts-ignore
+	//   game.EnvironmentInteraction._onClickLeft2Wall,
+	//   'MIXED',
+	// );
 
-  // ========================
-  // NOTE/JOURNAL
-  // ========================
+	// ========================
+	// NOTE/JOURNAL
+	// ========================
 
-  //@ts-ignore
-  libWrapper.register(
-    CONSTANTS.MODULE_NAME,
-    'Note.prototype._onClickLeft',
-    //@ts-ignore
-    game.EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
-    'MIXED',
-  );
+	//@ts-ignore
+	libWrapper.register(
+		CONSTANTS.MODULE_NAME,
+		"Note.prototype._onClickLeft",
+		//@ts-ignore
+		game.EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
+		"MIXED"
+	);
 
-  //@ts-ignore
-  libWrapper.register(
-    CONSTANTS.MODULE_NAME,
-    'Note.prototype._onClickLeft2',
-    //@ts-ignore
-    game.EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
-    'MIXED',
-  );
+	//@ts-ignore
+	libWrapper.register(
+		CONSTANTS.MODULE_NAME,
+		"Note.prototype._onClickLeft2",
+		//@ts-ignore
+		game.EnvironmentInteraction._NotePrototypeOnClickLeftHandler,
+		"MIXED"
+	);
 };
 
 export const readyHooks = async () => {
-  // Register hook callbacks
-  // @ts-ignore
-  game.EnvironmentInteraction.EnvironmentInteractionPlaceableConfig.registerHooks();
+	// Register hook callbacks
+	// @ts-ignore
+	game.EnvironmentInteraction.EnvironmentInteractionPlaceableConfig.registerHooks();
 
-  Hooks.on(
-    'tokenBarUpdateRoll',
-    (tokenBarApp: ContestedRoll | Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
-      // tokenBarApp can be any app of token bar moduel e.g. SavingThrow
+	Hooks.on(
+		"tokenBarUpdateRoll",
+		(tokenBarApp: ContestedRoll | Roll, message: ChatMessage, updateId: string, msgtokenRoll: Roll) => {
+			// tokenBarApp can be any app of token bar moduel e.g. SavingThrow
+			//@ts-ignore
+			const customInfo = <customInfoEnvironmentInteraction>(<any>message.flags["monks-tokenbar"])?.options?.ei;
 
-      const customInfo = <customInfoEnvironmentInteraction>(<any>message.data.flags['monks-tokenbar'])?.options?.ei;
+			const interactorTokenTokenBar = <Token>canvas.tokens?.get(updateId);
 
-      const interactorTokenTokenBar = <Token>canvas.tokens?.get(updateId);
+			const total = <number>msgtokenRoll?.total;
 
-      const total = <number>msgtokenRoll?.total;
+			const environmentItemId = customInfo.environmentItemID;
+			const environmentActorId = customInfo.environmentActorID;
+			const environmentActor = <Actor>game.actors?.get(environmentActorId);
+			const environmentTokenId = customInfo.environmentTokenID;
+			const environmentToken = <Token>canvas.tokens?.get(environmentTokenId);
 
-      const environmentItemId = customInfo.environmentItemID;
-      const environmentActorId = customInfo.environmentActorID;
-      const environmentActor = <Actor>game.actors?.get(environmentActorId);
-      const environmentTokenId = customInfo.environmentTokenID;
-      const environmentToken = <Token>canvas.tokens?.get(environmentTokenId);
+			let dc = customInfo.environmentDC;
 
-      let dc = customInfo.environmentDC;
+			const interactorItemId = customInfo.interactorItemID;
+			const interactorActorId = customInfo.interactorActorID;
+			const interactorActor = <Actor>game.actors?.get(interactorActorId);
+			const interactorTokenId = customInfo.interactorTokenID;
+			const interactorToken = <Token>canvas.tokens?.get(interactorTokenId);
 
-      const interactorItemId = customInfo.interactorItemID;
-      const interactorActorId = customInfo.interactorActorID;
-      const interactorActor = <Actor>game.actors?.get(interactorActorId);
-      const interactorTokenId = customInfo.interactorTokenID;
-      const interactorToken = <Token>canvas.tokens?.get(interactorTokenId);
+			const isInteractor = interactorTokenTokenBar.id == interactorTokenId;
+			// This work because the interactor is the last one called ??
+			if (isInteractor) {
+				const environmentItem = <Item>environmentActor.items.find((item: Item) => {
+					return item.id == environmentItemId;
+				});
 
-      const isInteractor = interactorTokenTokenBar.id == interactorTokenId;
-      // This work because the interactor is the last one called ??
-      if (isInteractor) {
-        const environmentItem = <Item>environmentActor.items.find((item: Item) => {
-          return item.id == environmentItemId;
-        });
+				if (environmentItem) {
+					// if (dc == null || dc == undefined || isNaN(dc)) {
+					if (
+						currentContestedRollTokenBar != null &&
+						currentContestedRollTokenBar != undefined &&
+						!isNaN(currentContestedRollTokenBar)
+					) {
+						dc = currentContestedRollTokenBar;
+					}
+					// }
+					if (dc != null && dc != undefined && !isNaN(dc)) {
+						if (total >= dc) {
+							executeEIMacro(environmentItem, EnvironmentInteractionFlags.notessuccess);
+						} else {
+							executeEIMacro(environmentItem, EnvironmentInteractionFlags.notesfailure);
+						}
+					} else {
+						const macroSuccess = environmentItem?.getFlag(
+							CONSTANTS.MODULE_NAME,
+							EnvironmentInteractionFlags.notessuccess
+						);
+						// const macroFailure = environmentItem?.getFlag(CONSTANTS.MODULE_NAME, Flags.notesfailure);
+						if (macroSuccess) {
+							executeEIMacro(environmentItem, EnvironmentInteractionFlags.notessuccess);
+						}
+					}
+				} else {
+					ui.notifications?.error(CONSTANTS.MODULE_NAME + " | Can't retrieve original item");
+					throw new Error(CONSTANTS.MODULE_NAME + " | Can't retrieve original item");
+				}
+				currentContestedRollTokenBar = NaN;
+			} else {
+				currentContestedRollTokenBar = total;
+			}
+		}
+	);
 
-        if (environmentItem) {
-          // if (dc == null || dc == undefined || isNaN(dc)) {
-          if (
-            currentContestedRollTokenBar != null &&
-            currentContestedRollTokenBar != undefined &&
-            !isNaN(currentContestedRollTokenBar)
-          ) {
-            dc = currentContestedRollTokenBar;
-          }
-          // }
-          if (dc != null && dc != undefined && !isNaN(dc)) {
-            if (total >= dc) {
-              executeEIMacro(environmentItem, EnvironmentInteractionFlags.notessuccess);
-            } else {
-              executeEIMacro(environmentItem, EnvironmentInteractionFlags.notesfailure);
-            }
-          } else {
-            const macroSuccess = environmentItem?.getFlag(
-              CONSTANTS.MODULE_NAME,
-              EnvironmentInteractionFlags.notessuccess,
-            );
-            // const macroFailure = environmentItem?.getFlag(CONSTANTS.MODULE_NAME, Flags.notesfailure);
-            if (macroSuccess) {
-              executeEIMacro(environmentItem, EnvironmentInteractionFlags.notessuccess);
-            }
-          }
-        } else {
-          ui.notifications?.error(CONSTANTS.MODULE_NAME + " | Can't retrieve original item");
-          throw new Error(CONSTANTS.MODULE_NAME + " | Can't retrieve original item");
-        }
-        currentContestedRollTokenBar = NaN;
-      } else {
-        currentContestedRollTokenBar = total;
-      }
-    },
-  );
+	// Hooks.on('forceUpdateTokenActionHUD', (args) => {
+	//   const checkout = args;
+	// });
 
-  // Hooks.on('forceUpdateTokenActionHUD', (args) => {
-  //   const checkout = args;
-  // });
-
-  /*
+	/*
   Hooks.on('renderChatMessage', async (message: ChatMessage, html: JQuery<HTMLElement>, speakerInfo) => {
     if(!message.roll){
       return;
@@ -215,8 +215,8 @@ export const readyHooks = async () => {
     });
     const alias = speakerInfo.message.speaker.alias;
 
-    const totalRef:HTMLElement|undefined = $(message.data.content).find('.part-total').length > 0
-      ? <HTMLElement>$(message.data.content).find('.part-total')[0]
+    const totalRef:HTMLElement|undefined = $(message.content).find('.part-total').length > 0
+      ? <HTMLElement>$(message.content).find('.part-total')[0]
       : undefined;
 
     const dc = 0;
@@ -227,7 +227,7 @@ export const readyHooks = async () => {
     let currentItem;
     canvas.tokens?.placeables.find((token: Token) => {
       const actor = <Actor>game.actors?.find((actor: Actor) => {
-        return token.data.actorId == actor.id;
+        return token.actorId == actor.id;
       });
       if (actor) {
         currentItem = actor.items.find((item: Item) => {
@@ -262,7 +262,7 @@ export const readyHooks = async () => {
   });
   */
 
-  /*
+	/*
   setupTinyMCEEditor();
   //@ts-ignore
   libWrapper.register(CONSTANTS.MODULE_NAME, 'TextEditor.enrichHTML', textEditorEnrichHTMLHandler, 'MIXED');
@@ -270,65 +270,65 @@ export const readyHooks = async () => {
   libWrapper.register(CONSTANTS.MODULE_NAME, 'TextEditor.create', textEditorCreateHandler, 'MIXED');
   */
 
-  Hooks.on(
-    'renderActorSheet',
-    async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
-      const isgm = game.user?.isGM;
-      if (!isgm) {
-        const actorEntity = <Actor>game.actors?.get(actorObject.actor._id);
-        if (actorEntity) {
-          // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
-          const list = htmlElement.find('li.item');
-          for (const li of list) {
-            const liOnInventory = $(li);
-            const itemId = liOnInventory.attr('data-item-id');
-            const item = actorEntity.items?.find((item: Item) => {
-              return item && item.id == itemId;
-            });
-            if (item?.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)) {
-              liOnInventory.hide();
-            }
-          }
-        }
-      } else {
-        const actorEntity = <Actor>game.actors?.get(actorObject.actor._id);
-        if (actorEntity) {
-          // <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
-          const list = htmlElement.find('li.item');
-          for (const li of list) {
-            const liOnInventory = $(li);
-            const itemId = liOnInventory.attr('data-item-id');
-            const item = actorEntity.items?.find((item: Item) => {
-              return item && item.id == itemId;
-            });
-            if (item?.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)) {
-              liOnInventory.css('background', 'rgba(233, 103, 28, 0.2)');
-            }
-          }
-        }
-      }
-    },
-  );
+	Hooks.on(
+		"renderActorSheet",
+		async function (actorSheet: ActorSheet, htmlElement: JQuery<HTMLElement>, actorObject: any) {
+			const isgm = game.user?.isGM;
+			if (!isgm) {
+				const actorEntity = <Actor>game.actors?.get(actorObject.actor._id);
+				if (actorEntity) {
+					// <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
+					const list = htmlElement.find("li.item");
+					for (const li of list) {
+						const liOnInventory = $(li);
+						const itemId = liOnInventory.attr("data-item-id");
+						const item = actorEntity.items?.find((item: Item) => {
+							return item && item.id == itemId;
+						});
+						if (item?.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)) {
+							liOnInventory.hide();
+						}
+					}
+				}
+			} else {
+				const actorEntity = <Actor>game.actors?.get(actorObject.actor._id);
+				if (actorEntity) {
+					// <li class="item context-enabled" data-item-id="crr7HgNpCvoWNL3D" draggable="true">
+					const list = htmlElement.find("li.item");
+					for (const li of list) {
+						const liOnInventory = $(li);
+						const itemId = liOnInventory.attr("data-item-id");
+						const item = actorEntity.items?.find((item: Item) => {
+							return item && item.id == itemId;
+						});
+						if (item?.getFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei)) {
+							liOnInventory.css("background", "rgba(233, 103, 28, 0.2)");
+						}
+					}
+				}
+			}
+		}
+	);
 
-  Hooks.on('renderItemSheet', (app, html, data) => {
-    // Activate only for item in a actor
-    // TODO we really need this ???
-    //if (app?.actor?.id) {
-    EnvironmentInteractionNote._initEntityHook(app, html, data);
-    // }
-  });
+	Hooks.on("renderItemSheet", (app, html, data) => {
+		// Activate only for item in a actor
+		// TODO we really need this ???
+		//if (app?.actor?.id) {
+		EnvironmentInteractionNote._initEntityHook(app, html, data);
+		// }
+	});
 
-  // =============================
-  // TRIGGER HAPPY INTEGRATION
-  // =============================
+	// =============================
+	// TRIGGER HAPPY INTEGRATION
+	// =============================
 
-  // const triggerHappy = game.modules.get("trigger-happy");
-  // TriggerHappyEim.setTriggerHappyActive(triggerHappy != undefined && triggerHappy.active == true)
+	// const triggerHappy = game.modules.get("trigger-happy");
+	// TriggerHappyEim.setTriggerHappyActive(triggerHappy != undefined && triggerHappy.active == true)
 
-  // Hooks.on('controlToken',(token,controlled) =>  {
-  //   TriggerHappyEim.triggerHappy_ControlToken(token,controlled);
-  // });
-  // Hooks.on('preUpdateToken',(scene, embedded, update) =>  {
-  //   TriggerHappyEim.triggerHappy_onPreUpdateToken(scene, embedded, update, undefined, <string>game.userId)
-  // });
+	// Hooks.on('controlToken',(token,controlled) =>  {
+	//   TriggerHappyEim.triggerHappy_ControlToken(token,controlled);
+	// });
+	// Hooks.on('preUpdateToken',(scene, embedded, update) =>  {
+	//   TriggerHappyEim.triggerHappy_onPreUpdateToken(scene, embedded, update, undefined, <string>game.userId)
+	// });
 };

@@ -1,33 +1,33 @@
 export interface BaseRolls {
-  get _supportedSystem(): boolean;
+	get _supportedSystem(): boolean;
 
-  activateHooks(): void;
+	activateHooks(): void;
 
-  get requestoptions(): any;
+	get requestoptions(): any;
 
-  get contestedoptions(): any;
+	get contestedoptions(): any;
 
-  get config(): any;
+	get config(): any;
 
-  get showXP(): boolean;
+	get showXP(): boolean;
 
-  getXP(actor): { value: number; max: number };
+	getXP(actor): { value: number; max: number };
 
-  getLevel(actor): number;
+	getLevel(actor): number;
 
-  get dcLabel(): string;
+	get dcLabel(): string;
 
-  get defaultStats(): any[];
+	get defaultStats(): any[];
 
-  getButtons(): any[];
+	getButtons(): any[];
 
-  defaultRequest(): any;
+	defaultRequest(): any;
 
-  defaultContested(): any;
+	defaultContested(): any;
 
-  dynamicRequest(tokens): any[];
+	dynamicRequest(tokens): any[];
 
-  roll({ id }, callback, e): { id: string; error: boolean; msg: string };
+	roll({ id }, callback, e): { id: string; error: boolean; msg: string };
 
-  assignXP(msgactor): Promise<void>;
+	assignXP(msgactor): Promise<void>;
 }

@@ -1,37 +1,37 @@
 export interface RollHandler {
-  preRollHandlers: any[];
+	preRollHandlers: any[];
 
-  i18n(toTranslate): string;
+	i18n(toTranslate): string;
 
-  getActor(tokenId): Actor;
+	getActor(tokenId): Actor;
 
-  getItem(actor, itemId): Item;
+	getItem(actor, itemId): Item;
 
-  getToken(tokenId): Token;
+	getToken(tokenId): Token;
 
-  throwInvalidValueErr(err): void;
+	throwInvalidValueErr(err): void;
 
-  handleActionEvent(event, encodedValue): Promise<void>;
+	handleActionEvent(event, encodedValue): Promise<void>;
 
-  doHandleActionEvent(event, encodedValue): void;
+	doHandleActionEvent(event, encodedValue): void;
 
-  addPreRollHandler(handler): void;
+	addPreRollHandler(handler): void;
 
-  registerKeyPresses(event): void;
+	registerKeyPresses(event): void;
 
-  doRenderItem(tokenId, itemId): void;
+	doRenderItem(tokenId, itemId): void;
 
-  isRenderItem(): boolean;
+	isRenderItem(): boolean;
 
-  isRightClick(event): boolean;
+	isRightClick(event): boolean;
 
-  isAlt(event): boolean;
+	isAlt(event): boolean;
 
-  isCtrl(event): boolean;
+	isCtrl(event): boolean;
 
-  isShift(event): boolean;
+	isShift(event): boolean;
 
-  _isMultiGenericAction(encodedValue): boolean;
+	_isMultiGenericAction(encodedValue): boolean;
 
-  _doMultiGenericAction(encodedValue): Promise<void>;
+	_doMultiGenericAction(encodedValue): Promise<void>;
 }
