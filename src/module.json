@@ -1,9 +1,8 @@
 {
-	"name": "environment-interaction-multisystem",
+	"id": "environment-interaction-multisystem",
 	"title": "Environment Interaction Multisystem",
 	"description": "Create environment placeable object that characters can interact with.",
-	"version": "1.2.1",
-	"author": "enso, p4535992",
+	"version": "1.3.0",
 	"authors": [
 		{ "name": "enso" },
 		{
@@ -11,7 +10,7 @@
 			"url": "https://github.com/p4535992",
 			"discord": "",
 			"twitter": "",
-			"patreon": "",
+			"patreon": "p4535992",
 			"github": "p4535992",
 			"ko-fi": "",
 			"reddit": "",
@@ -23,6 +22,7 @@
 	"includes": [
 		"./assets/**",
 		"./lang/**",
+		"./languages/**",
 		"./scripts/**",
 		"./styles/**",
 		"./templates/**",
@@ -49,37 +49,49 @@
 		{
 			"lang": "en",
 			"name": "English",
-			"path": "lang/en.json"
+			"path": "languages/en.json"
 		}
 	],
-	"system": [],
+	"packs": [],
 	"scripts": ["module/lib/dd.min.js"],
 	"esmodules": ["eim-main.js"],
 	"styles": ["styles/eim.css", "styles/eim-macro-editor.css", "styles/dd.css"],
-	"minimumCoreVersion": "9",
-	"compatibleCoreVersion": "9",
+	"compatibility": {
+		"minimum": 10,
+		"verified": 10,
+		"maximum": 10
+	},
+	"manifestPlusVersion": "1.2.1",
 	"url": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem",
 	"manifest": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/releases/latest/download/module.json",
 	"download": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/releases/latest/download/module.zip",
-	"readme": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/blob/v1.2.1/README.md",
-	"changelog": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/blob/v1.2.1/changelog.md",
+	"readme": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/blob/v1.3.0/README.md",
+	"changelog": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/blob/v1.3.0/changelog.md",
 	"bugs": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/issues",
 	"allowBugReporter": true,
-	"manifestPlusVersion": "1.2.0",
-	"dependencies": [
-		{
-			"name": "lib-wrapper"
-		},
-		{
-			"name": "socketlib"
-		},
-		{
-			"name": "acelib",
-			"type": "module"
-		}
-	],
-	"flags": {
-		"manifestPlusVersion": "1.2.0",
-		"allowBugReporter": true
+	"relationships": {
+		"systems": [],
+		"requires": [
+			{
+				"id": "lib-wrapper",
+				"type": "module",
+				"manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json",
+				"compatibility": {}
+			},
+			{
+				"id": "socketlib",
+				"type": "module",
+				"manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/develop/module.json",
+				"compatibility": {}
+			},
+			{
+				"id": "acelib",
+				"type": "module",
+				"compatibility": {
+
+				}
+			}
+		],
+		"conflicts": []
 	}
 }
