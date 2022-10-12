@@ -87,9 +87,7 @@
 			{
 				"id": "acelib",
 				"type": "module",
-				"compatibility": {
-
-				}
+				"compatibility": {}
 			}
 		],
 		"conflicts": []
