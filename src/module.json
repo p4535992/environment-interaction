@@ -53,7 +53,7 @@
 		}
 	],
 	"packs": [],
-	"scripts": ["module/lib/dd.min.js"],
+	"scripts": ["scripts/lib/dd.min.js"],
 	"esmodules": ["eim-main.js"],
 	"styles": ["styles/eim.css", "styles/eim-macro-editor.css", "styles/dd.css"],
 	"compatibility": {
