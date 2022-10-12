@@ -22,6 +22,7 @@
             <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction-multisystem.note.event-use-environment-interaction"}}">
                 <input type="checkbox" name="flags.environment-interaction-multisystem.notes-use-environment-interaction"
                     value="{{flags.environment-interaction-multisystem.notes-use-environment-interaction}}"
+                    onclick="$(this).attr('value', this.checked ? true : false)"
                     {{checkedIf flags.environment-interaction-multisystem.notes-use-environment-interaction}}/>
                 <label>{{localize "environment-interaction-multisystem.note.event-use-environment-interaction"}}</label>
             </div>
@@ -30,6 +31,7 @@
             <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction-multisystem.note.event-use-item-macro"}}">
                 <input type="checkbox" name="flags.environment-interaction-multisystem.notes-use-item-macro"
                     value="{{flags.environment-interaction-multisystem.notes-use-item-macro}}"
+                    onclick="$(this).attr('value', this.checked ? true : false)"
                     {{checkedIf flags.environment-interaction-multisystem.notes-use-item-macro}}/>
                 <label>{{localize "environment-interaction-multisystem.note.event-use-item-macro"}}</label>
             </div>
@@ -38,6 +40,7 @@
             <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction-multisystem.note.event-use-item-environment"}}">
                 <input type="checkbox" name="flags.environment-interaction-multisystem.notes-use-item-environment"
                     value="{{flags.environment-interaction-multisystem.notes-use-item-environment}}"
+                    onclick="$(this).attr('value', this.checked ? true : false)"
                     {{checkedIf flags.environment-interaction-multisystem.notes-use-item-environment}}/>
                 <label>{{localize "environment-interaction-multisystem.note.event-use-item-environment"}}</label>
             </div>
@@ -45,7 +48,9 @@
         <div class="form-group stacked">
             <label>{{localize "environment-interaction-multisystem.note.event-detail"}}</label>
             <div class="form-group">
-                <input type="text" name="flags.environment-interaction-multisystem.notes-detail" placeholder="" value="{{flags.environment-interaction-multisystem.notes-detail}}" />
+                <input type="text" name="flags.environment-interaction-multisystem.notes-detail" placeholder="" 
+                value="{{flags.environment-interaction-multisystem.notes-detail}}" 
+                onchange="$(this).attr('value', this.value);" onkeyup="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"/>
             </div>
         </div>
         <div class="form-group stacked notes-info">
@@ -70,6 +75,7 @@
             <div class="form-group" data-toggle='tooltip' data-placement='right' data-original-title="{{localize "environment-interaction-multisystem.note.event-use-as-macro"}}">
                 <input type="checkbox" name="flags.environment-interaction-multisystem.notes-use-as-macro"
                     value="{{flags.environment-interaction-multisystem.notes-use-as-macro}}"
+                    onclick="$(this).attr('value', this.checked ? true : false)"
                     {{checkedIf flags.environment-interaction-multisystem.notes-use-as-macro}}/>
                 <label>{{localize "environment-interaction-multisystem.note.event-use-as-macro"}}</label>
             </div>
@@ -88,7 +94,8 @@
             <input type="text" name="flags.environment-interaction-multisystem.notes-args"
                 class="ei-macro-execute-args-button-{{id}}-{{flags.environment-interaction-multisystem.notes-args}}"
                 placeHolder="Additional args e.g.'arg0,arg1,ecc.' on the macro are recovered from args[0],args[1],ecc."
-                value="{{flags.environment-interaction-multisystem.notes-args}}" />
+                value="{{flags.environment-interaction-multisystem.notes-args}}" 
+                onchange="$(this).attr('value', this.value);" onkeyup="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"/>
         </div>
         <div class="form-group stacked command notes-condition">
             <label>{{localize "environment-interaction-multisystem.note.event-condition"}}</label>
@@ -98,7 +105,8 @@
             <input type="text" name="flags.environment-interaction-multisystem.notes-condition-args"
                 class="ei-macro-execute-args-button-{{id}}-{{flags.environment-interaction-multisystem.notes-condition-args}}"
                 placeHolder="Additional args e.g.'arg0,arg1,ecc.' on the macro are recovered from args[0],args[1],ecc."
-                value="{{flags.environment-interaction-multisystem.notes-condition-args}}" />
+                value="{{flags.environment-interaction-multisystem.notes-condition-args}}" 
+                onchange="$(this).attr('value', this.value);" onkeyup="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"/>
         </div>
         <div class="form-group stacked command notes-success">
             <label>{{localize "environment-interaction-multisystem.note.event-success"}}</label>
@@ -108,7 +116,8 @@
             <input type="text" name="flags.environment-interaction-multisystem.notes-success-args"
                 class="ei-macro-execute-args-button-{{id}}-{{flags.environment-interaction-multisystem.notes-success-args}}"
                 placeHolder="Additional args e.g.'arg0,arg1,ecc.' on the macro are recovered from args[0],args[1],ecc."
-                value="{{flags.environment-interaction-multisystem.notes-success-args}}" />
+                value="{{flags.environment-interaction-multisystem.notes-success-args}}" 
+                onchange="$(this).attr('value', this.value);" onkeyup="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"/>
         </div>
         <div class="form-group stacked command notes-failure">
             <label>{{localize "environment-interaction-multisystem.note.event-failure"}}</label>
@@ -118,7 +127,8 @@
             <input type="text" name="flags.environment-interaction-multisystem.notes-failure-args"
                 class="ei-macro-execute-args-button-{{id}}-{{flags.environment-interaction-multisystem.notes-failure-args}}"
                 placeHolder="Additional args e.g.'arg0,arg1,ecc.' on the macro are recovered from args[0],args[1],ecc."
-                value="{{flags.environment-interaction-multisystem.notes-failure-args}}" />
+                value="{{flags.environment-interaction-multisystem.notes-failure-args}}" 
+                onchange="$(this).attr('value', this.value);" onkeyup="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"/>
         </div>
 
         <footer class="sheet-footer flexrow">

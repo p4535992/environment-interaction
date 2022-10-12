@@ -163,7 +163,7 @@ export const registerSettings = function () {
 		default: 15, // seconds
 		type: Number,
 		scope: "world",
-		config: false,
+		config: true,
 	});
 
 	game.settings.register(CONSTANTS.MODULE_NAME, "debug", {

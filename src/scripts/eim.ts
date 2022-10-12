@@ -176,7 +176,7 @@ export class EnvironmentInteraction {
 				}
 			})
 			//@ts-ignore
-			.sort((a, b) => (a.document.sort || 0) - (b.document.sort || 0))
+			.sort((a, b) => (a.sort || 0) - (b.sort || 0))
 			.forEach((i) => {
 				if (items.some((e) => e.id === i.id)) {
 					// contains the element we're looking for
@@ -236,8 +236,8 @@ export class EnvironmentInteraction {
 		const dialogOptions = {
 			id: "ei-interaction-dialog",
 			width: 270,
-			top: event.originalEvent.clientY - 10,
-			left: event.originalEvent.clientX + 50,
+			top: event.data.originalEvent.clientY - 10,
+			left: event.data.originalEvent.clientX + 50,
 		};
 		const render = (html) => {
 			html.on("click", `button.ei-info`, async (event) => {
@@ -928,7 +928,7 @@ export class EnvironmentInteraction {
 										//@ts-ignore
 										CombatTimer.Create(secondsOfdelayForDeletion);
 									}
-									wait(secondsOfdelayForDeletion);
+									await wait(secondsOfdelayForDeletion);
 									await interactorItemTmp.delete();
 									//interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>interactorItemTmp.id]);
 								}

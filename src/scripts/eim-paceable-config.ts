@@ -68,7 +68,7 @@ export class EnvironmentInteractionPlaceableConfig {
 		{ classType: TileConfig, method: "_handleTileConfig" },
 		{ classType: DrawingConfig, method: "_handleDrawingConfig" },
 		{ classType: WallConfig, method: "_handleGenericConfig" },
-		{ classType: LightConfig, method: "_handleGenericConfig" },
+		{ classType: AmbientLightConfig, method: "_handleAmbientLightConfig" },
 		{ classType: AmbientSoundConfig, method: "_handleGenericConfig" },
 		{ classType: MeasuredTemplateConfig, method: "_handleGenericConfig" },
 		{ classType: NoteConfig, method: "_handleGenericConfig" },

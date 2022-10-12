@@ -305,17 +305,38 @@ export class EnvironmentInteractionNote extends FormApplication {
 	//   d.render(true);
 	// }
 
+	toB(obj: any) {
+		if (obj != null && obj != undefined) {
+			switch (String(obj).toLowerCase().trim()) {
+				case "true": {
+					return true;
+				}
+				case "false": {
+					return false;
+				}
+				default: {
+					return obj;
+				}
+			}
+		} else {
+			return obj;
+		}
+	}
+
 	async _updateObject(event, formData) {
 		if (game.user?.isGM) {
-			const useei = formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesuseei}`];
+			const useei = this.toB(
+				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesuseei}`]
+			);
 			if (useei != null && useei != undefined) {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei, useei);
 			} else {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseei, null);
 			}
 
-			const useitemmacro =
-				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesuseitemmacro}`];
+			const useitemmacro = this.toB(
+				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesuseitemmacro}`]
+			);
 			if (useitemmacro != null && useitemmacro != undefined) {
 				await this.entity.setFlag(
 					CONSTANTS.MODULE_NAME,
@@ -326,8 +347,9 @@ export class EnvironmentInteractionNote extends FormApplication {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseitemmacro, null);
 			}
 
-			const useitemenvironment =
-				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesuseitemenvironment}`];
+			const useitemenvironment = this.toB(
+				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesuseitemenvironment}`]
+			);
 			if (useitemenvironment != null && useitemenvironment != undefined) {
 				await this.entity.setFlag(
 					CONSTANTS.MODULE_NAME,
@@ -342,8 +364,9 @@ export class EnvironmentInteractionNote extends FormApplication {
 				);
 			}
 
-			const useasmacro =
-				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesuseasmacro}`];
+			const useasmacro = this.toB(
+				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesuseasmacro}`]
+			);
 			if (useasmacro != null && useasmacro != undefined) {
 				await this.entity.setFlag(
 					CONSTANTS.MODULE_NAME,
@@ -354,22 +377,25 @@ export class EnvironmentInteractionNote extends FormApplication {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesuseasmacro, null);
 			}
 
-			const detail = formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesdetail}`];
+			const detail = this.toB(
+				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesdetail}`]
+			);
 			if (detail != null && detail != undefined) {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesdetail, detail);
 			} else {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesdetail, null);
 			}
 
-			const info = formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesinfo}`];
+			const info = this.toB(formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesinfo}`]);
 			if (info != null && info != undefined) {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesinfo, info);
 			} else {
 				// await this.entity.setFlag(CONSTANTS.MODULE_NAME, Flags.notesinfo, null);
 			}
 
-			const explicitdc =
-				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesexplicitdc}`];
+			const explicitdc = this.toB(
+				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesexplicitdc}`]
+			);
 			if (explicitdc != null && explicitdc != undefined) {
 				await this.entity.setFlag(
 					CONSTANTS.MODULE_NAME,
@@ -380,7 +406,7 @@ export class EnvironmentInteractionNote extends FormApplication {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesexplicitdc, null);
 			}
 
-			const notes = formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notes}`];
+			const notes = this.toB(formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notes}`]);
 			if (notes != null && notes != undefined) {
 				if (useasmacro) {
 					let macroUseAsMacro = notes;
@@ -399,15 +425,18 @@ export class EnvironmentInteractionNote extends FormApplication {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notes, null);
 			}
 
-			const notesargs = formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesargs}`];
+			const notesargs = this.toB(
+				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesargs}`]
+			);
 			if (notesargs != null && notesargs != undefined) {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesargs, notesargs);
 			} else {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesargs, null);
 			}
 
-			const notescondition =
-				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notescondition}`];
+			const notescondition = this.toB(
+				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notescondition}`]
+			);
 			if (notescondition != null && notescondition != undefined) {
 				let macroCondition = notescondition;
 				if (macroCondition && !macroCondition?.startsWith("return")) {
@@ -422,8 +451,9 @@ export class EnvironmentInteractionNote extends FormApplication {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notescondition, null);
 			}
 
-			const notesconditionargs =
-				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesconditionargs}`];
+			const notesconditionargs = this.toB(
+				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesconditionargs}`]
+			);
 			if (notesconditionargs != null && notesconditionargs != undefined) {
 				await this.entity.setFlag(
 					CONSTANTS.MODULE_NAME,
@@ -434,7 +464,9 @@ export class EnvironmentInteractionNote extends FormApplication {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesconditionargs, null);
 			}
 
-			const notessuccess = formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notessuccess}`];
+			const notessuccess = this.toB(
+				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notessuccess}`]
+			);
 			if (notessuccess != null && notessuccess != undefined) {
 				await this.entity.setFlag(
 					CONSTANTS.MODULE_NAME,
@@ -445,8 +477,9 @@ export class EnvironmentInteractionNote extends FormApplication {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccess, null);
 			}
 
-			const notessuccessargs =
-				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notessuccessargs}`];
+			const notessuccessargs = this.toB(
+				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notessuccessargs}`]
+			);
 			if (notessuccessargs != null && notessuccessargs != undefined) {
 				await this.entity.setFlag(
 					CONSTANTS.MODULE_NAME,
@@ -457,7 +490,9 @@ export class EnvironmentInteractionNote extends FormApplication {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notessuccessargs, null);
 			}
 
-			const notesfailure = formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesfailure}`];
+			const notesfailure = this.toB(
+				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesfailure}`]
+			);
 			if (notesfailure != null && notesfailure != undefined) {
 				await this.entity.setFlag(
 					CONSTANTS.MODULE_NAME,
@@ -468,8 +503,9 @@ export class EnvironmentInteractionNote extends FormApplication {
 				await this.entity.setFlag(CONSTANTS.MODULE_NAME, EnvironmentInteractionFlags.notesfailure, null);
 			}
 
-			const notesfailureargs =
-				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesfailureargs}`];
+			const notesfailureargs = this.toB(
+				formData[`flags.${CONSTANTS.MODULE_NAME}.${EnvironmentInteractionFlags.notesfailureargs}`]
+			);
 			if (notesfailureargs != null && notesfailureargs != undefined) {
 				await this.entity.setFlag(
 					CONSTANTS.MODULE_NAME,
