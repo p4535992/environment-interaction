@@ -1,3 +1,7 @@
+### Update 1.3.1
+
+- Just update fro fvtt10
+
 ### Update 1.2.1
 
 - Bug fix (more a pathc than a bug fix [[BUG] Standard use does not work with MidiQoL if attack/damage are not auto-rolled](https://github.com/p4535992/environment-interaction-multisystem/issues/1)

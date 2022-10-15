@@ -2,7 +2,7 @@
 	"id": "environment-interaction-multisystem",
 	"title": "Environment Interaction Multisystem",
 	"description": "Create environment placeable object that characters can interact with.",
-	"version": "1.3.0",
+	"version": "1.3.1",
 	"authors": [
 		{ "name": "enso" },
 		{
@@ -65,8 +65,8 @@
 	"url": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem",
 	"manifest": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/releases/latest/download/module.json",
 	"download": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/releases/latest/download/module.zip",
-	"readme": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/blob/v1.3.0/README.md",
-	"changelog": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/blob/v1.3.0/changelog.md",
+	"readme": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/blob/v1.3.1/README.md",
+	"changelog": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/blob/v1.3.1/changelog.md",
 	"bugs": "https://github.com/p4535992/foundryvtt-environment-interaction-multisystem/issues",
 	"allowBugReporter": true,
 	"relationships": {

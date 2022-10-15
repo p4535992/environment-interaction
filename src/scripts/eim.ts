@@ -917,7 +917,7 @@ export class EnvironmentInteraction {
 							if (found) {
 								if (interactorItemTmp.actor?.id == interactorToken.actor?.id) {
 									// Wait tot. seconds before delete the item
-									const secondsOfdelayForDeletion = <number>(
+									const secondsOfDelayForDeletion = <number>(
 										game.settings.get(
 											CONSTANTS.MODULE_NAME,
 											"delayedTimeBeforeDeleteTheEnvironmentItem"
@@ -926,9 +926,9 @@ export class EnvironmentInteraction {
 									// HURRY UP INTEGRATION
 									if (game.modules.get("hurry-up")?.active) {
 										//@ts-ignore
-										CombatTimer.Create(secondsOfdelayForDeletion);
+										CombatTimer.Create(secondsOfDelayForDeletion);
 									}
-									await wait(secondsOfdelayForDeletion);
+									await wait(secondsOfDelayForDeletion * 1000); // SECONDS TO MILLISECONDS
 									await interactorItemTmp.delete();
 									//interactorToken.actor?.deleteEmbeddedDocuments('Item', [<string>interactorItemTmp.id]);
 								}
