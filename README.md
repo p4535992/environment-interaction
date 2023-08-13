@@ -10,7 +10,7 @@
 
 [![Foundry Hub Endorsements](https://img.shields.io/endpoint?logoColor=white&url=https%3A%2F%2Fwww.foundryvtt-hub.com%2Fwp-json%2Fhubapi%2Fv1%2Fpackage%2Fenvironment-interaction-multisystem%2Fshield%2Fendorsements&style=for-the-badge)](https://www.foundryvtt-hub.com/package/environment-interaction-multisystem/)
 
-![GitHub all releases](https://img.shields.io/github/downloads/p4535992/environment-interaction-multisystem/total?style=for-the-badge)
+![GitHub all releases](https://img.shields.io/github/downloads/p4535992/foundryvtt-environment-interaction-multisystem/total?style=for-the-badge)
 
 ### If you want to buy me a coffee [![alt-text](https://img.shields.io/badge/-Patreon-%23ff424d?style=for-the-badge)](https://www.patreon.com/p4535992)
 
@@ -67,7 +67,7 @@ To install this module manually:
 1.  Inside the Foundry "Configuration and Setup" screen, click "Add-on Modules"
 2.  Click "Install Module"
 3.  In the "Manifest URL" field, paste the following url:
-`https://raw.githubusercontent.com/p4535992/environment-interaction-multisystem/master/src/module.json`
+`https://raw.githubusercontent.com/p4535992/foundryvtt-environment-interaction-multisystem/master/src/module.json`
 4.  Click 'Install' and wait for installation to complete
 5.  Don't forget to enable the module in game using the "Manage Module" button
 
